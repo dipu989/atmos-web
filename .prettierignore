@@ -1,0 +1,10 @@
+# Ignore artifacts:
+build
+coverage
+dist
+.next
+out
+
+# Ignore all files:
+*.pem
+pnpm-lock.yaml

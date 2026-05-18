@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  @apply border-divider;
+}
+
+body {
+  @apply bg-bg-page text-text-primary;
+}
