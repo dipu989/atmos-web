@@ -1,0 +1,35 @@
+# Automatically label issues based on title or description
+# This file configures the GitHub issue labeler action
+# Reference: https://github.com/actions/labeler
+
+bug:
+  - title-contains:
+      - "[BUG]"
+  - body-contains:
+      - "bug"
+
+enhancement:
+  - title-contains:
+      - "[FEATURE]"
+  - body-contains:
+      - "feature request"
+
+documentation:
+  - title-contains:
+      - "[DOCS]"
+  - body-contains:
+      - "documentation"
+
+performance:
+  - title-contains:
+      - "[PERF]"
+  - body-contains:
+      - "performance"
+
+accessibility:
+  - title-contains:
+      - "a11y"
+      - "accessibility"
+  - body-contains:
+      - "accessibility"
+      - "a11y"
