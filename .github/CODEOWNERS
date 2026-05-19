@@ -1,0 +1,20 @@
+# This file specifies who should review code changes
+# When a PR is opened, GitHub will automatically request review from these users
+
+# All files
+* @dipu989
+
+# Configuration files
+.github/** @dipu989
+.eslintrc.json @dipu989
+tailwind.config.ts @dipu989
+
+# TypeScript/Build
+tsconfig.json @dipu989
+next.config.js @dipu989
+
+# Tests
+*.test.tsx @dipu989
+e2e/ @dipu989
+vitest.config.ts @dipu989
+playwright.config.ts @dipu989

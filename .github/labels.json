@@ -1,0 +1,62 @@
+[
+  {
+    "name": "bug",
+    "color": "d73a4a",
+    "description": "Something isn't working"
+  },
+  {
+    "name": "enhancement",
+    "color": "a2eeef",
+    "description": "New feature or request"
+  },
+  {
+    "name": "documentation",
+    "color": "0075ca",
+    "description": "Improvements or additions to documentation"
+  },
+  {
+    "name": "performance",
+    "color": "fbca04",
+    "description": "Performance improvement or optimization"
+  },
+  {
+    "name": "refactor",
+    "color": "d4c5f9",
+    "description": "Code cleanup, reorganization, or restructuring"
+  },
+  {
+    "name": "testing",
+    "color": "c2e0c6",
+    "description": "Improvements or additions to testing"
+  },
+  {
+    "name": "accessibility",
+    "color": "008672",
+    "description": "A11y improvements"
+  },
+  {
+    "name": "dependencies",
+    "color": "0366d6",
+    "description": "Updates to dependencies"
+  },
+  {
+    "name": "good first issue",
+    "color": "7057ff",
+    "description": "Good for newcomers"
+  },
+  {
+    "name": "help wanted",
+    "color": "33aa3f",
+    "description": "Extra attention is needed"
+  },
+  {
+    "name": "blocked",
+    "color": "fc2929",
+    "description": "Blocked by another issue or PR"
+  },
+  {
+    "name": "wontfix",
+    "color": "ffffff",
+    "description": "This will not be worked on"
+  }
+]
