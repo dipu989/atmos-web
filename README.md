@@ -1,4 +1,6 @@
-# atmos-web
+<h1 align="center">Atmos Web</h1>
+<img width="1973" height="797" alt="atmos web" src="https://github.com/user-attachments/assets/280c4cd6-6e58-49fd-9307-36dfeb5c58fd" />
+
 
 Web frontend for Atmos — a personal carbon footprint tracker that automatically detects and logs commute trips via the companion mobile app.
 
