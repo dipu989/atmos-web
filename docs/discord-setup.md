@@ -1,6 +1,6 @@
 # Discord Webhook Setup
 
-Agents use Discord to notify you when a task starts, completes, or is blocked.
+PR notifications are sent by **GitHub Actions** when a PR is opened or merged into `main`. Agents do not call Discord locally.
 
 ---
 
@@ -23,31 +23,44 @@ The URL looks like:
 https://discord.com/api/webhooks/1234567890/abcdefghijklmnop...
 ```
 
-## Step 3 — Add to .env.local
+## Step 3 — Add GitHub secret (required for PR notifications)
+
+1. GitHub repo → **Settings** → **Secrets and variables** → **Actions**
+2. **New repository secret**
+3. Name: `DISCORD_WEBHOOK_URL`
+4. Value: your webhook URL from Step 2
+
+Workflow: `.github/workflows/discord-pr.yml`
+
+If the secret is missing, the workflow skips quietly.
+
+## Step 4 — Optional: local test script
+
+For manual testing only, you can add the same URL to `.env.local`:
 
 ```bash
-# atmos-web/.env.local
 DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/YOUR_ID/YOUR_TOKEN
 ```
-
-## Step 4 — Test it
 
 ```bash
 ./scripts/discord-notify.sh "Test notification from atmos-web" 3066993 "TEST" "main"
 ```
 
-You should see a blue embed appear in `#atmos-agents`.
-
 ---
 
-## What the notifications look like
+## What gets notified
 
-- **Task started:** agent begins working on T004
-- **Task completed:** PR opened, link included
-- **Task blocked:** agent hit a blocker, needs your input
+| Event | Trigger | Color |
+|-------|---------|-------|
+| **PR opened** | PR opened/reopened targeting `main` | Blue |
+| **PR merged** | PR merged into `main` | Green |
+
+Each embed includes: PR link, branch, task ID (`T003` from branch or title), author (open) or merger (merge).
+
+Task ID is parsed from `feat/T003-app-layout` or `feat(T003): ...` in the title.
 
 ---
 
 ## No Discord?
 
-The scripts fail silently if `DISCORD_WEBHOOK_URL` is not set — agents still work, you just won't get notifications.
+Agents and CI still work; you simply won't get channel notifications until `DISCORD_WEBHOOK_URL` is set in GitHub Actions secrets.

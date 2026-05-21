@@ -24,8 +24,9 @@ fi
 
 TASK_NAME=$(basename "$TASK_FILE" .md)
 BRANCH_NAME="feat/${TASK_NAME}"
-WORKTREE_PATH="$(pwd)/../../atmos-web-${TASK_ID}"
 REPO_ROOT="$(pwd)"
+REPO_PARENT="$(cd "${REPO_ROOT}/.." && pwd)"
+WORKTREE_PATH="${REPO_PARENT}/atmos-web-${TASK_ID}"
 
 echo ""
 echo "🤖 Launching agent for: $TASK_NAME"
@@ -33,9 +34,28 @@ echo "   Branch:   $BRANCH_NAME"
 echo "   Worktree: $WORKTREE_PATH"
 echo ""
 
-# Create worktree
+# Create worktree (or attach to existing branch)
+EXISTING_WORKTREE=$(git worktree list --porcelain | awk -v branch="$BRANCH_NAME" '
+  /^worktree / { path=$2 }
+  /^branch / && $2 ~ branch { print path }
+' | head -1)
+
+if [ -n "$EXISTING_WORKTREE" ]; then
+  EXISTING_WORKTREE="$(cd "$EXISTING_WORKTREE" && pwd)"
+fi
+
+if [ -n "$EXISTING_WORKTREE" ] && [ "$EXISTING_WORKTREE" != "$WORKTREE_PATH" ]; then
+  echo "❌ Branch $BRANCH_NAME is already checked out at: $EXISTING_WORKTREE"
+  echo "   Run: git worktree remove '$EXISTING_WORKTREE' --force"
+  echo "   Or:  make clean-agent TASK=${TASK_ID}"
+  exit 1
+fi
+
 if [ -d "$WORKTREE_PATH" ]; then
   echo "⚠️  Worktree already exists at $WORKTREE_PATH — reusing"
+elif git show-ref --verify --quiet "refs/heads/${BRANCH_NAME}"; then
+  git worktree add "$WORKTREE_PATH" "$BRANCH_NAME"
+  echo "✅ Worktree created (existing branch)"
 else
   git worktree add "$WORKTREE_PATH" -b "$BRANCH_NAME"
   echo "✅ Worktree created"
@@ -44,36 +64,26 @@ fi
 # Copy context files (not committed yet)
 cp -r "../.context" "$WORKTREE_PATH/../.context" 2>/dev/null || true
 
-# Build initial prompt for agent
-TASK_CONTENT=$(cat "$TASK_FILE")
-PROMPT="You are working on the atmos-web project.
-
-Read CLAUDE.md first for all project rules and conventions.
-Then read ../../.context/api-spec.md for backend API reference.
-Then read ../../.context/data-models.md for TypeScript types.
-Then read ../../.context/auth-flow.md for auth patterns.
-Then read ../../.context/design-system.md for UI patterns.
-Then read the task file below and complete it fully.
-
-Your task:
----
-${TASK_CONTENT}
----
-
-After completing:
-1. Run: pnpm build (fix all errors before stopping)
-2. Run: pnpm lint (fix all warnings)
-3. Run: pnpm test (ensure tests pass)
-4. Run: ./scripts/discord-notify.sh '✅ ${TASK_NAME} ready for QA' 3066993 '${TASK_ID}'"
-
-# Notify Discord: agent starting
-./scripts/discord-notify.sh "🚀 Agent started: **${TASK_NAME}**" 3447003 "$TASK_ID" "$BRANCH_NAME" 2>/dev/null || true
+# Build initial prompt for agent — keep it short, agent reads files itself
+PROMPT="Read CLAUDE.md, then read tasks/${TASK_NAME}.md and complete it fully. Only read context files listed in the task. When done: run pnpm build, pnpm lint, pnpm test — fix all errors. Then open a PR."
 
 # Launch Claude in new terminal (macOS)
+# Write prompt to a file — embedding multi-line markdown in AppleScript breaks quoting
+PROMPT_FILE="${WORKTREE_PATH}/.agent-prompt.txt"
+printf '%s\n' "$PROMPT" > "$PROMPT_FILE"
+
+LAUNCHER="${WORKTREE_PATH}/.launch-agent.sh"
+cat > "$LAUNCHER" << 'LAUNCHER_EOF'
+#!/bin/bash
+cd "$(dirname "$0")"
+exec claude "$(cat .agent-prompt.txt)"
+LAUNCHER_EOF
+chmod +x "$LAUNCHER"
+
 osascript <<APPLESCRIPT
 tell application "Terminal"
   activate
-  set newTab to do script "cd '${WORKTREE_PATH}' && claude '${PROMPT//\'/\\'\''}'"
+  do script "'${LAUNCHER}'"
   set custom title of front window to "Agent: ${TASK_ID}"
 end tell
 APPLESCRIPT
@@ -81,4 +91,4 @@ APPLESCRIPT
 echo ""
 echo "✅ Agent launched in new Terminal window"
 echo "📋 Monitor: Terminal window titled 'Agent: ${TASK_ID}'"
-echo "🔔 Discord will notify when QA-ready"
+echo "🔔 Discord notifies on PR open/merge (GitHub Actions)"

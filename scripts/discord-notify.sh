@@ -1,9 +1,11 @@
 #!/bin/bash
-# Usage: ./scripts/discord-notify.sh "message" "color_decimal"
+# Manual Discord webhook test only. PR open/merge notifications use GitHub Actions
+# (.github/workflows/discord-pr.yml) — not this script.
+#
+# Usage: ./scripts/discord-notify.sh "message" "color_decimal" [task_id] [branch]
 # Colors: 3066993=green, 15158332=red, 3447003=blue, 16776960=yellow
 #
 # Requires DISCORD_WEBHOOK_URL in environment or .env.local
-# Set it: export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 
 set -euo pipefail
 
