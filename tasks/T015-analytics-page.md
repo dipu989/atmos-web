@@ -1,7 +1,7 @@
 # T015 — Analytics Page Assembly
 
 **Branch:** `feat/T015-analytics-page`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T013, T014 both merged to main
 
 ---
@@ -96,23 +96,23 @@ interface CardProps {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Analytics page loads at `/analytics`
-- [ ] Period switcher present with 4 options
-- [ ] 4 KPI cards rendered
-- [ ] Daily bar chart rendered
-- [ ] Month-over-month chart rendered
-- [ ] Stacked area chart rendered
-- [ ] Top routes table rendered
-- [ ] Weekday chart rendered
-- [ ] Visual matches `Analytics.html` reference
-- [ ] Responsive layout below 1024px
+- [x] `pnpm build` passes
+- [x] Analytics page loads at `/analytics`
+- [x] Period switcher present with 4 options
+- [x] 4 KPI cards rendered
+- [x] Daily bar chart rendered
+- [x] Month-over-month chart rendered
+- [x] Stacked area chart rendered
+- [x] Top routes table rendered
+- [x] Weekday chart rendered
+- [x] Visual matches `Analytics.html` reference
+- [x] Responsive layout below 1024px
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] Visual QA: compare against `design/Atmos Frontend/Analytics.html`
-- [ ] PR: `feat(T015): analytics page — wire all charts with period switcher`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] Visual QA: compare against `design/Atmos Frontend/Analytics.html`
+- [x] PR: `feat(T015): analytics page — wire all charts with period switcher`
