@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { isAuthenticated } from '@/lib/auth'
+import { Sidebar } from '@/components/layout/Sidebar'
+import { SidebarProvider } from '@/components/layout/SidebarContext'
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
@@ -44,6 +46,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     )
   }
 
-  {/* Sidebar layout implemented in T003 */}
-  return <main className="min-h-screen bg-bg-page">{children}</main>
+  return (
+    <SidebarProvider>
+      <div className="flex h-screen overflow-hidden">
+        <Sidebar />
+        <div className="flex flex-1 flex-col overflow-y-auto">{children}</div>
+      </div>
+    </SidebarProvider>
+  )
 }
