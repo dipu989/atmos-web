@@ -1,7 +1,7 @@
 # T011 — Component: TripsFilters
 
 **Branch:** `feat/T011-trips-filters`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -109,18 +109,18 @@ Loading state: 4 skeleton cards same height.
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Search input with clear button works
-- [ ] 6 mode chips render with trip counts
-- [ ] Active mode chip highlighted with correct color
-- [ ] Source toggle: 3 options, active highlighted
-- [ ] 4 stats strip cards rendered
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Search input with clear button works
+- [x] 6 mode chips render with trip counts
+- [x] Active mode chip highlighted with correct color
+- [x] Source toggle: 3 options, active highlighted
+- [x] 4 stats strip cards rendered
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T011): TripsFilters — mode chips, source toggle, search`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T011): TripsFilters — mode chips, source toggle, search`
