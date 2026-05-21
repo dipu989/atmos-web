@@ -1,7 +1,7 @@
 # T017 — Component: InsightCard (All Type Variants)
 
 **Branch:** `feat/T017-insight-card-variants`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -99,21 +99,21 @@ interface InsightCardProps {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] All 7 types render without error
-- [ ] Left border color matches type color
-- [ ] TIP type shows impact banner (green)
-- [ ] ANOMALY type shows mini sparkline
-- [ ] STREAK type shows progress bar
-- [ ] "New" dot visible for unread insights
-- [ ] Action buttons render and are clickable
-- [ ] Mark-read removes the dot optimistically
-- [ ] All tests pass
+- [x] `pnpm build` passes
+- [x] All 7 types render without error
+- [x] Left border color matches type color
+- [x] TIP type shows impact banner (green)
+- [x] ANOMALY type shows mini sparkline
+- [x] STREAK type shows progress bar
+- [x] "New" dot visible for unread insights
+- [x] Action buttons render and are clickable
+- [x] Mark-read removes the dot optimistically
+- [x] All tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T017): InsightCard — all 7 type variants`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T017): InsightCard — all 7 type variants`
