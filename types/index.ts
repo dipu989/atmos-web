@@ -87,6 +87,12 @@ export interface Trip {
   status: ActivityStatus
   createdAt: string
   updatedAt: string
+  /** CO₂ emissions in kg — derived from backend summary data when available */
+  co2Kg?: number
+  /** Trip origin label — mapped from activity metadata when present */
+  from?: string
+  /** Trip destination label — mapped from activity metadata when present */
+  to?: string
 }
 
 /** Shape sent to POST /api/v1/activities */
