@@ -1,0 +1,32 @@
+import {
+  Leaf,
+  Target,
+  Flame,
+  Calendar,
+  ArrowDownRight,
+  ArrowUpRight,
+  Minus,
+} from 'lucide-react'
+
+export interface IconProps {
+  name: string
+  size?: number
+  color?: string
+  strokeWidth?: number
+}
+
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>> = {
+  leaf: Leaf,
+  target: Target,
+  flame: Flame,
+  calendar: Calendar,
+  arrowDownRight: ArrowDownRight,
+  arrowUpRight: ArrowUpRight,
+  minus: Minus,
+}
+
+export function Icon({ name, size = 16, color, strokeWidth = 2 }: IconProps) {
+  const Component = ICON_MAP[name]
+  if (!Component) return null
+  return <Component size={size} color={color} strokeWidth={strokeWidth} />
+}
