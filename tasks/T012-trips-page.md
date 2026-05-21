@@ -97,7 +97,7 @@ const { data, isLoading } = useTrips({
 - [x] Stats strip shows correct totals
 - [x] URL params `?mode=` and `?q=` applied on page load
 - [x] Export button shows "coming soon" message
-- [ ] Visual matches `Trips.html` reference
+- [x] Visual matches `Trips.html` reference
 
 ---
 
@@ -105,5 +105,5 @@ const { data, isLoading } = useTrips({
 - [x] `pnpm build` zero errors
 - [x] `pnpm lint` zero warnings
 - [x] `pnpm test` green
-- [ ] Visual QA: compare against `design/Atmos Frontend/Trips.html`
+- [x] Visual QA: compare against `design/Atmos Frontend/Trips.html`
 - [x] PR: `feat(T012): trips page — wire filters, table, pagination`
