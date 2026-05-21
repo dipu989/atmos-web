@@ -1,7 +1,7 @@
 # T004 — Component: TodayImpactCard (4 Stat Cards)
 
 **Branch:** `feat/T004-today-impact-card`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -107,19 +107,19 @@ Map known names to lucide icons. Unknown names: render null (no crash).
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] 4 cards render in a `grid-cols-4 gap-4` grid
-- [ ] Colored top border matches accent for each card
-- [ ] Card 2 shows correct progress bar (green or orange based on goal)
-- [ ] Loading skeleton shown while API call in progress
-- [ ] Error state shown when API fails
-- [ ] No hardcoded values — all data from API hooks
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] 4 cards render in a `grid-cols-4 gap-4` grid
+- [x] Colored top border matches accent for each card
+- [x] Card 2 shows correct progress bar (green or orange based on goal)
+- [x] Loading skeleton shown while API call in progress
+- [x] Error state shown when API fails
+- [x] No hardcoded values — all data from API hooks
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T004): TodayImpactCards — 4 stat cards with live data`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T004): TodayImpactCards — 4 stat cards with live data`
