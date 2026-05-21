@@ -1,7 +1,7 @@
 # T016 — Component: WeeklyDigestHero
 
 **Branch:** `feat/T016-weekly-digest-hero`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -88,18 +88,18 @@ interface WeeklyDigestHeroProps {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Dark card background `#1A2332`
-- [ ] Title, body, metric, delta badge render correctly
-- [ ] Sparkline SVG renders without crash
-- [ ] Negative delta = green badge, positive = orange
-- [ ] Highlighted (highest) sparkline point is orange
-- [ ] All tests pass
+- [x] `pnpm build` passes
+- [x] Dark card background `#1A2332`
+- [x] Title, body, metric, delta badge render correctly
+- [x] Sparkline SVG renders without crash
+- [x] Negative delta = green badge, positive = orange
+- [x] Highlighted (highest) sparkline point is orange
+- [x] All tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T016): WeeklyDigestHero — dark hero card with sparkline`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T016): WeeklyDigestHero — dark hero card with sparkline`
