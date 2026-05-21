@@ -120,6 +120,15 @@ Branch format: `feat/T00X-short-description`
 Commit format: Conventional Commits — `feat(dashboard): add today impact card`
 One task = one branch = one PR. Never batch multiple tasks into one PR.
 
+**Before opening a PR, always:**
+```bash
+git fetch origin main
+git rebase origin/main   # resolve conflicts locally
+pnpm test --run && pnpm build
+git push --force-with-lease
+```
+Never push a branch without rebasing onto latest `main` first — other tasks may have landed and caused conflicts.
+
 ---
 
 ## Path Aliases
