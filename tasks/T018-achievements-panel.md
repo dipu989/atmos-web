@@ -1,7 +1,7 @@
 # T018 — Component: AchievementsPanel
 
 **Branch:** `feat/T018-achievements-panel`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -91,19 +91,19 @@ interface AchievementsPanelProps {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Grid shows all badges (earned + locked)
-- [ ] Earned badges: colored icon, date earned, green checkmark
-- [ ] Locked badges: grayscale icon
-- [ ] Locked badges with progress show progress bar
-- [ ] Badge count sub-text correct
-- [ ] Responsive: 4 columns → 2 columns below 640px
-- [ ] All tests pass
+- [x] `pnpm build` passes
+- [x] Grid shows all badges (earned + locked)
+- [x] Earned badges: colored icon, date earned, green checkmark
+- [x] Locked badges: grayscale icon
+- [x] Locked badges with progress show progress bar
+- [x] Badge count sub-text correct
+- [x] Responsive: 4 columns → 2 columns below 640px
+- [x] All tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T018): AchievementsPanel — badge grid with progress`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T018): AchievementsPanel — badge grid with progress`

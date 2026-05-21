@@ -1,1 +1,1 @@
-Read CLAUDE.md, then read tasks/T017-insight-card-variants.md and complete it fully. Only read context files listed in the task. When done: run pnpm build, pnpm lint, pnpm test — fix all errors. Then open a PR.
+Read CLAUDE.md, then read tasks/T018-achievements-panel.md and complete it fully. Only read context files listed in the task. When done: run pnpm build, pnpm lint, pnpm test — fix all errors. Then open a PR.

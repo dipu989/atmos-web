@@ -6,6 +6,19 @@ import {
   ArrowDownRight,
   ArrowUpRight,
   Minus,
+  Trophy,
+  Star,
+  Zap,
+  Award,
+  Shield,
+  Crown,
+  TreePine,
+  Medal,
+  Bike,
+  Train,
+  CheckCircle,
+  Check,
+  ShieldCheck,
 } from 'lucide-react'
 
 export interface IconProps {
@@ -23,6 +36,19 @@ const ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: stri
   arrowDownRight: ArrowDownRight,
   arrowUpRight: ArrowUpRight,
   minus: Minus,
+  trophy: Trophy,
+  star: Star,
+  zap: Zap,
+  award: Award,
+  shield: Shield,
+  crown: Crown,
+  treePine: TreePine,
+  medal: Medal,
+  bike: Bike,
+  train: Train,
+  checkCircle: CheckCircle,
+  check: Check,
+  shieldCheck: ShieldCheck,
 }
 
 export function Icon({ name, size = 16, color, strokeWidth = 2 }: IconProps) {
