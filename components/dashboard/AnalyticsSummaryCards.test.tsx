@@ -2,56 +2,47 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { AnalyticsSummaryCards } from '@/components/dashboard/AnalyticsSummaryCards'
-import type { MonthlySummary, WeeklySummary } from '@/types/index'
+import type { DailySummary } from '@/types/index'
 
 // ─── Mocks ────────────────────────────────────────────────────────────────────
 
 vi.mock('@/lib/hooks/useTrips', () => ({
-  useWeeklySummaries: vi.fn(),
-  useMonthlySummaries: vi.fn(),
+  useDailySummaries: vi.fn(),
 }))
 
-import {
-  useWeeklySummaries,
-  useMonthlySummaries,
-} from '@/lib/hooks/useTrips'
+import { useDailySummaries } from '@/lib/hooks/useTrips'
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
 // biome-ignore lint: test helper — partial mock is intentional
-function q<T>(data: T, isLoading = false, isError = false): ReturnType<typeof useMonthlySummaries> {
+function q<T>(data: T, isLoading = false, isError = false): ReturnType<typeof useDailySummaries> {
   return { data, isLoading, isError, error: isError ? new Error('fail') : null }
 }
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
-const mockMonthly: MonthlySummary[] = [
+const mockDaily: DailySummary[] = [
   {
-    id: 'm1',
+    id: 'd1',
     userId: 'u1',
-    year: 2026,
-    month: 5,
-    totalKgCo2e: 36.0,
-    totalDistanceKm: 180.0,
-    activityCount: 12,
+    dateLocal: '2026-05-01',
+    totalKgCo2e: 18.0,
+    totalDistanceKm: 90.0,
+    activityCount: 6,
     breakdown: {},
-    computedAt: '2026-05-22T00:00:00Z',
-    trend: { prev_total_kg_co2e: 40, change_pct: -10, direction: 'down' },
+    computedAt: '2026-05-01T00:00:00Z',
+    trend: { prev_total_kg_co2e: 20, change_pct: -10, direction: 'down' },
   },
-]
-
-const mockWeekly: WeeklySummary[] = [
   {
-    id: 'w1',
+    id: 'd2',
     userId: 'u1',
-    weekStart: '2026-05-18',
-    weekEnd: '2026-05-24',
-    totalKgCo2e: 9.0,
-    totalDistanceKm: 45.0,
-    activityCount: 3,
+    dateLocal: '2026-05-02',
+    totalKgCo2e: 18.0,
+    totalDistanceKm: 90.0,
+    activityCount: 6,
     breakdown: {},
-    computedAt: '2026-05-22T00:00:00Z',
-    trend: { prev_total_kg_co2e: 10, change_pct: -10, direction: 'down' },
+    computedAt: '2026-05-02T00:00:00Z',
+    trend: { prev_total_kg_co2e: 20, change_pct: -10, direction: 'down' },
   },
 ]
 
@@ -63,8 +54,7 @@ describe('AnalyticsSummaryCards', () => {
   })
 
   it('renders 4 skeleton cards while loading', () => {
-    vi.mocked(useWeeklySummaries).mockReturnValue(q(undefined, true))
-    vi.mocked(useMonthlySummaries).mockReturnValue(q(undefined, true))
+    vi.mocked(useDailySummaries).mockReturnValue(q(undefined, true))
 
     render(<AnalyticsSummaryCards />)
 
@@ -73,8 +63,7 @@ describe('AnalyticsSummaryCards', () => {
   })
 
   it('renders 4 cards with data when loaded', () => {
-    vi.mocked(useWeeklySummaries).mockReturnValue(q(mockWeekly))
-    vi.mocked(useMonthlySummaries).mockReturnValue(q(mockMonthly))
+    vi.mocked(useDailySummaries).mockReturnValue(q(mockDaily))
 
     render(<AnalyticsSummaryCards />)
 
@@ -84,25 +73,23 @@ describe('AnalyticsSummaryCards', () => {
     expect(screen.getByText('Avg per trip')).toBeInTheDocument()
   })
 
-  it('renders correct values from monthly data', () => {
-    vi.mocked(useWeeklySummaries).mockReturnValue(q(mockWeekly))
-    vi.mocked(useMonthlySummaries).mockReturnValue(q(mockMonthly))
+  it('renders correct values derived from daily summaries', () => {
+    vi.mocked(useDailySummaries).mockReturnValue(q(mockDaily))
 
     render(<AnalyticsSummaryCards />)
 
-    // totalTrips = 12
+    // totalTrips = 6 + 6 = 12
     expect(screen.getByText('12')).toBeInTheDocument()
-    // totalDistanceKm = 180.0
+    // totalDistanceKm = 90 + 90 = 180.0
     expect(screen.getByText('180.0')).toBeInTheDocument()
-    // totalCo2 = 36.0
+    // totalCo2 = 18 + 18 = 36.0
     expect(screen.getByText('36.0')).toBeInTheDocument()
-    // avgPerTrip = 36/12 = 3.00
+    // avgPerTrip = 36 / 12 = 3.00
     expect(screen.getByText('3.00')).toBeInTheDocument()
   })
 
   it('shows error state when query fails', () => {
-    vi.mocked(useWeeklySummaries).mockReturnValue(q(undefined, false, true))
-    vi.mocked(useMonthlySummaries).mockReturnValue(q(undefined, false, true))
+    vi.mocked(useDailySummaries).mockReturnValue(q(undefined, false, true))
 
     render(<AnalyticsSummaryCards />)
 
@@ -114,13 +101,20 @@ describe('AnalyticsSummaryCards', () => {
   })
 
   it('renders 4 cards in a grid', () => {
-    vi.mocked(useWeeklySummaries).mockReturnValue(q(mockWeekly))
-    vi.mocked(useMonthlySummaries).mockReturnValue(q(mockMonthly))
+    vi.mocked(useDailySummaries).mockReturnValue(q(mockDaily))
 
     const { container } = render(<AnalyticsSummaryCards />)
 
     const grid = container.firstChild as HTMLElement
     expect(grid.className).toContain('grid-cols-4')
     expect(grid.className).toContain('gap-4')
+  })
+
+  it('accepts a period prop and renders the period label', () => {
+    vi.mocked(useDailySummaries).mockReturnValue(q(mockDaily))
+
+    render(<AnalyticsSummaryCards period="3m" />)
+
+    expect(screen.getAllByText('Last 3 months').length).toBeGreaterThan(0)
   })
 })

@@ -1,7 +1,9 @@
 'use client'
 
 import { StatCard } from '@/components/dashboard/StatCard'
-import { useWeeklySummaries, useMonthlySummaries } from '@/lib/hooks/useTrips'
+import { useDailySummaries } from '@/lib/hooks/useTrips'
+import type { AnalyticsPeriod } from '@/lib/hooks/useAnalytics'
+import { PERIOD_DAYS } from '@/lib/hooks/useAnalytics'
 
 // ─── Skeleton ─────────────────────────────────────────────────────────────────
 
@@ -22,17 +24,18 @@ const ERROR_SUB = (
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function AnalyticsSummaryCards() {
-  const weeklyQuery = useWeeklySummaries(4)
-  const monthlyQuery = useMonthlySummaries(3)
+interface AnalyticsSummaryCardsProps {
+  period?: AnalyticsPeriod
+}
 
-  const isLoading = weeklyQuery.isLoading || monthlyQuery.isLoading
-  const isError = weeklyQuery.isError || monthlyQuery.isError
+export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsProps) {
+  const days = PERIOD_DAYS[period]
+  const dailyQuery = useDailySummaries(days)
 
   // ── Loading ──────────────────────────────────────────────────────────────
-  if (isLoading) {
+  if (dailyQuery.isLoading) {
     return (
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <SkeletonCard />
         <SkeletonCard />
         <SkeletonCard />
@@ -42,9 +45,9 @@ export function AnalyticsSummaryCards() {
   }
 
   // ── Error ────────────────────────────────────────────────────────────────
-  if (isError) {
+  if (dailyQuery.isError) {
     return (
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard accent="#4A90C4" label="Total trips" value="—" sub={ERROR_SUB} />
         <StatCard accent="#3DAB82" label="Total distance" value="—" sub={ERROR_SUB} />
         <StatCard accent="#F0956A" label="Total CO₂" value="—" sub={ERROR_SUB} />
@@ -53,18 +56,29 @@ export function AnalyticsSummaryCards() {
     )
   }
 
-  // ── Derive values ────────────────────────────────────────────────────────
+  // ── Derive values from daily summaries ───────────────────────────────────
 
-  // Use the most recent monthly summary for KPI data
-  const monthly = monthlyQuery.data?.[0]
-  const totalTrips = monthly?.activityCount ?? 0
-  const totalDistanceKm = monthly?.totalDistanceKm ?? 0
-  const totalCo2 = monthly?.totalKgCo2e ?? 0
+  const summaries = dailyQuery.data ?? []
+  const totalTrips = summaries.reduce((sum, d) => sum + d.activityCount, 0)
+  const totalDistanceKm = summaries.reduce((sum, d) => sum + d.totalDistanceKm, 0)
+  const totalCo2 = summaries.reduce((sum, d) => sum + d.totalKgCo2e, 0)
   const avgPerTrip = totalTrips > 0 ? totalCo2 / totalTrips : 0
+
+  // ── Period label ─────────────────────────────────────────────────────────
+
+  const periodLabels: Record<AnalyticsPeriod, string> = {
+    '30d': 'Last 30 days',
+    '3m':  'Last 3 months',
+    '6m':  'Last 6 months',
+    '1y':  'Last year',
+  }
+  const periodSub = (
+    <span className="text-[12px] text-[#6B7A8D]">{periodLabels[period]}</span>
+  )
 
   // ── Render ───────────────────────────────────────────────────────────────
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {/* Card 1: Total trips */}
       <StatCard
         accent="#4A90C4"
@@ -72,9 +86,7 @@ export function AnalyticsSummaryCards() {
         label="Total trips"
         value={totalTrips}
         unit="trips"
-        sub={
-          <span className="text-[12px] text-[#6B7A8D]">This month</span>
-        }
+        sub={periodSub}
       />
 
       {/* Card 2: Total distance */}
@@ -84,9 +96,7 @@ export function AnalyticsSummaryCards() {
         label="Total distance"
         value={totalDistanceKm.toFixed(1)}
         unit="km"
-        sub={
-          <span className="text-[12px] text-[#6B7A8D]">This month</span>
-        }
+        sub={periodSub}
       />
 
       {/* Card 3: Total CO₂ */}
@@ -96,9 +106,7 @@ export function AnalyticsSummaryCards() {
         label="Total CO₂"
         value={totalCo2.toFixed(1)}
         unit="kg"
-        sub={
-          <span className="text-[12px] text-[#6B7A8D]">This month</span>
-        }
+        sub={periodSub}
       />
 
       {/* Card 4: Avg per trip */}
@@ -108,9 +116,7 @@ export function AnalyticsSummaryCards() {
         label="Avg per trip"
         value={avgPerTrip.toFixed(2)}
         unit="kg CO₂"
-        sub={
-          <span className="text-[12px] text-[#6B7A8D]">Per trip avg</span>
-        }
+        sub={<span className="text-[12px] text-[#6B7A8D]">Per trip avg</span>}
       />
     </div>
   )
