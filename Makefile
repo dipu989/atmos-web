@@ -68,7 +68,7 @@ seed-user:
 setup:
 	pnpm install
 	@echo "✅ Dependencies installed"
-	@echo "📋 Next: cp .env.example .env.local and add DISCORD_WEBHOOK_URL"
+	@echo "📋 Next: add DISCORD_WEBHOOK_URL to GitHub Actions secrets (see docs/discord-setup.md)"
 
 help:
 	@echo ""

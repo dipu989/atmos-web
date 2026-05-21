@@ -10,7 +10,7 @@ if [ -z "$TASK_ID" ]; then
   exit 1
 fi
 
-WORKTREE_PATH="$(pwd)/../../atmos-web-${TASK_ID}"
+WORKTREE_PATH="$(pwd)/../atmos-web-${TASK_ID}"
 
 if [ ! -d "$WORKTREE_PATH" ]; then
   echo "⚠️  Worktree not found: $WORKTREE_PATH"
@@ -20,6 +20,3 @@ fi
 echo "Removing worktree: $WORKTREE_PATH"
 git worktree remove "$WORKTREE_PATH" --force
 echo "✅ Worktree removed for $TASK_ID"
-
-# Notify Discord
-./scripts/discord-notify.sh "🧹 Worktree cleaned up: ${TASK_ID}" 16776960 "$TASK_ID" 2>/dev/null || true
