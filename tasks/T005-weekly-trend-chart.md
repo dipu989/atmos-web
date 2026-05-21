@@ -1,7 +1,7 @@
 # T005 — Component: WeeklyTrendChart
 
 **Branch:** `feat/T005-weekly-trend-chart`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -99,19 +99,19 @@ export function WeeklyTrendCard()
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Chart renders with 7 data points
-- [ ] Dashed green goal line visible
-- [ ] X-axis shows Mon–Sun labels
-- [ ] Hover tooltip shows day + CO₂ value
-- [ ] Loading skeleton shown while fetching
-- [ ] No Recharts imports outside `components/charts/`
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Chart renders with 7 data points
+- [x] Dashed green goal line visible
+- [x] X-axis shows Mon–Sun labels
+- [x] Hover tooltip shows day + CO₂ value
+- [x] Loading skeleton shown while fetching
+- [x] No Recharts imports outside `components/charts/`
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T005): WeeklyTrendChart — 7-day CO₂ line chart with goal line`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T005): WeeklyTrendChart — 7-day CO₂ line chart with goal line`
