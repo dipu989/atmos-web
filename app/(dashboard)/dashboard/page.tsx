@@ -1,6 +1,7 @@
 import { TodayImpactCards } from '@/components/dashboard/TodayImpactCards'
 import { WeeklyTrendCard } from '@/components/dashboard/WeeklyTrendCard'
 import { RecentTripsList } from '@/components/dashboard/RecentTripsList'
+import { InsightsFeedMini } from '@/components/dashboard/InsightsFeedMini'
 
 export default function DashboardPage() {
   return (
@@ -8,6 +9,7 @@ export default function DashboardPage() {
       <TodayImpactCards />
       <WeeklyTrendCard />
       <RecentTripsList />
+      <InsightsFeedMini />
     </div>
   )
 }
