@@ -1,7 +1,7 @@
 # T010 — Component: TripsTable
 
 **Branch:** `feat/T010-trips-table`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -91,20 +91,20 @@ Columns: icon | route | date | distance | duration | CO₂ | source badge | chev
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Table renders with all 7 column headers
-- [ ] Rows show mode icon, route, date, distance, duration, CO₂, source
-- [ ] Clicking column header sorts rows (local sort on current page data)
-- [ ] Pagination shows correct page numbers
-- [ ] Prev/Next disabled appropriately at boundaries
-- [ ] 12 skeleton rows shown during loading
-- [ ] Empty state shown when no trips
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Table renders with all 7 column headers
+- [x] Rows show mode icon, route, date, distance, duration, CO₂, source
+- [x] Clicking column header sorts rows (local sort on current page data)
+- [x] Pagination shows correct page numbers
+- [x] Prev/Next disabled appropriately at boundaries
+- [x] 12 skeleton rows shown during loading
+- [x] Empty state shown when no trips
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T010): TripsTable — sortable table with pagination`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T010): TripsTable — sortable table with pagination`

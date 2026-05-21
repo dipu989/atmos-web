@@ -1,7 +1,7 @@
 # T009 — Dashboard Page Assembly
 
 **Branch:** `feat/T009-dashboard-page`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T004, T005, T006, T007, T008 all merged to main
 
 ---
@@ -78,21 +78,21 @@ export default function RootPage() { redirect('/dashboard') }
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Dashboard page loads at `localhost:3000/dashboard` (requires backend + auth)
-- [ ] Visual matches `Dashboard.html` reference opened in browser side-by-side
-- [ ] 4 stat cards in top row
-- [ ] Weekly chart + donut in second row (2-column)
-- [ ] Recent trips + insights in third row (2-column)
-- [ ] User name in subtitle
-- [ ] Responsive: collapses to 1 column below 1024px
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Dashboard page loads at `localhost:3000/dashboard` (requires backend + auth)
+- [x] Visual matches `Dashboard.html` reference opened in browser side-by-side
+- [x] 4 stat cards in top row
+- [x] Weekly chart + donut in second row (2-column)
+- [x] Recent trips + insights in third row (2-column)
+- [x] User name in subtitle
+- [x] Responsive: collapses to 1 column below 1024px
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] Visual QA: compare against `design/Atmos Frontend/Dashboard.html`
-- [ ] PR: `feat(T009): dashboard page — wire all components`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] Visual QA: compare against `design/Atmos Frontend/Dashboard.html`
+- [x] PR: `feat(T009): dashboard page — wire all components`

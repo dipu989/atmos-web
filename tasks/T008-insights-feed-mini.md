@@ -1,7 +1,7 @@
 # T008 — Component: InsightsFeedMini
 
 **Branch:** `feat/T008-insights-feed-mini`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -77,20 +77,20 @@ const INSIGHT_COLORS: Record<string, string> = {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Up to 3 insight mini cards render
-- [ ] Left border color matches insight type
-- [ ] Unread count badge shown in header
-- [ ] New dot on unread insights
-- [ ] Body text clamped at 2 lines
-- [ ] Empty and loading states correct
-- [ ] "See all →" links to /insights
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Up to 3 insight mini cards render
+- [x] Left border color matches insight type
+- [x] Unread count badge shown in header
+- [x] New dot on unread insights
+- [x] Body text clamped at 2 lines
+- [x] Empty and loading states correct
+- [x] "See all →" links to /insights
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T008): InsightsFeedMini — 3 insight preview cards for dashboard`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T008): InsightsFeedMini — 3 insight preview cards for dashboard`

@@ -1,7 +1,7 @@
 # T006 — Component: TransportBreakdownChart
 
 **Branch:** `feat/T006-transport-breakdown`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -93,18 +93,18 @@ Wraps chart + legend in a Card:
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Donut chart renders with center total
-- [ ] Legend shows modes sorted by CO₂ descending
-- [ ] Modes with 0 kg not shown in legend
-- [ ] Hover on slice highlights it
-- [ ] Loading state shown correctly
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Donut chart renders with center total
+- [x] Legend shows modes sorted by CO₂ descending
+- [x] Modes with 0 kg not shown in legend
+- [x] Hover on slice highlights it
+- [x] Loading state shown correctly
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T006): TransportBreakdownChart — donut chart with legend`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T006): TransportBreakdownChart — donut chart with legend`

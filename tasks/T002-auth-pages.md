@@ -1,7 +1,7 @@
 # T002 — Auth Pages
 
 **Branch:** `feat/T002-auth-pages`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T001 merged to main
 
 ---
@@ -122,19 +122,19 @@ export default function DashboardPage() {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] `/login` renders with email, password, submit button
-- [ ] `/signup` renders with name, email, password, submit button
-- [ ] Successful login stores tokens in localStorage and redirects to `/dashboard`
-- [ ] Already-authenticated users redirect away from `/login`
-- [ ] Unauthenticated users redirect to `/login` from `/dashboard`
-- [ ] Error states display correctly
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] `/login` renders with email, password, submit button
+- [x] `/signup` renders with name, email, password, submit button
+- [x] Successful login stores tokens in localStorage and redirects to `/dashboard`
+- [x] Already-authenticated users redirect away from `/login`
+- [x] Unauthenticated users redirect to `/login` from `/dashboard`
+- [x] Error states display correctly
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T002): auth pages — login, signup, route guard`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T002): auth pages — login, signup, route guard`

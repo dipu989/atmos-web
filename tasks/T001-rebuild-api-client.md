@@ -1,7 +1,7 @@
 # T001 — Rebuild API Client
 
 **Branch:** `feat/T001-rebuild-api-client`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** nothing (start here)
 
 ---
@@ -190,18 +190,18 @@ Use `vi.stubGlobal('fetch', ...)` for mocking fetch. Use `vi.stubGlobal('localSt
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] `pnpm lint` passes
-- [ ] `pnpm test` passes (all auth and client tests green)
-- [ ] No `any` types anywhere in the new files
-- [ ] `types/index.ts` has all interfaces listed above
-- [ ] API client exports all listed functions
-- [ ] Activity→Trip mapping applied in all trip-related fetchers
+- [x] `pnpm build` passes
+- [x] `pnpm lint` passes
+- [x] `pnpm test` passes (all auth and client tests green)
+- [x] No `any` types anywhere in the new files
+- [x] `types/index.ts` has all interfaces listed above
+- [x] API client exports all listed functions
+- [x] Activity→Trip mapping applied in all trip-related fetchers
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR opened with template: `feat(T001): rebuild API client with correct routes and activity→trip mapping`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR opened with template: `feat(T001): rebuild API client with correct routes and activity→trip mapping`

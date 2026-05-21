@@ -1,7 +1,7 @@
 # T012 — Trips Page Assembly
 
 **Branch:** `feat/T012-trips-page`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T010, T011 both merged to main
 
 ---
@@ -87,23 +87,23 @@ const { data, isLoading } = useTrips({
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Trips page loads at `/trips`
-- [ ] Search filters rows client-side
-- [ ] Mode chip selection updates table
-- [ ] Source toggle updates table
-- [ ] Sorting columns works
-- [ ] Pagination navigates pages
-- [ ] Stats strip shows correct totals
-- [ ] URL params `?mode=` and `?q=` applied on page load
-- [ ] Export button shows "coming soon" message
+- [x] `pnpm build` passes
+- [x] Trips page loads at `/trips`
+- [x] Search filters rows client-side
+- [x] Mode chip selection updates table
+- [x] Source toggle updates table
+- [x] Sorting columns works
+- [x] Pagination navigates pages
+- [x] Stats strip shows correct totals
+- [x] URL params `?mode=` and `?q=` applied on page load
+- [x] Export button shows "coming soon" message
 - [ ] Visual matches `Trips.html` reference
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
 - [ ] Visual QA: compare against `design/Atmos Frontend/Trips.html`
-- [ ] PR: `feat(T012): trips page — wire filters, table, pagination`
+- [x] PR: `feat(T012): trips page — wire filters, table, pagination`

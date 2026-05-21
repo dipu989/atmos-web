@@ -1,7 +1,7 @@
 # T003 — App Layout Shell
 
 **Branch:** `feat/T003-app-layout`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T002 merged to main
 
 ---
@@ -131,19 +131,19 @@ Map nav item icon names to lucide-react icons:
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Sidebar visible at 1440px, all 5 nav items with correct icons
-- [ ] Active nav item highlighted correctly (matches current route)
-- [ ] User initials shown in sidebar footer
-- [ ] Date-range picker dropdown opens/closes
-- [ ] Mobile: sidebar hidden by default at <1024px, hamburger opens drawer
-- [ ] Dashboard stub page renders with layout (no console errors)
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] Sidebar visible at 1440px, all 5 nav items with correct icons
+- [x] Active nav item highlighted correctly (matches current route)
+- [x] User initials shown in sidebar footer
+- [x] Date-range picker dropdown opens/closes
+- [x] Mobile: sidebar hidden by default at <1024px, hamburger opens drawer
+- [x] Dashboard stub page renders with layout (no console errors)
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T003): app layout — sidebar, header, page shell, mobile nav`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T003): app layout — sidebar, header, page shell, mobile nav`

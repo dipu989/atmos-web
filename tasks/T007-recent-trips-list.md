@@ -1,7 +1,7 @@
 # T007 — Component: RecentTripsList
 
 **Branch:** `feat/T007-recent-trips-list`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -86,19 +86,19 @@ const MODE_COLORS: Record<string, string> = {
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] 5 rows rendered with mode icon badge, route, date, CO₂
-- [ ] CO₂ colors correct (green 0 kg, orange >2 kg, dark otherwise)
-- [ ] Date formatting: "Today", "Yesterday", or "MMM d" as appropriate
-- [ ] Loading skeleton 5 rows shown
-- [ ] Empty state shown when no trips
-- [ ] "View all →" link goes to /trips
-- [ ] All unit tests pass
+- [x] `pnpm build` passes
+- [x] 5 rows rendered with mode icon badge, route, date, CO₂
+- [x] CO₂ colors correct (green 0 kg, orange >2 kg, dark otherwise)
+- [x] Date formatting: "Today", "Yesterday", or "MMM d" as appropriate
+- [x] Loading skeleton 5 rows shown
+- [x] Empty state shown when no trips
+- [x] "View all →" link goes to /trips
+- [x] All unit tests pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T007): RecentTripsList — last 5 trips feed on dashboard`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T007): RecentTripsList — last 5 trips feed on dashboard`
