@@ -85,7 +85,7 @@ export function TripStatsStrip({
   }
 
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {/* Card 1: Total trips */}
       <CompactStatCard
         accent="#4A90C4"
