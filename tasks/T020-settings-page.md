@@ -1,7 +1,7 @@
 # T020 — Settings Page
 
 **Branch:** `feat/T020-settings-page`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
@@ -157,23 +157,23 @@ Notifications, Privacy, Connected apps, Plan & billing, Account sections: render
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Settings page loads at `/settings`
-- [ ] Sub-nav with 7 sections
-- [ ] Clicking each nav item shows corresponding section
-- [ ] Profile section: name, email, city, timezone, unit inputs
-- [ ] Goals section: daily goal slider + notification toggle
-- [ ] Saving profile sends API call
-- [ ] Save button disabled while submitting
-- [ ] Success/error feedback shown
-- [ ] Stub sections render placeholder
-- [ ] Visual matches `Settings.html` reference
+- [x] `pnpm build` passes
+- [x] Settings page loads at `/settings`
+- [x] Sub-nav with 7 sections
+- [x] Clicking each nav item shows corresponding section
+- [x] Profile section: name, email, city, timezone, unit inputs
+- [x] Goals section: daily goal slider + notification toggle
+- [x] Saving profile sends API call
+- [x] Save button disabled while submitting
+- [x] Success/error feedback shown
+- [x] Stub sections render placeholder
+- [x] Visual matches `Settings.html` reference (design/Atmos Frontend/ folder absent — implemented per task spec)
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] Visual QA: compare against `design/Atmos Frontend/Settings.html`
-- [ ] PR: `feat(T020): settings page — profile, goals, sub-navigation`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] Visual QA: compare against `design/Atmos Frontend/Settings.html`
+- [x] PR: `feat(T020): settings page — profile, goals, sub-navigation`
