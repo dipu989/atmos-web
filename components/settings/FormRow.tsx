@@ -12,13 +12,12 @@ export function FormRow({ label, hint, divider = true, children }: FormRowProps)
   return (
     <div
       className={cn(
+        // Mobile: single column (label above input). Desktop: 2-column side-by-side.
         'grid items-center gap-4',
+        'grid-cols-1 lg:grid-cols-[140px_1fr]',
         divider && 'border-b border-divider',
       )}
-      style={{
-        gridTemplateColumns: '140px 1fr',
-        padding: '18px 0',
-      }}
+      style={{ padding: '18px 0' }}
     >
       {/* Label column */}
       <div>

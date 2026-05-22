@@ -123,4 +123,10 @@ describe('DashboardPage', () => {
 
     expect(screen.getByTestId('page-shell')).toBeInTheDocument()
   })
+
+  it('renders without crash at 375px mobile viewport', () => {
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 })
+    expect(() => render(<DashboardPage />)).not.toThrow()
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 })
+  })
 })

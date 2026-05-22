@@ -34,7 +34,7 @@ export function StatCard({ accent, label, value, unit, sub, icon }: StatCardProp
 
       {/* Value + unit */}
       <div className="flex items-baseline gap-1">
-        <span className="text-[30px] font-semibold text-[#1A2332] tracking-[-0.6px] leading-none">
+        <span className="text-[24px] font-semibold text-[#1A2332] tracking-[-0.6px] leading-none lg:text-[30px]">
           {value}
         </span>
         {unit && (
