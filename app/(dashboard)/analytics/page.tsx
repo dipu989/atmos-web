@@ -11,29 +11,31 @@ import { WeekdayAverageChart } from '@/components/charts/WeekdayAverageChart'
 import { TopRoutesTable } from '@/components/analytics/TopRoutesTable'
 import { SectionCard } from '@/components/ui/Card'
 import { useAnalytics } from '@/lib/hooks/useAnalytics'
+import { useIsMobile } from '@/lib/hooks/useIsMobile'
 import type { AnalyticsPeriod } from '@/lib/hooks/useAnalytics'
 
 // ─── Period switcher ──────────────────────────────────────────────────────────
 
-const PERIOD_OPTIONS: { key: AnalyticsPeriod; label: string }[] = [
-  { key: '30d', label: '30 days' },
-  { key: '3m',  label: '3 months' },
-  { key: '6m',  label: '6 months' },
-  { key: '1y',  label: '1 year' },
+const PERIOD_OPTIONS: { key: AnalyticsPeriod; label: string; shortLabel: string }[] = [
+  { key: '30d', label: '30 days',   shortLabel: '30d' },
+  { key: '3m',  label: '3 months',  shortLabel: '3m'  },
+  { key: '6m',  label: '6 months',  shortLabel: '6m'  },
+  { key: '1y',  label: '1 year',    shortLabel: '1y'  },
 ]
 
 interface PeriodSwitcherProps {
   value: AnalyticsPeriod
   onChange: (v: AnalyticsPeriod) => void
+  isMobile: boolean
 }
 
-function PeriodSwitcher({ value, onChange }: PeriodSwitcherProps) {
+function PeriodSwitcher({ value, onChange, isMobile }: PeriodSwitcherProps) {
   return (
     <div
       data-testid="period-switcher"
       className="flex items-center rounded-xl bg-[#F0F2F5] p-1"
     >
-      {PERIOD_OPTIONS.map(({ key, label }) => (
+      {PERIOD_OPTIONS.map(({ key, label, shortLabel }) => (
         <button
           key={key}
           type="button"
@@ -47,7 +49,7 @@ function PeriodSwitcher({ value, onChange }: PeriodSwitcherProps) {
               : 'text-[#6B7A8D] hover:text-[#1A2332]',
           )}
         >
-          {label}
+          {isMobile ? shortLabel : label}
         </button>
       ))}
     </div>
@@ -101,11 +103,14 @@ function ChartError() {
 
 export default function AnalyticsPage() {
   const [period, setPeriod] = useState<AnalyticsPeriod>('30d')
+  const isMobile = useIsMobile(768)
   const { isLoading, isError, dailyBarData, momData, modeData, weekdayData, routesData, goal } =
     useAnalytics(period)
 
+  const chartHeight = isMobile ? 180 : 240
+
   const periodSwitcher = (
-    <PeriodSwitcher value={period} onChange={setPeriod} />
+    <PeriodSwitcher value={period} onChange={setPeriod} isMobile={isMobile} />
   )
 
   return (
@@ -123,18 +128,18 @@ export default function AnalyticsPage() {
         className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_320px]"
       >
         <SectionCard title="Daily CO₂" subtitle="Emissions per day over the selected period">
-          {isLoading && <ChartSkeleton height={240} />}
+          {isLoading && <ChartSkeleton height={chartHeight} />}
           {!isLoading && isError && <ChartError />}
           {!isLoading && !isError && dailyBarData.length === 0 && (
             <EmptyChart message="Start logging trips to see your daily CO₂." />
           )}
           {!isLoading && !isError && dailyBarData.length > 0 && (
-            <DailyBarChart data={dailyBarData} goal={goal} />
+            <DailyBarChart data={dailyBarData} goal={goal} height={chartHeight} />
           )}
         </SectionCard>
 
         <SectionCard title="Month over month" subtitle="By week">
-          {isLoading && <ChartSkeleton height={240} />}
+          {isLoading && <ChartSkeleton height={chartHeight} />}
           {!isLoading && isError && <ChartError />}
           {!isLoading && !isError && momData.length === 0 && (
             <EmptyChart message="Not enough data yet." />

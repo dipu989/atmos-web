@@ -16,11 +16,15 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { useIsMobile } from '@/lib/hooks/useIsMobile'
 import type { Trip, TransportMode, ActivitySource } from '@/types/index'
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
-const COLS = '36px minmax(0, 1.6fr) 150px 90px 90px 90px 104px 28px'
+const COLS_DESKTOP = '36px minmax(0, 1.6fr) 150px 90px 90px 90px 104px 28px'
+//                   icon  route              date    dist  dur   co2   src   chev
+const COLS_MOBILE  = '36px minmax(0, 1.6fr) 130px 80px 90px 100px 24px'
+//                   icon  route              date   dist  co2   src   chev  (no duration)
 
 type SortKey = 'route' | 'date' | 'distance' | 'duration' | 'co2' | 'source'
 
@@ -168,12 +172,13 @@ function SortHeader({ label, colKey, activeSortKey, align = 'left', onSort }: So
 
 // ─── SkeletonRow ───────────────────────────────────────────────────────────────
 
-function SkeletonRow() {
+function SkeletonRow({ isMobile }: { isMobile: boolean }) {
+  const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
   return (
     <div
       data-testid="trip-skeleton-row"
       className="grid items-center gap-3 border-b border-divider px-5 py-3"
-      style={{ gridTemplateColumns: COLS }}
+      style={{ gridTemplateColumns: cols }}
     >
       <div className="h-[30px] w-[30px] animate-pulse rounded-[9px] bg-gray-100" />
       <div className="min-w-0 space-y-1.5">
@@ -181,7 +186,9 @@ function SkeletonRow() {
       </div>
       <div className="h-[12px] w-2/3 animate-pulse rounded bg-gray-100" />
       <div className="ml-auto h-[12px] w-10 animate-pulse rounded bg-gray-100" />
-      <div className="ml-auto h-[12px] w-8 animate-pulse rounded bg-gray-100" />
+      {!isMobile && (
+        <div className="ml-auto h-[12px] w-8 animate-pulse rounded bg-gray-100" />
+      )}
       <div className="ml-auto h-[12px] w-10 animate-pulse rounded bg-gray-100" />
       <div className="h-[20px] w-16 animate-pulse rounded-full bg-gray-100" />
       <div className="h-[14px] w-[14px] animate-pulse rounded bg-gray-100" />
@@ -191,7 +198,7 @@ function SkeletonRow() {
 
 // ─── TripRow ───────────────────────────────────────────────────────────────────
 
-function TripRow({ trip }: { trip: Trip }) {
+function TripRow({ trip, isMobile }: { trip: Trip; isMobile: boolean }) {
   const modeKey   = trip.transportMode ? (MODE_DISPLAY_KEY[trip.transportMode] ?? 'car') : 'car'
   const modeColor = MODE_COLORS[modeKey] ?? '#6B7A8D'
   const ModeIcon: ModeIconComponent = MODE_ICONS[modeKey] ?? Car
@@ -202,11 +209,12 @@ function TripRow({ trip }: { trip: Trip }) {
   const co2Color = getCo2Color(co2Kg)
   const detected = isDetectedSource(trip.source)
   const dateLabel = formatTripDate(trip.dateLocal)
+  const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
 
   return (
     <div
       className="grid cursor-pointer items-center gap-3 border-b border-divider px-5 py-3 transition-colors hover:bg-[#F5F7FA]"
-      style={{ gridTemplateColumns: COLS }}
+      style={{ gridTemplateColumns: cols }}
     >
       {/* Mode icon badge — 30×30, border-radius 9px */}
       <div
@@ -236,15 +244,17 @@ function TripRow({ trip }: { trip: Trip }) {
         )}
       </div>
 
-      {/* Duration — right-aligned */}
-      <div className="text-right">
-        <span className="text-[12.5px] text-text-secondary">
-          {trip.durationMinutes != null ? trip.durationMinutes : '—'}
-        </span>
-        {trip.durationMinutes != null && (
-          <span className="ml-0.5 text-[12px] text-text-secondary">min</span>
-        )}
-      </div>
+      {/* Duration — right-aligned — hidden on mobile */}
+      {!isMobile && (
+        <div className="text-right">
+          <span className="text-[12.5px] text-text-secondary">
+            {trip.durationMinutes != null ? trip.durationMinutes : '—'}
+          </span>
+          {trip.durationMinutes != null && (
+            <span className="ml-0.5 text-[12px] text-text-secondary">min</span>
+          )}
+        </div>
+      )}
 
       {/* CO₂ — right-aligned, colored */}
       <div className="text-right">
@@ -281,18 +291,23 @@ function TripRow({ trip }: { trip: Trip }) {
 
 // ─── Pagination ────────────────────────────────────────────────────────────────
 
-function getPageNumbers(current: number, total: number): (number | 'ellipsis')[] {
-  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1)
+function getPageNumbers(
+  current: number,
+  total: number,
+  maxMiddle = 3,
+): (number | 'ellipsis')[] {
+  if (total <= maxMiddle + 2) return Array.from({ length: total }, (_, i) => i + 1)
 
   const pages: (number | 'ellipsis')[] = [1]
 
   if (current > 3) pages.push('ellipsis')
 
-  const rangeStart = Math.max(2, current - 1)
-  const rangeEnd   = Math.min(total - 1, current + 1)
+  const half = Math.floor(maxMiddle / 2)
+  const rangeStart = Math.max(2, current - half)
+  const rangeEnd   = Math.min(total - 1, current + half)
   for (let p = rangeStart; p <= rangeEnd; p++) pages.push(p)
 
-  if (current < total - 2) pages.push('ellipsis')
+  if (current < total - (half + 1)) pages.push('ellipsis')
 
   pages.push(total)
   return pages
@@ -302,14 +317,17 @@ interface PaginationProps {
   page: number
   pageSize: number
   total: number
+  isMobile: boolean
   onPageChange: (page: number) => void
 }
 
-function Pagination({ page, pageSize, total, onPageChange }: PaginationProps) {
+function Pagination({ page, pageSize, total, isMobile, onPageChange }: PaginationProps) {
   const totalPages = Math.ceil(total / pageSize)
   const start      = (page - 1) * pageSize + 1
   const end        = Math.min(page * pageSize, total)
-  const pageNums   = getPageNumbers(page, totalPages)
+  // Show max 3 page buttons on mobile, 7 on desktop
+  const maxMiddle  = isMobile ? 1 : 3
+  const pageNums   = getPageNumbers(page, totalPages, maxMiddle)
 
   const isPrevDisabled = page <= 1
   const isNextDisabled = page >= totalPages
@@ -319,7 +337,7 @@ function Pagination({ page, pageSize, total, onPageChange }: PaginationProps) {
   return (
     <div className="flex items-center justify-between rounded-b-2xl bg-[#FAFBFC] px-5 py-3">
       <p className="text-[12.5px] text-text-secondary">
-        Showing {start}–{end} of {total}
+        {isMobile ? `${start}–${end} of ${total}` : `Showing ${start}–${end} of ${total}`}
       </p>
 
       <div className="flex items-center gap-1">
@@ -397,6 +415,7 @@ export function TripsTable({
   loading,
   hasActiveFilter = false,
 }: TripsTableProps) {
+  const isMobile = useIsMobile(768)
   const [sortKey, setSortKey] = useState<SortKey>('date')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
 
@@ -422,84 +441,90 @@ export function TripsTable({
 
   const sortDirLabel  = sortDir === 'asc' ? 'ascending' : 'descending'
   const sortKeyLabel  = SORT_KEY_LABELS[sortKey]
+  const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
 
   return (
-    <div className="overflow-hidden rounded-2xl bg-bg-card shadow-card">
-      {/* ── Result summary ─────────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between px-5 py-3">
-        <div className="flex items-baseline gap-2 flex-wrap">
-          <span className="text-[15px] font-semibold text-text-primary">
-            {trips.length} of {total} trips
+    <div className="overflow-x-auto rounded-2xl">
+      <div className="min-w-[560px] overflow-hidden rounded-2xl bg-bg-card shadow-card">
+        {/* ── Result summary ─────────────────────────────────────────────────── */}
+        <div className="flex items-center justify-between px-5 py-3">
+          <div className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-[15px] font-semibold text-text-primary">
+              {trips.length} of {total} trips
+            </span>
+            <span className="text-[12.5px] text-text-secondary">
+              {totalKm.toFixed(1)} km · {totalCo2.toFixed(1)} kg CO₂ in current filter
+            </span>
+          </div>
+          <span className="shrink-0 text-[12px] text-text-secondary">
+            Sorted by {sortKeyLabel} ({sortDirLabel})
           </span>
-          <span className="text-[12.5px] text-text-secondary">
-            {totalKm.toFixed(1)} km · {totalCo2.toFixed(1)} kg CO₂ in current filter
-          </span>
         </div>
-        <span className="shrink-0 text-[12px] text-text-secondary">
-          Sorted by {sortKeyLabel} ({sortDirLabel})
-        </span>
-      </div>
 
-      {/* ── Header row ─────────────────────────────────────────────────────── */}
-      <div
-        className="sticky top-0 z-10 grid items-center gap-3 border-b border-divider bg-[#FAFBFC] px-5 py-2.5"
-        style={{ gridTemplateColumns: COLS }}
-      >
-        <div /> {/* icon column — no sort */}
-        <SortHeader label="Route"    colKey="route"    activeSortKey={sortKey} onSort={handleSort} />
-        <SortHeader label="Date"     colKey="date"     activeSortKey={sortKey} onSort={handleSort} />
-        <SortHeader label="Distance" colKey="distance" activeSortKey={sortKey} align="right" onSort={handleSort} />
-        <SortHeader label="Duration" colKey="duration" activeSortKey={sortKey} align="right" onSort={handleSort} />
-        <SortHeader label="CO₂"      colKey="co2"      activeSortKey={sortKey} align="right" onSort={handleSort} />
-        <SortHeader label="Source"   colKey="source"   activeSortKey={sortKey} onSort={handleSort} />
-        <div /> {/* chevron column — no sort */}
-      </div>
-
-      {/* ── Loading: 12 skeleton rows ───────────────────────────────────────── */}
-      {loading && (
-        <div>
-          {Array.from({ length: 12 }).map((_, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
-            <SkeletonRow key={i} />
-          ))}
+        {/* ── Header row ─────────────────────────────────────────────────────── */}
+        <div
+          className="sticky top-0 z-10 grid items-center gap-3 border-b border-divider bg-[#FAFBFC] px-5 py-2.5"
+          style={{ gridTemplateColumns: cols }}
+        >
+          <div /> {/* icon column — no sort */}
+          <SortHeader label="Route"    colKey="route"    activeSortKey={sortKey} onSort={handleSort} />
+          <SortHeader label="Date"     colKey="date"     activeSortKey={sortKey} onSort={handleSort} />
+          <SortHeader label="Distance" colKey="distance" activeSortKey={sortKey} align="right" onSort={handleSort} />
+          {!isMobile && (
+            <SortHeader label="Duration" colKey="duration" activeSortKey={sortKey} align="right" onSort={handleSort} />
+          )}
+          <SortHeader label="CO₂"      colKey="co2"      activeSortKey={sortKey} align="right" onSort={handleSort} />
+          <SortHeader label="Source"   colKey="source"   activeSortKey={sortKey} onSort={handleSort} />
+          <div /> {/* chevron column — no sort */}
         </div>
-      )}
 
-      {/* ── Empty state ────────────────────────────────────────────────────── */}
-      {!loading && trips.length === 0 && (
-        hasActiveFilter ? (
-          <EmptyState
-            icon={<Filter size={48} color="#C5CCD6" aria-hidden="true" />}
-            title="No trips match these filters"
-            description="Try widening the date range or clearing the search."
+        {/* ── Loading: 12 skeleton rows ───────────────────────────────────────── */}
+        {loading && (
+          <div>
+            {Array.from({ length: 12 }).map((_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
+              <SkeletonRow key={i} isMobile={isMobile} />
+            ))}
+          </div>
+        )}
+
+        {/* ── Empty state ────────────────────────────────────────────────────── */}
+        {!loading && trips.length === 0 && (
+          hasActiveFilter ? (
+            <EmptyState
+              icon={<Filter size={48} color="#C5CCD6" aria-hidden="true" />}
+              title="No trips match these filters"
+              description="Try widening the date range or clearing the search."
+            />
+          ) : (
+            <EmptyState
+              icon={<Navigation size={48} color="#C5CCD6" aria-hidden="true" />}
+              title="No trips logged yet"
+              description="Trips detected by Atmos will appear here automatically."
+            />
+          )
+        )}
+
+        {/* ── Trip rows ──────────────────────────────────────────────────────── */}
+        {!loading && sortedTrips.length > 0 && (
+          <div>
+            {sortedTrips.map(trip => (
+              <TripRow key={trip.id} trip={trip} isMobile={isMobile} />
+            ))}
+          </div>
+        )}
+
+        {/* ── Pagination ─────────────────────────────────────────────────────── */}
+        {!loading && (
+          <Pagination
+            page={page}
+            pageSize={pageSize}
+            total={total}
+            isMobile={isMobile}
+            onPageChange={onPageChange}
           />
-        ) : (
-          <EmptyState
-            icon={<Navigation size={48} color="#C5CCD6" aria-hidden="true" />}
-            title="No trips logged yet"
-            description="Trips detected by Atmos will appear here automatically."
-          />
-        )
-      )}
-
-      {/* ── Trip rows ──────────────────────────────────────────────────────── */}
-      {!loading && sortedTrips.length > 0 && (
-        <div>
-          {sortedTrips.map(trip => (
-            <TripRow key={trip.id} trip={trip} />
-          ))}
-        </div>
-      )}
-
-      {/* ── Pagination ─────────────────────────────────────────────────────── */}
-      {!loading && (
-        <Pagination
-          page={page}
-          pageSize={pageSize}
-          total={total}
-          onPageChange={onPageChange}
-        />
-      )}
+        )}
+      </div>
     </div>
   )
 }

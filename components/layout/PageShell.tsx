@@ -25,7 +25,7 @@ export function PageShell({
         onRangeChange={rangePicker?.onChange}
         rightExtra={rightExtra}
       />
-      <main className="flex flex-col gap-5 bg-bg-page py-8 px-9">
+      <main className="flex flex-col gap-5 bg-bg-page p-4 lg:p-[32px_36px]">
         {children}
       </main>
     </>

@@ -3,6 +3,7 @@
 import { Car, Train, Bus, Bike, Footprints, Plane, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/components/ui/EmptyState'
+import { useIsMobile } from '@/lib/hooks/useIsMobile'
 import type { TransportMode } from '@/types/index'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -21,9 +22,13 @@ export interface TopRoutesTableProps {
   loading?: boolean
 }
 
-// ─── Grid layout ──────────────────────────────────────────────────────────────
+// ─── Grid layouts ─────────────────────────────────────────────────────────────
 
-const COLS = '36px minmax(0, 1fr) 60px 80px 90px'
+const COLS_DESKTOP = '36px minmax(0, 1fr) 60px 80px 90px'
+// icon | route | trips | distance | co2
+
+const COLS_MOBILE = '36px minmax(0, 1fr) 60px 90px'
+// icon | route | trips | co2  (no distance)
 
 // ─── Mode helpers ─────────────────────────────────────────────────────────────
 
@@ -62,16 +67,19 @@ const MODE_ICONS: Record<string, ModeIconComponent> = {
 
 // ─── Table header ─────────────────────────────────────────────────────────────
 
-function TableHeader() {
+function TableHeader({ isMobile }: { isMobile: boolean }) {
+  const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
   return (
     <div
       className="grid items-center gap-3 border-b border-[#F0F2F5] bg-[#FAFBFC] px-4 py-2.5"
-      style={{ gridTemplateColumns: COLS }}
+      style={{ gridTemplateColumns: cols }}
     >
       <div /> {/* icon column */}
       <span className="text-[12px] font-medium text-[#6B7A8D]">Route</span>
       <span className="text-right text-[12px] font-medium text-[#6B7A8D]">Trips</span>
-      <span className="text-right text-[12px] font-medium text-[#6B7A8D]">Distance</span>
+      {!isMobile && (
+        <span className="text-right text-[12px] font-medium text-[#6B7A8D]">Distance</span>
+      )}
       <span className="text-right text-[12px] font-medium text-[#6B7A8D]">CO₂</span>
     </div>
   )
@@ -79,12 +87,13 @@ function TableHeader() {
 
 // ─── Skeleton row ─────────────────────────────────────────────────────────────
 
-function SkeletonRow() {
+function SkeletonRow({ isMobile }: { isMobile: boolean }) {
+  const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
   return (
     <div
       data-testid="route-skeleton-row"
       className="grid items-center gap-3 border-b border-[#F0F2F5] px-4 py-3"
-      style={{ gridTemplateColumns: COLS }}
+      style={{ gridTemplateColumns: cols }}
     >
       <div className="h-[30px] w-[30px] animate-pulse rounded-[9px] bg-gray-100" />
       <div className="space-y-1.5">
@@ -92,7 +101,9 @@ function SkeletonRow() {
         <div className="h-[4px] w-full animate-pulse rounded-full bg-gray-100" />
       </div>
       <div className="ml-auto h-[12px] w-6 animate-pulse rounded bg-gray-100" />
-      <div className="ml-auto h-[12px] w-10 animate-pulse rounded bg-gray-100" />
+      {!isMobile && (
+        <div className="ml-auto h-[12px] w-10 animate-pulse rounded bg-gray-100" />
+      )}
       <div className="ml-auto h-[12px] w-10 animate-pulse rounded bg-gray-100" />
     </div>
   )
@@ -103,19 +114,21 @@ function SkeletonRow() {
 interface RouteRowProps {
   route: TopRoute
   maxKm: number
+  isMobile: boolean
 }
 
-function RouteRow({ route, maxKm }: RouteRowProps) {
+function RouteRow({ route, maxKm, isMobile }: RouteRowProps) {
   const displayKey  = MODE_DISPLAY_KEY[route.mode] ?? 'car'
   const modeColor   = MODE_COLORS[displayKey] ?? '#6B7A8D'
   const ModeIcon: ModeIconComponent = MODE_ICONS[displayKey] ?? Car
   const barWidthPct = maxKm > 0 ? Math.round((route.total_km / maxKm) * 100) : 0
+  const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
 
   return (
     <div
       data-testid="route-row"
       className="grid items-center gap-3 border-b border-[#F0F2F5] px-4 py-3"
-      style={{ gridTemplateColumns: COLS }}
+      style={{ gridTemplateColumns: cols }}
     >
       {/* Mode icon badge */}
       <div
@@ -146,11 +159,13 @@ function RouteRow({ route, maxKm }: RouteRowProps) {
         <span className="text-[13px] text-[#1A2332]">{route.count}</span>
       </div>
 
-      {/* Distance */}
-      <div className="text-right">
-        <span className="text-[13px] text-[#1A2332]">{route.total_km.toFixed(1)}</span>
-        <span className="ml-0.5 text-[11px] text-[#6B7A8D]">km</span>
-      </div>
+      {/* Distance — hidden on mobile */}
+      {!isMobile && (
+        <div className="text-right">
+          <span className="text-[13px] text-[#1A2332]">{route.total_km.toFixed(1)}</span>
+          <span className="ml-0.5 text-[11px] text-[#6B7A8D]">km</span>
+        </div>
+      )}
 
       {/* CO₂ */}
       <div className="text-right">
@@ -164,6 +179,7 @@ function RouteRow({ route, maxKm }: RouteRowProps) {
 // ─── TopRoutesTable ───────────────────────────────────────────────────────────
 
 export function TopRoutesTable({ routes, loading = false }: TopRoutesTableProps) {
+  const isMobile = useIsMobile(768)
   const maxKm = routes.reduce((max, r) => Math.max(max, r.total_km), 0)
 
   return (
@@ -171,14 +187,14 @@ export function TopRoutesTable({ routes, loading = false }: TopRoutesTableProps)
       data-testid="top-routes-table"
       className={cn('overflow-hidden rounded-2xl bg-white shadow-card')}
     >
-      <TableHeader />
+      <TableHeader isMobile={isMobile} />
 
       {/* Loading: 5 skeleton rows */}
       {loading && (
         <div>
           {Array.from({ length: 5 }).map((_, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
-            <SkeletonRow key={i} />
+            <SkeletonRow key={i} isMobile={isMobile} />
           ))}
         </div>
       )}
@@ -197,7 +213,7 @@ export function TopRoutesTable({ routes, loading = false }: TopRoutesTableProps)
         <div>
           {routes.map((route, i) => (
             // biome-ignore lint/suspicious/noArrayIndexKey: routes may lack unique id
-            <RouteRow key={i} route={route} maxKm={maxKm} />
+            <RouteRow key={i} route={route} maxKm={maxKm} isMobile={isMobile} />
           ))}
         </div>
       )}

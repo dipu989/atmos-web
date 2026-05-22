@@ -71,7 +71,7 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
               data-active={isActive}
               aria-current={isActive ? 'page' : undefined}
               className={cn(
-                'flex items-center gap-3 rounded-[10px] py-2.5 px-3 text-[14px]',
+                'flex min-h-[44px] items-center gap-3 rounded-[10px] py-2.5 px-3 text-[14px]',
                 isActive
                   ? 'bg-horizon-blue/10 font-semibold text-horizon-blue'
                   : 'font-medium text-text-secondary hover:bg-bg-page',
@@ -131,7 +131,7 @@ export function Sidebar() {
             <button
               onClick={close}
               aria-label="Close navigation"
-              className="absolute right-3 top-4 z-10 rounded-lg p-1.5 text-text-secondary hover:bg-bg-page"
+              className="absolute right-3 top-4 z-10 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-text-secondary hover:bg-bg-page"
             >
               <X size={18} />
             </button>

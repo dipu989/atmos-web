@@ -307,4 +307,10 @@ describe('TripsPage', () => {
       expect(screen.getByTestId('trips-table')).toHaveAttribute('data-page', '1')
     })
   })
+
+  it('renders without crash at 375px mobile viewport', () => {
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 })
+    expect(() => render(<TripsPage />)).not.toThrow()
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 })
+  })
 })

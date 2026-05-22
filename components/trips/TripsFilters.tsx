@@ -31,8 +31,8 @@ interface SearchInputProps {
 function SearchInput({ value, onChange }: SearchInputProps) {
   return (
     <div
-      className="relative flex items-center bg-white border border-divider"
-      style={{ width: 280, height: 36, borderRadius: 9 }}
+      className="relative flex w-full items-center bg-white border border-divider sm:w-[280px]"
+      style={{ height: 36, borderRadius: 9 }}
     >
       <Search
         size={14}
@@ -183,8 +183,8 @@ export function TripsFilters({
 }: TripsFiltersProps) {
   return (
     <div className="bg-bg-card rounded-2xl shadow-card p-[18px_20px] flex flex-col gap-3">
-      {/* Row 1: Search + Source */}
-      <div className="flex items-center justify-between">
+      {/* Row 1: Search + Source — stack on mobile, side-by-side on sm+ */}
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <SearchInput value={search} onChange={onSearchChange} />
         <div className="flex items-center gap-2">
           <span className="text-[13px] font-medium text-text-secondary">Source</span>

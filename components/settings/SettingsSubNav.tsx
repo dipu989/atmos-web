@@ -54,7 +54,7 @@ export function SettingsSubNav({ active, onChange }: SettingsSubNavProps) {
             data-active={isActive}
             aria-current={isActive ? 'page' : undefined}
             className={cn(
-              'flex w-full items-center gap-2.5 rounded-[9px] px-3 text-left transition-colors duration-150',
+              'flex min-h-[44px] w-full items-center gap-2.5 rounded-[9px] px-3 text-left transition-colors duration-150',
               'focus:outline-none focus-visible:ring-2 focus-visible:ring-horizon-blue/40',
               isActive
                 ? 'bg-[rgba(74,144,196,0.10)] font-semibold text-horizon-blue'

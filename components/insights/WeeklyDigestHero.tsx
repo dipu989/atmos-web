@@ -61,14 +61,12 @@ export function WeeklyDigestHero({ insight }: WeeklyDigestHeroProps) {
 
   return (
     <div
-      style={{
-        backgroundColor: '#1A2332',
-        borderRadius: 20,
-        padding: '28px 32px',
-      }}
+      className="rounded-[20px] p-5 lg:p-[28px_32px]"
+      style={{ backgroundColor: '#1A2332' }}
     >
-      <div className="flex items-start justify-between gap-6">
-        {/* ── Left column ──────────────────────────────────────────────────── */}
+      {/* On mobile: single-column. On lg+: side-by-side with sparkline */}
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
+        {/* ── Left / main column ───────────────────────────────────────────── */}
         <div className="flex min-w-0 flex-1 flex-col">
           {/* Type chip */}
           <span
@@ -135,8 +133,8 @@ export function WeeklyDigestHero({ insight }: WeeklyDigestHeroProps) {
           </div>
         </div>
 
-        {/* ── Right column: sparkline ───────────────────────────────────────── */}
-        <div className="flex shrink-0 items-center self-center">
+        {/* ── Right column: sparkline — hidden on mobile (decorative) ──────── */}
+        <div className="hidden shrink-0 items-center self-center lg:flex">
           <Sparkline data={spark} />
         </div>
       </div>

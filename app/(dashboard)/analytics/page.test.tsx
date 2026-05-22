@@ -178,4 +178,11 @@ describe('AnalyticsPage', () => {
     const emptyMessages = screen.getAllByText('No data yet')
     expect(emptyMessages.length).toBeGreaterThan(0)
   })
+
+  it('renders without crash at 375px mobile viewport', () => {
+    mockAnalytics()
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 })
+    expect(() => render(<AnalyticsPage />)).not.toThrow()
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 })
+  })
 })

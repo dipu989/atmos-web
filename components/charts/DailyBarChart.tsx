@@ -24,6 +24,7 @@ export interface DailyBarChartDataPoint {
 export interface DailyBarChartProps {
   data: DailyBarChartDataPoint[]
   goal: number
+  height?: number
 }
 
 // ─── Custom tooltip ───────────────────────────────────────────────────────────
@@ -74,12 +75,12 @@ function GoalLabel({ viewBox }: GoalLabelProps) {
 
 // ─── Chart ────────────────────────────────────────────────────────────────────
 
-export function DailyBarChart({ data, goal }: DailyBarChartProps) {
+export function DailyBarChart({ data, goal, height = 240 }: DailyBarChartProps) {
   // Attach goal to each data point so the tooltip can access it
   const dataWithGoal = data.map((d) => ({ ...d, goal }))
 
   return (
-    <ResponsiveContainer width="100%" height={240}>
+    <ResponsiveContainer width="100%" height={height}>
       <BarChart
         data={dataWithGoal}
         margin={{ top: 24, right: 36, bottom: 0, left: 0 }}

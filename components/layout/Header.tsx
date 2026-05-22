@@ -37,13 +37,13 @@ export function Header({
 
   return (
     <header className="sticky top-0 z-10 border-b border-divider bg-bg-page">
-      <div className="flex items-center justify-between py-5 px-9">
+      <div className="flex items-center justify-between py-5 px-4 lg:px-9">
         {/* Left: hamburger + title */}
         <div className="flex items-center gap-3">
           <button
             onClick={toggle}
             aria-label="Open navigation"
-            className="rounded-lg p-1.5 text-text-secondary hover:bg-divider lg:hidden"
+            className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg text-text-secondary hover:bg-divider lg:hidden"
           >
             <Menu size={20} />
           </button>

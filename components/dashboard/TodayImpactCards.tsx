@@ -127,7 +127,7 @@ export function TodayImpactCards() {
   // ── Loading ────────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <SkeletonCard />
         <SkeletonCard />
         <SkeletonCard />
@@ -139,7 +139,7 @@ export function TodayImpactCards() {
   // ── Error ──────────────────────────────────────────────────────────────────
   if (isError) {
     return (
-      <div className="grid grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         <StatCard accent="#4A90C4" label="CO₂ this month" value="—" sub={ERROR_SUB} />
         <StatCard accent="#3DAB82" label="Daily goal" value="—" sub={ERROR_SUB} />
         <StatCard accent="#F0956A" label="Current streak" value="—" sub={ERROR_SUB} />
@@ -176,7 +176,7 @@ export function TodayImpactCards() {
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {/* Card 1: CO₂ this month */}
       <StatCard
         accent="#4A90C4"

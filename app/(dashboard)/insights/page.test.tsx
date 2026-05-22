@@ -353,3 +353,16 @@ describe('InsightsPage — empty data', () => {
     expect(screen.getByTestId('insight-feed')).toHaveAttribute('data-count', '0')
   })
 })
+
+describe('InsightsPage — mobile viewport', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    mockHookData()
+  })
+
+  it('renders without crash at 375px mobile viewport', () => {
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 375 })
+    expect(() => render(<InsightsPage />)).not.toThrow()
+    Object.defineProperty(window, 'innerWidth', { writable: true, configurable: true, value: 1024 })
+  })
+})
