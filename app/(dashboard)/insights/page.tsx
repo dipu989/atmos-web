@@ -119,6 +119,8 @@ export default function InsightsPage() {
           insights={filteredInsights}
           onRead={handleMarkRead}
           loading={isLoading}
+          activeType={activeTab}
+          onViewAll={activeTab !== 'all' ? () => setActiveTab('all') : undefined}
         />
       </div>
 

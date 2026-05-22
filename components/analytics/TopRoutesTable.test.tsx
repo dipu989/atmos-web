@@ -63,7 +63,11 @@ describe('TopRoutesTable', () => {
 
   it('shows empty state when no routes and not loading', () => {
     render(<TopRoutesTable routes={[]} />)
-    expect(screen.getByText('No routes yet')).toBeInTheDocument()
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+    expect(screen.getByText('No recurring routes yet')).toBeInTheDocument()
+    expect(
+      screen.getByText('Atmos will identify your most-traveled routes here.'),
+    ).toBeInTheDocument()
   })
 
   it('does not show empty state when routes are present', () => {

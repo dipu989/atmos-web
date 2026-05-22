@@ -1,9 +1,11 @@
 'use client'
 
+import { TrendingUp } from 'lucide-react'
 import { format, parseISO, subDays } from 'date-fns'
 import { WeeklyTrendChart } from '@/components/charts/WeeklyTrendChart'
 import { Card, CardContent, CardHeader } from '@/components/ui/Card'
 import { useDailySummaries, usePreferences } from '@/lib/hooks/useTrips'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 // ─── Skeleton ────────────────────────────────────────────────────────────────
 
@@ -71,6 +73,25 @@ export function WeeklyTrendCard() {
   })
 
   const goal = prefsQuery.data?.daily_goal_kg_co2e ?? 5
+
+  // ── Empty state ────────────────────────────────────────────────────────────
+  if (chartData.length === 0) {
+    return (
+      <Card>
+        <CardHeader className="pb-2">
+          <h2 className="text-subheading font-semibold text-text-primary">Weekly CO₂ trend</h2>
+          <p className="text-label text-text-secondary">{dateRange}</p>
+        </CardHeader>
+        <CardContent>
+          <EmptyState
+            icon={<TrendingUp size={48} color="#C5CCD6" aria-hidden="true" />}
+            title="No data this week"
+            description="Start tracking to see your weekly trend."
+          />
+        </CardContent>
+      </Card>
+    )
+  }
 
   // ── Render ─────────────────────────────────────────────────────────────────
   return (

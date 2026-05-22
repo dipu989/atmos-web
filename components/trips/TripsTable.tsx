@@ -10,10 +10,12 @@ import {
   Footprints,
   Plane,
   Navigation,
+  Filter,
   ChevronRight,
   ChevronsUpDown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { Trip, TransportMode, ActivitySource } from '@/types/index'
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
@@ -73,6 +75,11 @@ interface TripsTableProps {
   pageSize: number
   onPageChange: (page: number) => void
   loading: boolean
+  /**
+   * Pass `true` when any filter (search, mode, or source) is active.
+   * Controls whether the empty state says "no trips logged" vs "no matches".
+   */
+  hasActiveFilter?: boolean
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -388,6 +395,7 @@ export function TripsTable({
   pageSize,
   onPageChange,
   loading,
+  hasActiveFilter = false,
 }: TripsTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('date')
   const [sortDir, setSortDir] = useState<'asc' | 'desc'>('desc')
@@ -459,15 +467,19 @@ export function TripsTable({
 
       {/* ── Empty state ────────────────────────────────────────────────────── */}
       {!loading && trips.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-2 py-12">
-          <Navigation size={40} color="#C5CCD6" />
-          <p className="text-[14px] font-medium text-text-primary">
-            No trips match these filters
-          </p>
-          <p className="text-[12.5px] text-text-secondary">
-            Try widening the date range or clearing the search.
-          </p>
-        </div>
+        hasActiveFilter ? (
+          <EmptyState
+            icon={<Filter size={48} color="#C5CCD6" aria-hidden="true" />}
+            title="No trips match these filters"
+            description="Try widening the date range or clearing the search."
+          />
+        ) : (
+          <EmptyState
+            icon={<Navigation size={48} color="#C5CCD6" aria-hidden="true" />}
+            title="No trips logged yet"
+            description="Trips detected by Atmos will appear here automatically."
+          />
+        )
       )}
 
       {/* ── Trip rows ──────────────────────────────────────────────────────── */}

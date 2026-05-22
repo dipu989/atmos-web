@@ -2,8 +2,22 @@
 
 import { Lightbulb } from 'lucide-react'
 import { InsightCard } from '@/components/insights/InsightCard'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { InsightCardInsight } from '@/components/insights/InsightCard'
 import type { Insight, InsightType } from '@/types'
+
+// ─── Label map for empty-state titles ────────────────────────────────────────
+
+const INSIGHT_TYPE_LABELS: Record<InsightType, string> = {
+  streak:            'streak',
+  milestone:         'milestone',
+  comparison:        'comparison',
+  tip:               'tip',
+  anomaly:           'anomaly',
+  weekly_comparison: 'weekly comparison',
+  mode_spike:        'mode spike',
+  mode_summary:      'mode summary',
+}
 
 // ─── Visual config per insight type ──────────────────────────────────────────
 
@@ -60,6 +74,10 @@ export interface InsightFeedProps {
   insights: Insight[]
   onRead: (id: string) => void
   loading?: boolean
+  /** Active filter tab — used to tailor the empty state copy. Defaults to 'all'. */
+  activeType?: InsightType | 'all'
+  /** Called when the user clicks "View all" in the filtered empty state. */
+  onViewAll?: () => void
 }
 
 // ─── Loading skeleton ─────────────────────────────────────────────────────────
@@ -76,7 +94,13 @@ function FeedSkeleton() {
 
 // ─── InsightFeed ──────────────────────────────────────────────────────────────
 
-export function InsightFeed({ insights, onRead, loading }: InsightFeedProps) {
+export function InsightFeed({
+  insights,
+  onRead,
+  loading,
+  activeType = 'all',
+  onViewAll,
+}: InsightFeedProps) {
   if (loading) {
     return (
       <div data-testid="insight-feed" className="mt-3 flex flex-col" style={{ gap: 12 }}>
@@ -88,15 +112,27 @@ export function InsightFeed({ insights, onRead, loading }: InsightFeedProps) {
   }
 
   if (insights.length === 0) {
+    const isFiltered = activeType !== 'all'
+    const typeLabel = isFiltered
+      ? (INSIGHT_TYPE_LABELS[activeType as InsightType] ?? (activeType as string).replace(/_/g, ' '))
+      : null
+
     return (
-      <div
-        data-testid="insight-feed"
-        className="flex flex-col items-center justify-center gap-3 py-14"
-      >
-        <Lightbulb size={32} color="#C5CCD6" aria-hidden="true" />
-        <p className="text-[14px] font-medium text-text-secondary">
-          No insights of this type yet
-        </p>
+      <div data-testid="insight-feed">
+        {isFiltered ? (
+          <EmptyState
+            icon={<Lightbulb size={48} color="#C5CCD6" aria-hidden="true" />}
+            title={`No ${typeLabel} insights`}
+            description="Nothing here yet."
+            action={onViewAll ? { label: 'View all', onClick: onViewAll } : undefined}
+          />
+        ) : (
+          <EmptyState
+            icon={<Lightbulb size={48} color="#C5CCD6" aria-hidden="true" />}
+            title="No insights yet"
+            description="Keep logging trips — Atmos will analyze your patterns soon."
+          />
+        )}
       </div>
     )
   }

@@ -84,8 +84,9 @@ describe('TransportBreakdownCard', () => {
 
     render(<TransportBreakdownCard />)
 
-    expect(screen.getByTestId('transport-breakdown-empty')).toBeInTheDocument()
-    expect(screen.getByText('No trips recorded this month')).toBeInTheDocument()
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+    expect(screen.getByText('No trips this month')).toBeInTheDocument()
+    expect(screen.getByText('Add trips to see your transport breakdown.')).toBeInTheDocument()
   })
 
   it('excludes modes with zero co2_kg', () => {

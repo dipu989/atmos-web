@@ -1,7 +1,8 @@
 'use client'
 
-import { Car, Train, Bus, Bike, Footprints, Plane } from 'lucide-react'
+import { Car, Train, Bus, Bike, Footprints, Plane, MapPin } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { TransportMode } from '@/types/index'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -184,27 +185,11 @@ export function TopRoutesTable({ routes, loading = false }: TopRoutesTableProps)
 
       {/* Empty state */}
       {!loading && routes.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-2 py-10">
-          <svg
-            width="40"
-            height="40"
-            viewBox="0 0 40 40"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="20" cy="20" r="18" stroke="#C5CCD6" strokeWidth="2" />
-            <path
-              d="M14 20h12M20 14v12"
-              stroke="#C5CCD6"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-          <p className="text-[14px] font-medium text-[#1A2332]">No routes yet</p>
-          <p className="text-[12.5px] text-[#6B7A8D]">
-            Start logging trips to see your top routes.
-          </p>
-        </div>
+        <EmptyState
+          icon={<MapPin size={48} color="#C5CCD6" aria-hidden="true" />}
+          title="No recurring routes yet"
+          description="Atmos will identify your most-traveled routes here."
+        />
       )}
 
       {/* Route rows */}

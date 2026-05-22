@@ -8,6 +8,7 @@ import {
   type TransportModeData,
 } from '@/components/charts/TransportBreakdownChart'
 import { useTransportBreakdown } from '@/lib/hooks/useTrips'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { TransportMode } from '@/types/index'
 
 // ─── Mode display names ───────────────────────────────────────────────────────
@@ -133,13 +134,11 @@ export function TransportBreakdownCard() {
           <p className="text-label text-text-secondary">This month</p>
         </CardHeader>
         <CardContent>
-          <div
-            data-testid="transport-breakdown-empty"
-            className="flex flex-col items-center justify-center h-[200px] gap-3"
-          >
-            <Navigation size={32} color="#6B7A8D" strokeWidth={1.5} />
-            <p className="text-label text-text-secondary">No trips recorded this month</p>
-          </div>
+          <EmptyState
+            icon={<Navigation size={48} color="#C5CCD6" aria-hidden="true" />}
+            title="No trips this month"
+            description="Add trips to see your transport breakdown."
+          />
         </CardContent>
       </Card>
     )

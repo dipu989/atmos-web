@@ -208,10 +208,19 @@ describe('AchievementsPanel — loading state', () => {
 })
 
 describe('AchievementsPanel — empty state', () => {
-  it('renders panel with zero badges and "0 of 0 earned"', () => {
+  it('renders EmptyState when achievements array is empty', () => {
     render(<AchievementsPanel achievements={[]} />)
-    expect(screen.getByTestId('earned-count')).toHaveTextContent('0 of 0 earned')
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+    expect(screen.getByText('No achievements yet')).toBeInTheDocument()
+    expect(screen.getByText('Complete milestones to earn badges.')).toBeInTheDocument()
+    // Badge grid and earned-count sub-text should not appear
     expect(screen.queryByTestId('achievement-badge')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('earned-count')).not.toBeInTheDocument()
+  })
+
+  it('still shows panel heading when empty', () => {
+    render(<AchievementsPanel achievements={[]} />)
+    expect(screen.getByText('Achievements')).toBeInTheDocument()
   })
 })
 
