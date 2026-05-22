@@ -1,8 +1,9 @@
 'use client'
 
-import { Check } from 'lucide-react'
+import { Check, Trophy } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Icon } from '@/components/ui/Icon'
+import { EmptyState } from '@/components/ui/EmptyState'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -212,6 +213,28 @@ export function AchievementsPanel({
             <BadgeSkeleton key={i} />
           ))}
         </div>
+      </div>
+    )
+  }
+
+  // ── Empty state (no achievements at all) ──────────────────────────────────
+  if (achievements.length === 0) {
+    return (
+      <div
+        data-testid="achievements-panel"
+        className={cn('rounded-2xl bg-bg-card p-5 shadow-card')}
+      >
+        <h2
+          className="font-semibold text-text-primary"
+          style={{ fontSize: 17 }}
+        >
+          Achievements
+        </h2>
+        <EmptyState
+          icon={<Trophy size={48} color="#C5CCD6" aria-hidden="true" />}
+          title="No achievements yet"
+          description="Complete milestones to earn badges."
+        />
       </div>
     )
   }

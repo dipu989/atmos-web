@@ -160,7 +160,14 @@ describe('InsightsFeedMini', () => {
 
     render(<InsightsFeedMini />)
 
-    expect(screen.getByText('No insights yet. Keep tracking trips!')).toBeInTheDocument()
+    expect(screen.getByText('No insights yet')).toBeInTheDocument()
+    expect(
+      screen.getByText('Keep tracking trips and insights will appear here.'),
+    ).toBeInTheDocument()
+    // Action link to insights page
+    const link = screen.getByRole('link', { name: 'Go to Insights' })
+    expect(link).toHaveAttribute('href', '/insights')
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
   })
 
   it('shows error state when query fails', () => {

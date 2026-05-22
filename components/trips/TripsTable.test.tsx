@@ -81,19 +81,37 @@ describe('TripsTable', () => {
     expect(screen.queryByText('Home')).not.toBeInTheDocument()
   })
 
-  it('empty state shown when trips is empty array', () => {
-    render(<TripsTable {...mkProps({ trips: [], total: 0 })} />)
+  it('shows filter empty state when hasActiveFilter=true and trips is empty', () => {
+    render(<TripsTable {...mkProps({ trips: [], total: 0, hasActiveFilter: true })} />)
 
     expect(screen.getByText('No trips match these filters')).toBeInTheDocument()
     expect(
       screen.getByText('Try widening the date range or clearing the search.'),
     ).toBeInTheDocument()
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+  })
+
+  it('shows no-trips empty state when hasActiveFilter=false and trips is empty', () => {
+    render(<TripsTable {...mkProps({ trips: [], total: 0, hasActiveFilter: false })} />)
+
+    expect(screen.getByText('No trips logged yet')).toBeInTheDocument()
+    expect(
+      screen.getByText('Trips detected by Atmos will appear here automatically.'),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+  })
+
+  it('default empty state (no hasActiveFilter prop) shows no-trips message', () => {
+    render(<TripsTable {...mkProps({ trips: [], total: 0 })} />)
+
+    expect(screen.getByText('No trips logged yet')).toBeInTheDocument()
   })
 
   it('empty state not shown when loading', () => {
     render(<TripsTable {...mkProps({ trips: [], total: 0, loading: true })} />)
 
     expect(screen.queryByText('No trips match these filters')).not.toBeInTheDocument()
+    expect(screen.queryByText('No trips logged yet')).not.toBeInTheDocument()
   })
 
   it('clicking sort header on active key toggles asc→desc', () => {

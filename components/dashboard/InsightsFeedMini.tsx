@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { Lightbulb } from 'lucide-react'
 import { useInsights } from '@/lib/hooks/useTrips'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { Insight } from '@/types/index'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -170,12 +171,12 @@ export function InsightsFeedMini() {
 
       {/* ── Empty ───────────────────────────────────────────────────────────── */}
       {!isLoading && !isError && displayInsights.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-2 py-8">
-          <Lightbulb size={24} className="text-text-secondary" />
-          <p className="text-[13px] text-text-secondary">
-            No insights yet. Keep tracking trips!
-          </p>
-        </div>
+        <EmptyState
+          icon={<Lightbulb size={48} color="#C5CCD6" aria-hidden="true" />}
+          title="No insights yet"
+          description="Keep tracking trips and insights will appear here."
+          action={{ label: 'Go to Insights', href: '/insights' }}
+        />
       )}
 
       {/* ── Insight cards ───────────────────────────────────────────────────── */}

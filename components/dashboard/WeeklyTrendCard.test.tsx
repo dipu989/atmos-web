@@ -103,4 +103,17 @@ describe('WeeklyTrendCard', () => {
 
     expect(screen.getByText('Weekly CO₂ trend')).toBeInTheDocument()
   })
+
+  it('shows empty state when no daily summaries', () => {
+    vi.mocked(useDailySummaries).mockReturnValue(q([]))
+    vi.mocked(usePreferences).mockReturnValue(q(mockPrefs))
+
+    render(<WeeklyTrendCard />)
+
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
+    expect(screen.getByText('No data this week')).toBeInTheDocument()
+    expect(screen.getByText('Start tracking to see your weekly trend.')).toBeInTheDocument()
+    // Chart should not be rendered
+    expect(screen.queryByTestId('weekly-trend-chart')).not.toBeInTheDocument()
+  })
 })

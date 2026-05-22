@@ -5,6 +5,7 @@ import { isToday, isYesterday, format, parseISO } from 'date-fns'
 import { Car, Train, Bus, Bike, Footprints, Plane, MapPin } from 'lucide-react'
 import { useTrips } from '@/lib/hooks/useTrips'
 import { cn } from '@/lib/utils'
+import { EmptyState } from '@/components/ui/EmptyState'
 import type { Trip, TransportMode } from '@/types/index'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -170,11 +171,11 @@ export function RecentTripsList() {
 
       {/* ── Empty ───────────────────────────────────────────────────────────── */}
       {!isLoading && !isError && trips.length === 0 && (
-        <div className="flex flex-col items-center justify-center gap-2 py-8">
-          <MapPin size={24} className="text-text-secondary" />
-          <p className="text-[13px] font-medium text-text-primary">No trips yet</p>
-          <p className="text-[12px] text-text-secondary">Start by adding your first trip</p>
-        </div>
+        <EmptyState
+          icon={<MapPin size={48} color="#C5CCD6" aria-hidden="true" />}
+          title="No trips yet"
+          description="Log your first trip to start tracking your carbon footprint."
+        />
       )}
 
       {/* ── Trip rows ───────────────────────────────────────────────────────── */}

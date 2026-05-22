@@ -81,6 +81,8 @@ function TripsPageContent() {
     transport_mode: mode === 'all' ? undefined : mode,
   })
 
+  const hasActiveFilter = search.trim() !== '' || mode !== 'all' || source !== 'all'
+
   // ── Full-dataset query: stats strip + mode chip counts ──────────────────────
   // NOTE: Trip counts per chip are approximate — derived from up to 1 000 trips,
   // not the true total. Acceptable for the initial build.
@@ -165,6 +167,7 @@ function TripsPageContent() {
         pageSize={PAGE_SIZE}
         onPageChange={setPage}
         loading={isLoading}
+        hasActiveFilter={hasActiveFilter}
       />
     </PageShell>
   )

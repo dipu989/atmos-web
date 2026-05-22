@@ -122,7 +122,10 @@ describe('RecentTripsList', () => {
     render(<RecentTripsList />)
 
     expect(screen.getByText('No trips yet')).toBeInTheDocument()
-    expect(screen.getByText('Start by adding your first trip')).toBeInTheDocument()
+    expect(
+      screen.getByText('Log your first trip to start tracking your carbon footprint.'),
+    ).toBeInTheDocument()
+    expect(screen.getByTestId('empty-state')).toBeInTheDocument()
   })
 
   it('shows error state when query fails', () => {
