@@ -1,7 +1,7 @@
 # T019 — Insights Page Assembly
 
 **Branch:** `feat/T019-insights-page`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T016, T017, T018 all merged to main
 
 ---
@@ -127,21 +127,21 @@ Achievements: if there's no dedicated endpoint, derive from insights of type MIL
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] Insights page loads at `/insights`
-- [ ] Stats strip 4 cards
-- [ ] Hero card rendered (dark background)
-- [ ] Type tabs filter the feed
-- [ ] InsightCard variants render correctly in feed
-- [ ] Achievements grid at bottom
-- [ ] Mark read removes "New" dot
-- [ ] Visual matches `Insights.html` reference
+- [x] `pnpm build` passes
+- [x] Insights page loads at `/insights`
+- [x] Stats strip 4 cards
+- [x] Hero card rendered (dark background)
+- [x] Type tabs filter the feed
+- [x] InsightCard variants render correctly in feed
+- [x] Achievements grid at bottom
+- [x] Mark read removes "New" dot
+- [x] Visual matches `Insights.html` reference
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] Visual QA: compare against `design/Atmos Frontend/Insights.html`
-- [ ] PR: `feat(T019): insights page — wire hero, feed, tabs, achievements`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] Visual QA: compare against `design/Atmos Frontend/Insights.html`
+- [x] PR: `feat(T019): insights page — wire hero, feed, tabs, achievements`
