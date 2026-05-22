@@ -94,7 +94,7 @@ function LegendRow({ mode }: LegendRowProps) {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function TransportBreakdownCard() {
-  const query = useTransportBreakdown('month')
+  const query = useTransportBreakdown('monthly')
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (query.isLoading) {

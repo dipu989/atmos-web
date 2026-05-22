@@ -13,6 +13,8 @@ import {
   Filter,
   ChevronRight,
   ChevronsUpDown,
+  ChevronUp,
+  ChevronDown,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { EmptyState } from '@/components/ui/EmptyState'
@@ -141,12 +143,18 @@ interface SortHeaderProps {
   label: string
   colKey: SortKey
   activeSortKey: SortKey
+  activeSortDir: 'asc' | 'desc'
   align?: 'left' | 'right'
   onSort: (key: SortKey) => void
 }
 
-function SortHeader({ label, colKey, activeSortKey, align = 'left', onSort }: SortHeaderProps) {
+function SortHeader({ label, colKey, activeSortKey, activeSortDir, align = 'left', onSort }: SortHeaderProps) {
   const isActive = colKey === activeSortKey
+
+  let SortIcon = ChevronsUpDown
+  if (isActive) {
+    SortIcon = activeSortDir === 'asc' ? ChevronUp : ChevronDown
+  }
 
   return (
     <button
@@ -159,7 +167,7 @@ function SortHeader({ label, colKey, activeSortKey, align = 'left', onSort }: So
       )}
     >
       {label}
-      <ChevronsUpDown
+      <SortIcon
         size={10}
         className={cn(
           'flex-shrink-0',
@@ -467,14 +475,14 @@ export function TripsTable({
           style={{ gridTemplateColumns: cols }}
         >
           <div /> {/* icon column — no sort */}
-          <SortHeader label="Route"    colKey="route"    activeSortKey={sortKey} onSort={handleSort} />
-          <SortHeader label="Date"     colKey="date"     activeSortKey={sortKey} onSort={handleSort} />
-          <SortHeader label="Distance" colKey="distance" activeSortKey={sortKey} align="right" onSort={handleSort} />
+          <SortHeader label="Route"    colKey="route"    activeSortKey={sortKey} activeSortDir={sortDir} onSort={handleSort} />
+          <SortHeader label="Date"     colKey="date"     activeSortKey={sortKey} activeSortDir={sortDir} onSort={handleSort} />
+          <SortHeader label="Distance" colKey="distance" activeSortKey={sortKey} activeSortDir={sortDir} align="right" onSort={handleSort} />
           {!isMobile && (
-            <SortHeader label="Duration" colKey="duration" activeSortKey={sortKey} align="right" onSort={handleSort} />
+            <SortHeader label="Duration" colKey="duration" activeSortKey={sortKey} activeSortDir={sortDir} align="right" onSort={handleSort} />
           )}
-          <SortHeader label="CO₂"      colKey="co2"      activeSortKey={sortKey} align="right" onSort={handleSort} />
-          <SortHeader label="Source"   colKey="source"   activeSortKey={sortKey} onSort={handleSort} />
+          <SortHeader label="CO₂"      colKey="co2"      activeSortKey={sortKey} activeSortDir={sortDir} align="right" onSort={handleSort} />
+          <SortHeader label="Source"   colKey="source"   activeSortKey={sortKey} activeSortDir={sortDir} onSort={handleSort} />
           <div /> {/* chevron column — no sort */}
         </div>
 

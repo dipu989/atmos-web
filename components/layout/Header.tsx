@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Menu, Calendar, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSidebar } from './SidebarContext';
@@ -34,6 +34,19 @@ export function Header({
 }: HeaderProps) {
   const { toggle } = useSidebar();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    if (!dropdownOpen) return;
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [dropdownOpen]);
 
   return (
     <header className="sticky top-0 z-10 border-b border-divider bg-bg-page">
@@ -63,7 +76,7 @@ export function Header({
           {rightExtra}
 
           {showRangePicker && (
-            <div className="relative">
+            <div className="relative" ref={dropdownRef}>
               <button
                 data-testid="range-picker-button"
                 onClick={() => setDropdownOpen((v) => !v)}
