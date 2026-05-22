@@ -1,7 +1,7 @@
 # T021 — Empty States
 
 **Branch:** `feat/T021-empty-states`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T019 merged (all pages assembled)
 
 ---
@@ -78,17 +78,17 @@ Add empty state assertions to existing component tests that already mock data:
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` passes
-- [ ] `EmptyState` component created in `components/ui/`
-- [ ] All 10 components in table above use `EmptyState`
-- [ ] Empty states visible by passing empty arrays to each component in dev
-- [ ] Actions (where defined) navigate correctly
-- [ ] All existing tests still pass
+- [x] `pnpm build` passes
+- [x] `EmptyState` component created in `components/ui/`
+- [x] All 10 components in table above use `EmptyState`
+- [x] Empty states visible by passing empty arrays to each component in dev
+- [x] Actions (where defined) navigate correctly
+- [x] All existing tests still pass
 
 ---
 
 ## Quality gates
-- [ ] `pnpm build` zero errors
-- [ ] `pnpm lint` zero warnings
-- [ ] `pnpm test` green
-- [ ] PR: `feat(T021): empty states — centralized EmptyState component across all pages`
+- [x] `pnpm build` zero errors
+- [x] `pnpm lint` zero warnings
+- [x] `pnpm test` green
+- [x] PR: `feat(T021): empty states — centralized EmptyState component across all pages`
