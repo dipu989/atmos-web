@@ -481,8 +481,11 @@ export async function markInsightRead(id: string): Promise<Insight> {
 
 // ─── User / Preferences ───────────────────────────────────────────────────────
 
-export async function getMe(): Promise<User> {
-  return request<User>(buildUrl('/users/me'))
+export async function getMe(accessToken?: string): Promise<User> {
+  const options: RequestInit = accessToken
+    ? { headers: { Authorization: `Bearer ${accessToken}` } }
+    : {}
+  return request<User>(buildUrl('/users/me'), options, !accessToken)
 }
 
 export async function updateMe(
