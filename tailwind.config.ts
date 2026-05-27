@@ -43,6 +43,7 @@ const config = {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-fraunces)', 'Georgia', 'serif'],
       },
       fontSize: {
         'body': ['15px', { lineHeight: '1.5' }],
