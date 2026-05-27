@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { isAuthenticated } from '@/lib/auth'
 import { LandingNav } from '@/components/landing/LandingNav'
 import { HeroSection } from '@/components/landing/HeroSection'
+import { LoveStrip } from '@/components/landing/LoveStrip'
 
 /**
  * Root page — /
@@ -26,6 +27,7 @@ export default function LandingPage() {
       <LandingNav />
       <main>
         <HeroSection />
+        <LoveStrip />
       </main>
     </div>
   )
