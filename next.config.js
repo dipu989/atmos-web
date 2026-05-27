@@ -7,6 +7,11 @@ const nextConfig = {
         protocol: 'http',
         hostname: 'localhost',
       },
+      {
+        // Google profile pictures (used after Google OAuth sign-in)
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
     ],
   },
 };
