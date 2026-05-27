@@ -3,6 +3,7 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { isAuthenticated } from '@/lib/auth'
+import { LandingNav } from '@/components/landing/LandingNav'
 
 /**
  * Root page — /
@@ -20,7 +21,11 @@ export default function LandingPage() {
   }, [router])
 
   return (
-    <main className="min-h-screen bg-white antialiased">
-    </main>
+    <div className="min-h-screen bg-white antialiased">
+      <LandingNav />
+      <main>
+        {/* Sections added here as they are built */}
+      </main>
+    </div>
   )
 }
