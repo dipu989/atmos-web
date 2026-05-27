@@ -9,6 +9,7 @@ import { LoveStrip } from '@/components/landing/LoveStrip'
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
 import { FeaturesSection } from '@/components/landing/FeaturesSection'
 import { InsightsSection } from '@/components/landing/InsightsSection'
+import { LandingFooter } from '@/components/landing/LandingFooter'
 
 /**
  * Root page — /
@@ -35,6 +36,7 @@ export default function LandingPage() {
         <FeaturesSection />
         <InsightsSection />
       </main>
+      <LandingFooter />
     </div>
   )
 }
