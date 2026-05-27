@@ -10,6 +10,7 @@ import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
 import { ProductSection } from '@/components/landing/ProductSection'
 import { FeaturesSection } from '@/components/landing/FeaturesSection'
 import { InsightsSection } from '@/components/landing/InsightsSection'
+import { LandingFooter } from '@/components/landing/LandingFooter'
 
 /**
  * Root page — /
@@ -37,6 +38,7 @@ export default function LandingPage() {
         <FeaturesSection />
         <InsightsSection />
       </main>
+      <LandingFooter />
     </div>
   )
 }
