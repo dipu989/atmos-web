@@ -6,6 +6,7 @@ import { isAuthenticated } from '@/lib/auth'
 import { LandingNav } from '@/components/landing/LandingNav'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { LoveStrip } from '@/components/landing/LoveStrip'
+import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
 
 /**
  * Root page — /
@@ -28,6 +29,7 @@ export default function LandingPage() {
       <main>
         <HeroSection />
         <LoveStrip />
+        <HowItWorksSection />
       </main>
     </div>
   )
