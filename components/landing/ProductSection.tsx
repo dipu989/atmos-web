@@ -155,7 +155,7 @@ export function ProductSection() {
           <p className="text-[11.5px] font-semibold uppercase tracking-[1.4px] text-horizon-blue">
             The Atmos dashboard
           </p>
-          <h2 className="mt-3.5 font-serif text-[44px] font-medium leading-[1.05] tracking-[-1.2px] text-text-primary [text-wrap:balance]">
+          <h2 className="mt-3.5 font-serif text-[30px] font-medium leading-[1.08] tracking-[-0.8px] lg:text-[44px] lg:leading-[1.05] lg:tracking-[-1.2px] text-text-primary [text-wrap:balance]">
             Your week, your modes,{' '}
             <em className="italic text-sage">your numbers.</em>
           </h2>
@@ -166,9 +166,9 @@ export function ProductSection() {
           </p>
         </div>
 
-        {/* Browser frame */}
-        <div className="mt-4 rounded-[22px] border border-[#E8ECF1] bg-bg-page p-3.5 shadow-[0_1px_2px_rgba(26,35,50,0.04),0_40px_80px_-40px_rgba(26,35,50,0.30)]">
-          <div className="overflow-hidden rounded-[14px] border border-divider bg-bg-page">
+        {/* Browser frame — scrolls horizontally on small screens */}
+        <div className="mt-4 overflow-x-auto rounded-[22px] border border-[#E8ECF1] bg-bg-page p-3.5 shadow-[0_1px_2px_rgba(26,35,50,0.04),0_40px_80px_-40px_rgba(26,35,50,0.30)]">
+          <div className="min-w-[680px] overflow-hidden rounded-[14px] border border-divider bg-bg-page">
 
             {/* Browser chrome bar */}
             <div className="flex h-9 items-center gap-1.5 border-b border-divider bg-white px-3.5">

@@ -94,7 +94,7 @@ export function FeaturesSection() {
           <p className="text-[11.5px] font-semibold uppercase tracking-[1.4px] text-horizon-blue">
             What makes it work
           </p>
-          <h2 className="mt-3.5 font-serif text-[44px] font-medium leading-[1.05] tracking-[-1.2px] text-text-primary [text-wrap:balance]">
+          <h2 className="mt-3.5 font-serif text-[30px] font-medium leading-[1.08] tracking-[-0.8px] lg:text-[44px] lg:leading-[1.05] lg:tracking-[-1.2px] text-text-primary [text-wrap:balance]">
             Smart where it counts.{' '}
             <em className="italic text-sage">Quiet everywhere else.</em>
           </h2>

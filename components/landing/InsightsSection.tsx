@@ -81,7 +81,7 @@ export function InsightsSection() {
             <p className="text-[11.5px] font-semibold uppercase tracking-[1.4px] text-sage">
               Weekly insights
             </p>
-            <h2 className="mt-3.5 font-serif text-[44px] font-medium leading-[1.05] tracking-[-1.2px] text-text-primary [text-wrap:balance]">
+            <h2 className="mt-3.5 font-serif text-[30px] font-medium leading-[1.08] tracking-[-0.8px] lg:text-[44px] lg:leading-[1.05] lg:tracking-[-1.2px] text-text-primary [text-wrap:balance]">
               The part nobody else gets right.
             </h2>
             <p className="mt-[18px] max-w-[480px] text-[16px] leading-[1.55] text-text-secondary">
