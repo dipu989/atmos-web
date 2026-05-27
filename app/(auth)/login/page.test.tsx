@@ -4,9 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Hoist mocks so they apply before module imports
 const mockPush = vi.fn()
+const mockGet = vi.fn().mockReturnValue(null)
 
 vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
+  useSearchParams: () => ({ get: mockGet }),
 }))
 
 vi.mock('@/lib/api/client', () => ({
@@ -117,7 +119,7 @@ describe('LoginPage', () => {
     fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
 
     await waitFor(() => {
-      expect(screen.getByRole('button')).toBeDisabled()
+      expect(screen.getByRole('button', { name: /signing in/i })).toBeDisabled()
       expect(screen.getByLabelText(/email/i)).toBeDisabled()
       expect(screen.getByLabelText(/password/i)).toBeDisabled()
     })
