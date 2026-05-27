@@ -7,6 +7,7 @@ import { LandingNav } from '@/components/landing/LandingNav'
 import { HeroSection } from '@/components/landing/HeroSection'
 import { LoveStrip } from '@/components/landing/LoveStrip'
 import { HowItWorksSection } from '@/components/landing/HowItWorksSection'
+import { FeaturesSection } from '@/components/landing/FeaturesSection'
 
 /**
  * Root page — /
@@ -30,6 +31,7 @@ export default function LandingPage() {
         <HeroSection />
         <LoveStrip />
         <HowItWorksSection />
+        <FeaturesSection />
       </main>
     </div>
   )
