@@ -1,4 +1,4 @@
-import { clearAuth, getAccessToken } from '@/lib/auth'
+import { clearAuth, getAccessToken, getRefreshToken, updateTokens } from '@/lib/auth'
 import type {
   AuthResponse,
   CreateTripRequest,
@@ -252,6 +252,7 @@ async function request<T>(
   url: string,
   options: RequestInit = {},
   authenticated = true,
+  allowRefreshRetry = true,
 ): Promise<T> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
 
@@ -268,9 +269,30 @@ async function request<T>(
   })
 
   if (response.status === 401) {
-    clearAuth()
-    if (typeof window !== 'undefined') {
-      window.location.href = '/login'
+    // Attempt a silent token refresh before falling back to logout.
+    // Only retry once (allowRefreshRetry=false on the second attempt) and only
+    // for authenticated requests — the refresh endpoint itself is unauthenticated.
+    if (allowRefreshRetry && authenticated) {
+      const storedRefreshToken = getRefreshToken()
+      if (storedRefreshToken) {
+        try {
+          const refreshed = await refreshToken(storedRefreshToken)
+          updateTokens(refreshed.access_token, refreshed.refresh_token)
+          // Retry the original request with the new access token. No further retry.
+          return request<T>(url, options, authenticated, false)
+        } catch {
+          // Refresh failed — fall through to logout below.
+        }
+      }
+    }
+    // Only clear the session for authenticated requests. The refresh endpoint
+    // itself is unauthenticated — a 401 there means the refresh token is expired
+    // or invalid, but there is no additional session state to tear down here.
+    if (authenticated) {
+      clearAuth()
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login'
+      }
     }
     throw new Error('Unauthorized — redirecting to login')
   }
