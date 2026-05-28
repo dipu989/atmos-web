@@ -36,6 +36,15 @@ export function getStoredUser(): User | null {
 }
 
 /**
+ * Update the stored access and refresh tokens without touching the cached user.
+ * Called after a successful silent token refresh.
+ */
+export function updateTokens(accessToken: string, refreshToken: string): void {
+  localStorage.setItem(ACCESS_KEY, accessToken)
+  localStorage.setItem(REFRESH_KEY, refreshToken)
+}
+
+/**
  * Remove all three auth keys from localStorage.
  * Called on logout or when a 401 response is received.
  */

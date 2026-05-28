@@ -243,8 +243,9 @@ describe('lib/api/client', () => {
 
   // ─── 401 handling ──────────────────────────────────────────────────────────
 
-  describe('401 handling', () => {
-    it('calls clearAuth when a 401 response is received', async () => {
+  describe('401 handling — no refresh token stored', () => {
+    it('calls clearAuth immediately when there is no refresh token', async () => {
+      // localStorage is empty → getRefreshToken() returns null → no retry
       fetchSpy.mockResolvedValue(makeErrorResponse(401, 'Unauthorized'))
       const { getTrips } = await import('@/lib/api/client')
 
@@ -257,6 +258,90 @@ describe('lib/api/client', () => {
       const { getMe } = await import('@/lib/api/client')
 
       await expect(getMe()).rejects.toThrow()
+    })
+  })
+
+  // ─── Silent token refresh ──────────────────────────────────────────────────
+
+  describe('silent token refresh', () => {
+    let getRefreshTokenSpy: ReturnType<typeof vi.spyOn>
+    let updateTokensSpy: ReturnType<typeof vi.spyOn>
+
+    beforeEach(() => {
+      getRefreshTokenSpy = vi
+        .spyOn(authModule, 'getRefreshToken')
+        .mockReturnValue('stored-refresh-token')
+      updateTokensSpy = vi.spyOn(authModule, 'updateTokens').mockImplementation(() => {})
+    })
+
+    it('retries the original request with a new token after a successful refresh', async () => {
+      const refreshResponse = { access_token: 'new-access-token', refresh_token: 'new-refresh-token' }
+      const tripsResponse = { activities: [], total: 0, limit: 20, offset: 0 }
+
+      fetchSpy
+        .mockResolvedValueOnce(makeErrorResponse(401))          // original request → 401
+        .mockResolvedValueOnce(makeOkResponse(refreshResponse)) // /auth/token/refresh → 200
+        .mockResolvedValueOnce(makeOkResponse(tripsResponse))   // retried request → 200
+
+      const { getTrips } = await import('@/lib/api/client')
+      const result = await getTrips()
+
+      // fetch called 3 times: original, refresh, retry
+      expect(fetchSpy).toHaveBeenCalledTimes(3)
+      // tokens updated in localStorage
+      expect(updateTokensSpy).toHaveBeenCalledWith('new-access-token', 'new-refresh-token')
+      // result is from the retried request
+      expect(result.items).toHaveLength(0)
+      // clearAuth NOT called — user stays logged in
+      expect(clearAuthSpy).not.toHaveBeenCalled()
+    })
+
+    it('calls clearAuth when the refresh endpoint returns 401', async () => {
+      fetchSpy
+        .mockResolvedValueOnce(makeErrorResponse(401))  // original → 401
+        .mockResolvedValueOnce(makeErrorResponse(401))  // refresh → 401 (refresh token expired)
+
+      const { getTrips } = await import('@/lib/api/client')
+
+      await expect(getTrips()).rejects.toThrow()
+      expect(clearAuthSpy).toHaveBeenCalledOnce()
+    })
+
+    it('calls clearAuth when the refresh endpoint returns a network error', async () => {
+      fetchSpy
+        .mockResolvedValueOnce(makeErrorResponse(401))              // original → 401
+        .mockRejectedValueOnce(new Error('Network error'))           // refresh → throws
+
+      const { getTrips } = await import('@/lib/api/client')
+
+      await expect(getTrips()).rejects.toThrow()
+      expect(clearAuthSpy).toHaveBeenCalledOnce()
+    })
+
+    it('does NOT retry again if the retried request also returns 401', async () => {
+      const refreshResponse = { access_token: 'new-access-token', refresh_token: 'new-refresh-token' }
+
+      fetchSpy
+        .mockResolvedValueOnce(makeErrorResponse(401))          // original → 401
+        .mockResolvedValueOnce(makeOkResponse(refreshResponse)) // refresh → 200
+        .mockResolvedValueOnce(makeErrorResponse(401))          // retry → 401 (no further retry)
+
+      const { getTrips } = await import('@/lib/api/client')
+
+      await expect(getTrips()).rejects.toThrow()
+      // fetch called exactly 3 times — no infinite loop
+      expect(fetchSpy).toHaveBeenCalledTimes(3)
+      expect(clearAuthSpy).toHaveBeenCalledOnce()
+    })
+
+    it('does NOT attempt refresh for unauthenticated endpoints', async () => {
+      fetchSpy.mockResolvedValue(makeErrorResponse(401))
+      const { login } = await import('@/lib/api/client')
+
+      await expect(login({ email: 'x@x.com', password: 'pass' })).rejects.toThrow()
+      // only 1 fetch — no refresh attempt
+      expect(fetchSpy).toHaveBeenCalledTimes(1)
+      expect(getRefreshTokenSpy).not.toHaveBeenCalled()
     })
   })
 
