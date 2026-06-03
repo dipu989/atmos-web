@@ -88,7 +88,7 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
       <div className="mt-auto border-t border-divider pt-4">
         <div className="flex items-center gap-3 px-1">
           <div className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-[#E8DCC7] text-[12px] font-semibold text-[#5A4A2A]">
-            {user ? getInitials(user.display_name) : 'U'}
+            {user?.display_name ? getInitials(user.display_name) : 'U'}
           </div>
           <div className="min-w-0">
             <p className="truncate text-[13.5px] font-semibold text-text-primary">
