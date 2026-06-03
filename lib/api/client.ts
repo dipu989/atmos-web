@@ -25,6 +25,16 @@ import type {
 // ─── Config ───────────────────────────────────────────────────────────────────
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8081'
+
+// ─── Error helpers ────────────────────────────────────────────────────────────
+
+function isNotFoundError(err: unknown): boolean {
+  return (
+    err instanceof Error &&
+    (err.message.toLowerCase().includes('not found') ||
+      err.message.toLowerCase().includes('record not found'))
+  )
+}
 const API_PREFIX = '/api/v1'
 
 // ─── Internal backend shapes (snake_case — never exposed to UI) ───────────────
@@ -351,18 +361,23 @@ export async function getTrips(params?: {
   date_to?: string
   transport_mode?: string
 }): Promise<PaginatedResponse<Trip>> {
-  const raw = await request<{
-    activities: BackendActivity[]
-    total: number
-    limit: number
-    offset: number
-  }>(buildUrl('/activities', params))
+  try {
+    const raw = await request<{
+      activities: BackendActivity[]
+      total: number
+      limit: number
+      offset: number
+    }>(buildUrl('/activities', params))
 
-  return {
-    items: raw.activities.map(mapActivity),
-    total: raw.total,
-    limit: raw.limit,
-    offset: raw.offset,
+    return {
+      items: raw.activities.map(mapActivity),
+      total: raw.total,
+      limit: raw.limit,
+      offset: raw.offset,
+    }
+  } catch (err) {
+    if (isNotFoundError(err)) return { items: [], total: 0, limit: 20, offset: 0 }
+    throw err
   }
 }
 
@@ -409,22 +424,27 @@ export async function deleteTrip(id: string): Promise<void> {
  * otherwise returns today's summary via GET /timeline/daily.
  */
 export async function getDailySummaries(params?: { days?: number }): Promise<DailySummary[]> {
-  if (params?.days && params.days > 1) {
-    const to = new Date()
-    const from = new Date()
-    from.setDate(from.getDate() - (params.days - 1))
+  try {
+    if (params?.days && params.days > 1) {
+      const to = new Date()
+      const from = new Date()
+      from.setDate(from.getDate() - (params.days - 1))
 
-    const toStr = to.toISOString().slice(0, 10)
-    const fromStr = from.toISOString().slice(0, 10)
+      const toStr = to.toISOString().slice(0, 10)
+      const fromStr = from.toISOString().slice(0, 10)
 
-    const raw = await request<BackendDailySummary[]>(
-      buildUrl('/timeline/range', { from: fromStr, to: toStr }),
-    )
-    return raw.map(mapDailySummary)
+      const raw = await request<BackendDailySummary[]>(
+        buildUrl('/timeline/range', { from: fromStr, to: toStr }),
+      )
+      return raw.map(mapDailySummary)
+    }
+
+    const raw = await request<BackendDailySummary>(buildUrl('/timeline/daily'))
+    return [mapDailySummary(raw)]
+  } catch (err) {
+    if (isNotFoundError(err)) return []
+    throw err
   }
-
-  const raw = await request<BackendDailySummary>(buildUrl('/timeline/daily'))
-  return [mapDailySummary(raw)]
 }
 
 /**
@@ -435,8 +455,13 @@ export async function getDailySummaries(params?: { days?: number }): Promise<Dai
 export async function getWeeklySummaries(
   _params?: { weeks?: number },
 ): Promise<WeeklySummary[]> {
-  const raw = await request<BackendWeeklySummary>(buildUrl('/timeline/weekly'))
-  return [mapWeeklySummary(raw)]
+  try {
+    const raw = await request<BackendWeeklySummary>(buildUrl('/timeline/weekly'))
+    return [mapWeeklySummary(raw)]
+  } catch (err) {
+    if (isNotFoundError(err)) return []
+    throw err
+  }
 }
 
 /**
@@ -447,8 +472,13 @@ export async function getWeeklySummaries(
 export async function getMonthlySummaries(
   _params?: { months?: number },
 ): Promise<MonthlySummary[]> {
-  const raw = await request<BackendMonthlySummary>(buildUrl('/timeline/monthly'))
-  return [mapMonthlySummary(raw)]
+  try {
+    const raw = await request<BackendMonthlySummary>(buildUrl('/timeline/monthly'))
+    return [mapMonthlySummary(raw)]
+  } catch (err) {
+    if (isNotFoundError(err)) return []
+    throw err
+  }
 }
 
 /**
@@ -459,39 +489,49 @@ export async function getMonthlySummaries(
 export async function getTransportBreakdown(
   params?: { period?: string },
 ): Promise<{ mode: TransportMode; co2_kg: number; distance_km: number }[]> {
-  let rawBreakdown: Partial<Record<TransportMode, BackendModeBreakdown>>
+  try {
+    let rawBreakdown: Partial<Record<TransportMode, BackendModeBreakdown>>
 
-  if (params?.period === 'weekly') {
-    const raw = await request<BackendWeeklySummary>(buildUrl('/timeline/weekly'))
-    rawBreakdown = raw.breakdown
-  } else if (params?.period === 'monthly') {
-    const raw = await request<BackendMonthlySummary>(buildUrl('/timeline/monthly'))
-    rawBreakdown = raw.breakdown
-  } else {
-    const raw = await request<BackendDailySummary>(buildUrl('/timeline/daily'))
-    rawBreakdown = raw.breakdown
-  }
-
-  const result: { mode: TransportMode; co2_kg: number; distance_km: number }[] = []
-  for (const key of Object.keys(rawBreakdown) as TransportMode[]) {
-    const val = rawBreakdown[key]
-    if (val !== undefined) {
-      result.push({ mode: key, co2_kg: val.kg_co2e, distance_km: val.distance_km })
+    if (params?.period === 'weekly') {
+      const raw = await request<BackendWeeklySummary>(buildUrl('/timeline/weekly'))
+      rawBreakdown = raw.breakdown
+    } else if (params?.period === 'monthly') {
+      const raw = await request<BackendMonthlySummary>(buildUrl('/timeline/monthly'))
+      rawBreakdown = raw.breakdown
+    } else {
+      const raw = await request<BackendDailySummary>(buildUrl('/timeline/daily'))
+      rawBreakdown = raw.breakdown
     }
+
+    const result: { mode: TransportMode; co2_kg: number; distance_km: number }[] = []
+    for (const key of Object.keys(rawBreakdown) as TransportMode[]) {
+      const val = rawBreakdown[key]
+      if (val !== undefined) {
+        result.push({ mode: key, co2_kg: val.kg_co2e, distance_km: val.distance_km })
+      }
+    }
+    return result
+  } catch (err) {
+    if (isNotFoundError(err)) return []
+    throw err
   }
-  return result
 }
 
 // ─── Insights ─────────────────────────────────────────────────────────────────
 
 export async function getInsights(): Promise<Insight[]> {
-  const raw = await request<{
-    items: BackendInsight[]
-    total: number
-    limit: number
-    offset: number
-  }>(buildUrl('/insights'))
-  return raw.items.map(mapInsight)
+  try {
+    const raw = await request<{
+      items: BackendInsight[]
+      total: number
+      limit: number
+      offset: number
+    }>(buildUrl('/insights'))
+    return raw.items.map(mapInsight)
+  } catch (err) {
+    if (isNotFoundError(err)) return []
+    throw err
+  }
 }
 
 export async function markInsightRead(id: string): Promise<Insight> {
