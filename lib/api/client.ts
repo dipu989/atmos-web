@@ -559,8 +559,21 @@ export async function updateMe(
   })
 }
 
+const DEFAULT_PREFERENCES: Preferences = {
+  distance_unit: 'km',
+  push_notifications_enabled: false,
+  weekly_report_enabled: true,
+  daily_goal_kg_co2e: 5,
+  data_sharing_enabled: false,
+}
+
 export async function getPreferences(): Promise<Preferences> {
-  return request<Preferences>(buildUrl('/users/me/preferences'))
+  try {
+    return await request<Preferences>(buildUrl('/users/me/preferences'))
+  } catch (err) {
+    if (isNotFoundError(err)) return DEFAULT_PREFERENCES
+    throw err
+  }
 }
 
 export async function updatePreferences(body: Partial<Preferences>): Promise<Preferences> {
