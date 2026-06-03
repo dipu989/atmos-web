@@ -6,9 +6,11 @@ import { getStoredUser } from '@/lib/auth';
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/dashboard'),
+  useRouter: vi.fn(() => ({ replace: vi.fn() })),
 }));
 
 vi.mock('@/lib/auth', () => ({
+  clearAuth: vi.fn(),
   getStoredUser: vi.fn(() => ({
     id: '1',
     display_name: 'John Doe',
