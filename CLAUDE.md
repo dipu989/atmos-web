@@ -117,7 +117,6 @@ Typography: `text-heading` (24px/600) · `text-subheading` (17px/600) · `text-b
 ## Git Rules
 
 Branch format: `feat/T00X-short-description`
-Commit format: Conventional Commits — `feat(dashboard): add today impact card`
 One task = one branch = one PR. Never batch multiple tasks into one PR.
 
 **Always start a task from latest main:**
@@ -132,6 +131,39 @@ git fetch origin main
 git rebase origin/main   # resolve any conflicts that landed while you were working
 pnpm test --run && pnpm build
 git push --force-with-lease
+```
+
+### Commit message format
+
+Commits are linted by commitlint on every PR (`commitlint.config.js`). Non-compliant messages will fail CI.
+
+```
+<type>(<scope>): <subject>
+```
+
+**Allowed types** (others will fail the pipeline):
+
+| Type | When to use |
+|---|---|
+| `feat` | New feature or capability |
+| `fix` | Bug fix |
+| `perf` | Performance improvement |
+| `refactor` | Code change that neither fixes a bug nor adds a feature |
+| `chore` | Maintenance, dependency bumps, config changes |
+| `docs` | Documentation only |
+| `test` | Adding or updating tests |
+| `ci` | CI/CD workflow changes |
+| `revert` | Reverting a previous commit |
+
+**Not allowed** (will fail CI): `build`, `style`
+
+**Examples:**
+```
+feat(dashboard): add today impact card
+fix(auth): handle 401 on token refresh
+chore: upgrade pnpm to v11
+refactor(trips): extract date grouping into util
+test(timeline): add weekly aggregation test
 ```
 
 ---
