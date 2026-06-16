@@ -1,152 +1,50 @@
-# CLAUDE.md
+# atmos-web
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-
----
+Next.js 15 App Router, TypeScript, Tailwind, TanStack Query, Recharts. All data-fetching is client-side — no server components fetch data.
 
 ## Commands
 
 ```bash
-pnpm dev                        # dev server → localhost:3000
-pnpm build                      # production build (run before every PR)
-pnpm lint                       # ESLint
-pnpm test                       # Vitest (--passWithNoTests set)
-pnpm test path/to/file.test.tsx # single file
-pnpm e2e                        # Playwright
+pnpm dev              # localhost:3000 (backend must be running on :8081)
+pnpm build            # run before every PR — a build failure means the task is not done
+pnpm lint             # ESLint
+pnpm test             # Vitest
+pnpm e2e              # Playwright
 ```
 
-Backend must be running: `cd ../atmos-core && make dev` (port 8081)
+Backend: `cd ../atmos-core && make dev`
 
----
-
-## Agent Rules
-
-### Always
-- Read the task file fully before writing any code
-- Run `pnpm build` before marking a task done — a build failure means the task is not done
-- Use design reference in `design/` for every UI component — pixel-perfect is the goal
-- Check `../.context/api-spec.md` before writing any API call
-- Use types from `types/index.ts` — never use `any`
-- Use `cn()` for all conditional classNames
-- Map `activity` → `trip` at the API client layer (`lib/api/client.ts`) — never expose backend terminology in UI
-
-### Never
-- Never create a new component if an existing one in `components/ui/` can be extended
-- Never add a feature not listed in the task file
-- Never use inline styles — Tailwind only
-- Never hardcode colors — use design tokens from `tailwind.config.ts`
-- Never commit `.env.local` or any secrets
-- Never use `any` type — use `unknown` and narrow, or define the type
-- Never leave unused imports
-- Never skip loading and error states — every data-fetching component needs all three states: loading, error, empty
-
-### When Uncertain
-- If the design reference is missing for a component → stop, add a `## Blockers` section to the task file, notify
-- If an API endpoint behaves differently than `api-spec.md` describes → document the discrepancy in the task file, use the actual behavior
-- If a task requires touching code outside its defined scope → stop and ask, don't expand scope silently
-
----
-
-## Architecture
-
-**Stack:** Next.js 15 App Router · TypeScript · Tailwind CSS · TanStack Query · Recharts
-
-**Data flow:**
-```
-Page → TanStack Query hook (lib/hooks/) → API fetcher (lib/api/client.ts) → atmos-core REST
-```
-
-Everything is client-side. No server components fetch data. All API calls go through `lib/api/client.ts`.
-
-**Route groups:**
-- `app/(auth)/` — login, signup. No sidebar layout.
-- `app/(dashboard)/` — all protected pages. Shared sidebar + header layout.
-
-**Providers** live in `app/providers.tsx`. Add new providers there only — never in `layout.tsx`.
-
-**Auth:** JWT stored in `localStorage` keys `atmos_access_token` and `atmos_refresh_token`. On 401, clear tokens and redirect to `/login`. Auto-refresh is NOT implemented (deferred to production hardening — see `ROADMAP.md`).
-
----
-
-## Component Rules
+## Commits — enforced by commitlint in CI
 
 ```
-components/
-  ui/           ← primitives (Button, Card, Badge). Extend these, don't duplicate.
-  layout/       ← Sidebar, Header, PageShell
-  dashboard/    ← dashboard-specific components
-  charts/       ← ALL Recharts wrappers live here. Never import Recharts outside this folder.
-  trips/        ← trips table, filters, row
-  insights/     ← insight card variants by type
+<type>(<scope>): <subject>
 ```
 
-- If a component exceeds ~150 lines, split it
-- Every component that fetches data must handle: loading skeleton, error state, empty state
-- Empty state copy: "No [thing] yet" with a subtle illustration or icon
+Allowed: `feat` `fix` `perf` `refactor` `chore` `docs` `test` `ci` `revert`  
+**Not allowed (fail CI):** `build` `style`
 
----
+## Rules
 
-## API Client Rules
+- Never push to `main`. Branch → PR always. One task = one branch = one PR.
+- Read the task file in `tasks/` fully before writing any code. Stop if design reference is missing — add a `## Blockers` note to the task file.
+- Check `../.context/api-spec.md` before writing any API call.
+- `activity` (backend term) → `trip` (UI term). Transform at the fetcher level in `lib/api/client.ts`. Never let backend terminology reach components.
+- Use types from `types/index.ts`. No `any` — use `unknown` and narrow, or define the type.
+- `cn()` for all conditional classNames. Tailwind only — no inline styles, no hardcoded colors.
+- Never import Recharts outside `components/charts/`.
+- Every data-fetching component needs all three states: loading skeleton, error, empty.
+- Never create a new primitive if one in `components/ui/` can be extended.
+- `@/` path alias always. No relative `../../` imports.
 
-- Base URL: `NEXT_PUBLIC_API_URL` (default `http://localhost:8081`)
-- All protected endpoints require header: `Authorization: Bearer <token>`
-- All routes are prefixed `/api/v1/` — see `../.context/api-spec.md` for full route list
-- `activity` from the backend = `trip` in the UI — transform at the fetcher level
-- Standard response envelope: `{ data: T, message: string }` — unwrap in fetcher, never in hooks
+## Non-obvious gotchas
 
----
+**Auth** — JWT in `localStorage` (`atmos_access_token`, `atmos_refresh_token`). On 401, clear tokens and redirect `/login`. Silent refresh is not implemented.
 
-## Design Tokens
+**Providers** go in `app/providers.tsx` only — never in `layout.tsx`.
 
-| Token | Value | Use |
-|---|---|---|
-| `horizon-blue` | #4A90C4 | Primary actions, links, active nav |
-| `sage` | #3DAB82 | Eco-positive, low-emission, streaks |
-| `peach` | #F0956A | Warnings, medium-emission |
-| `alert-red` | #E05252 | Errors, high-emission, destructive |
-| `bg-page` | #F5F7FA | Page background |
-| `bg-card` | #FFFFFF | Card surfaces |
-| `text-primary` | #1A2332 | Headings, body |
-| `text-secondary` | #6B7A8D | Labels, captions |
+**Response envelope** — `{ data: T, message: string }`. Unwrap in the fetcher (`lib/api/client.ts`), never in hooks or components.
 
-Card pattern: `rounded-2xl shadow-card p-5`
-Typography: `text-heading` (24px/600) · `text-subheading` (17px/600) · `text-body` (15px/400) · `text-label` (13px/500)
+## Design tokens (don't hardcode hex values)
 
----
-
-## Git Rules
-
-Branch format: `feat/T00X-short-description`
-Commit format: Conventional Commits — `feat(dashboard): add today impact card`
-One task = one branch = one PR. Never batch multiple tasks into one PR.
-
-**Always start a task from latest main:**
-```bash
-git fetch origin main
-git checkout -b feat/T00X-description origin/main
-```
-
-**Before pushing, fetch once more and rebase:**
-```bash
-git fetch origin main
-git rebase origin/main   # resolve any conflicts that landed while you were working
-pnpm test --run && pnpm build
-git push --force-with-lease
-```
-
----
-
-## Path Aliases
-
-`@/` = project root. Always use it. Never use relative `../../` imports.
-
----
-
-## Decisions Log
-
-| Decision | Choice | Reason | Revisit when |
-|---|---|---|---|
-| JWT storage | localStorage | Simpler for initial build | Before production — move to httpOnly cookies |
-| Token expiry | Redirect to /login | Simpler for initial build | Before production — implement silent refresh |
-| Data fetching | Client-side only | No SSR complexity | If SEO matters later |
-| Activity naming | Map to "trip" in UI | UX clarity | If backend renames the resource |
+`horizon-blue` · `sage` · `peach` · `alert-red` · `bg-page` · `bg-card` · `text-primary` · `text-secondary`  
+Card: `rounded-2xl shadow-card p-5` · Type scale: `text-heading` `text-subheading` `text-body` `text-label`
