@@ -57,8 +57,8 @@ describe('ProfileSection', () => {
     render(<ProfileSection />)
     expect(screen.getByText('Full name')).toBeInTheDocument()
     expect(screen.getByText('Email')).toBeInTheDocument()
-    expect(screen.getByText('City')).toBeInTheDocument()
     expect(screen.getByText('Time zone')).toBeInTheDocument()
+    expect(screen.getByText('Language')).toBeInTheDocument()
     expect(screen.getByText('Distance unit')).toBeInTheDocument()
   })
 
