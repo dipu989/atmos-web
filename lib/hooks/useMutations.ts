@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
   createAPIKey,
   createTrip,
+  deleteAccount,
   deleteTrip,
   markInsightRead,
   revokeAPIKey,
@@ -104,5 +105,11 @@ export function useRevokeAPIKey() {
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['apiKeys'] })
     },
+  })
+}
+
+export function useDeleteAccount() {
+  return useMutation({
+    mutationFn: () => deleteAccount(),
   })
 }

@@ -626,18 +626,28 @@ function mapCreateAPIKeyResponse(k: BackendCreateAPIKeyResponse): CreateAPIKeyRe
 }
 
 export async function listAPIKeys(): Promise<APIKey[]> {
-  const raw = await request<BackendAPIKeyItem[]>(buildUrl('/users/me/api-keys'))
-  return (raw ?? []).map(mapAPIKeyItem)
+  const raw = await request<{ data: BackendAPIKeyItem[] }>(buildUrl('/users/me/api-keys'))
+  return (raw.data ?? []).map(mapAPIKeyItem)
 }
 
 export async function createAPIKey(name: string): Promise<CreateAPIKeyResponse> {
-  const raw = await request<BackendCreateAPIKeyResponse>(
+  const raw = await request<{ data: BackendCreateAPIKeyResponse }>(
     buildUrl('/users/me/api-keys'),
     { method: 'POST', body: JSON.stringify({ name }) },
   )
-  return mapCreateAPIKeyResponse(raw)
+  return mapCreateAPIKeyResponse(raw.data)
 }
 
 export async function revokeAPIKey(id: string): Promise<void> {
   await request<void>(buildUrl(`/users/me/api-keys/${id}`), { method: 'DELETE' })
+}
+
+// ─── Account ──────────────────────────────────────────────────────────────────
+
+export async function deleteAccount(): Promise<{ message: string }> {
+  const raw = await request<{ data: { message: string } }>(buildUrl('/users/me'), {
+    method: 'DELETE',
+    body: JSON.stringify({ confirmation: 'delete' }),
+  })
+  return raw.data
 }
