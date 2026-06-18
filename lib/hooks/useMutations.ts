@@ -6,8 +6,10 @@ import {
   createTrip,
   deleteAccount,
   deleteTrip,
+  disconnectGmail,
   markInsightRead,
   revokeAPIKey,
+  syncGmail,
   updateMe,
   updatePreferences,
   updateTrip,
@@ -111,5 +113,28 @@ export function useRevokeAPIKey() {
 export function useDeleteAccount() {
   return useMutation({
     mutationFn: () => deleteAccount(),
+  })
+}
+
+export function useDisconnectGmail() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => disconnectGmail(),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['gmailStatus'] })
+    },
+  })
+}
+
+export function useSyncGmail() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: () => syncGmail(),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['gmailStatus'] })
+      void queryClient.invalidateQueries({ queryKey: ['trips'] })
+    },
   })
 }
