@@ -327,7 +327,13 @@ async function request<T>(
     return undefined as T
   }
 
-  return response.json() as Promise<T>
+  const json = (await response.json()) as Record<string, unknown>
+  // All backend endpoints wrap responses in { success: bool, data: T }.
+  // Unwrap automatically so every fetcher receives the payload directly.
+  if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
+    return json.data as T
+  }
+  return json as T
 }
 
 // ─── Auth endpoints (no Authorization header required) ────────────────────────
@@ -620,13 +626,13 @@ function mapGmailStatus(s: BackendGmailStatus): GmailStatus {
 }
 
 export async function getGmailStatus(): Promise<GmailStatus> {
-  const raw = await request<{ data: BackendGmailStatus }>(buildUrl('/gmail/status'))
-  return mapGmailStatus(raw.data)
+  const raw = await request<BackendGmailStatus>(buildUrl('/gmail/status'))
+  return mapGmailStatus(raw)
 }
 
 export async function getGmailAuthUrl(): Promise<string> {
-  const raw = await request<{ data: { url: string } }>(buildUrl('/gmail/auth-url'))
-  return raw.data.url
+  const raw = await request<{ url: string }>(buildUrl('/gmail/auth-url'))
+  return raw.url
 }
 
 export async function disconnectGmail(): Promise<void> {
@@ -634,8 +640,7 @@ export async function disconnectGmail(): Promise<void> {
 }
 
 export async function syncGmail(): Promise<GmailSyncResult> {
-  const raw = await request<{ data: GmailSyncResult }>(buildUrl('/gmail/sync'), { method: 'POST' })
-  return raw.data
+  return request<GmailSyncResult>(buildUrl('/gmail/sync'), { method: 'POST' })
 }
 
 // ─── API Keys ─────────────────────────────────────────────────────────────────
@@ -679,16 +684,16 @@ function mapCreateAPIKeyResponse(k: BackendCreateAPIKeyResponse): CreateAPIKeyRe
 }
 
 export async function listAPIKeys(): Promise<APIKey[]> {
-  const raw = await request<{ data: BackendAPIKeyItem[] }>(buildUrl('/users/me/api-keys'))
-  return (raw.data ?? []).map(mapAPIKeyItem)
+  const raw = await request<BackendAPIKeyItem[]>(buildUrl('/users/me/api-keys'))
+  return (raw ?? []).map(mapAPIKeyItem)
 }
 
 export async function createAPIKey(name: string): Promise<CreateAPIKeyResponse> {
-  const raw = await request<{ data: BackendCreateAPIKeyResponse }>(
+  const raw = await request<BackendCreateAPIKeyResponse>(
     buildUrl('/users/me/api-keys'),
     { method: 'POST', body: JSON.stringify({ name }) },
   )
-  return mapCreateAPIKeyResponse(raw.data)
+  return mapCreateAPIKeyResponse(raw)
 }
 
 export async function revokeAPIKey(id: string): Promise<void> {
@@ -698,9 +703,8 @@ export async function revokeAPIKey(id: string): Promise<void> {
 // ─── Account ──────────────────────────────────────────────────────────────────
 
 export async function deleteAccount(): Promise<{ message: string }> {
-  const raw = await request<{ data: { message: string } }>(buildUrl('/users/me'), {
+  return request<{ message: string }>(buildUrl('/users/me'), {
     method: 'DELETE',
     body: JSON.stringify({ confirmation: 'delete' }),
   })
-  return raw.data
 }
