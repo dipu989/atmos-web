@@ -3,7 +3,6 @@
 import { useQuery } from '@tanstack/react-query'
 import {
   getDailySummaries,
-  getGmailStatus,
   getInsights,
   getMe,
   getMonthlySummaries,
@@ -99,10 +98,3 @@ export function useAPIKeys() {
   })
 }
 
-export function useGmailStatus() {
-  return useQuery({
-    queryKey: ['gmailStatus'],
-    queryFn: () => getGmailStatus(),
-    staleTime: STALE_TIME,
-  })
-}
