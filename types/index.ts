@@ -191,6 +191,26 @@ export interface Insight {
   updatedAt: string
 }
 
+// ─── API Keys ─────────────────────────────────────────────────────────────────
+
+export interface APIKey {
+  id: string
+  name: string
+  prefix: string
+  lastUsedAt?: string
+  expiresAt?: string
+  createdAt: string
+}
+
+export interface CreateAPIKeyResponse {
+  id: string
+  name: string
+  /** Raw key — returned once at creation time only. Store it immediately. */
+  key: string
+  prefix: string
+  createdAt: string
+}
+
 // ─── Pagination ───────────────────────────────────────────────────────────────
 
 export interface PaginatedResponse<T> {
