@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { clearAuth, getStoredUser } from '@/lib/auth';
+import { useMe } from '@/lib/hooks/useTrips';
 import { useSidebar } from './SidebarContext';
 
 const NAV_ITEMS = [
@@ -40,7 +41,13 @@ interface SidebarContentProps {
 function SidebarContent({ onNavClick }: SidebarContentProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const user = getStoredUser();
+  // useMe() keeps the sidebar in sync when the user updates their profile.
+  // Fall back to localStorage while the query is in-flight to avoid a flash of "User".
+  const { data: meData } = useMe();
+  const storedUser = getStoredUser();
+  const displayName = meData?.display_name ?? storedUser?.display_name ?? '';
+  const email = meData?.email ?? storedUser?.email ?? '';
+  const avatarUrl = meData?.avatar_url ?? storedUser?.avatar_url ?? '';
 
   function handleLogout() {
     clearAuth();
@@ -94,14 +101,22 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
       {/* User block */}
       <div className="mt-auto border-t border-divider pt-4">
         <div className="flex items-center gap-3 px-1">
-          <div className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-[#E8DCC7] text-[12px] font-semibold text-[#5A4A2A]">
-            {user?.display_name ? getInitials(user.display_name) : 'U'}
-          </div>
+          {avatarUrl ? (
+            <img
+              src={avatarUrl}
+              alt={displayName}
+              className="h-[34px] w-[34px] flex-shrink-0 rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-[34px] w-[34px] flex-shrink-0 items-center justify-center rounded-full bg-[#E8DCC7] text-[12px] font-semibold text-[#5A4A2A]">
+              {displayName ? getInitials(displayName) : '?'}
+            </div>
+          )}
           <div className="min-w-0 flex-1">
             <p className="truncate text-[13.5px] font-semibold text-text-primary">
-              {user?.display_name ?? 'User'}
+              {displayName || '—'}
             </p>
-            <p className="text-[11.5px] text-text-secondary">Free plan</p>
+            <p className="truncate text-[11.5px] text-text-secondary">{email}</p>
           </div>
           <button
             onClick={handleLogout}
