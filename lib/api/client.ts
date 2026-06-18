@@ -626,16 +626,16 @@ function mapCreateAPIKeyResponse(k: BackendCreateAPIKeyResponse): CreateAPIKeyRe
 }
 
 export async function listAPIKeys(): Promise<APIKey[]> {
-  const raw = await request<{ data: BackendAPIKeyItem[] }>(buildUrl('/users/me/api-keys'))
-  return (raw.data ?? []).map(mapAPIKeyItem)
+  const raw = await request<BackendAPIKeyItem[]>(buildUrl('/users/me/api-keys'))
+  return (raw ?? []).map(mapAPIKeyItem)
 }
 
 export async function createAPIKey(name: string): Promise<CreateAPIKeyResponse> {
-  const raw = await request<{ data: BackendCreateAPIKeyResponse }>(
+  const raw = await request<BackendCreateAPIKeyResponse>(
     buildUrl('/users/me/api-keys'),
     { method: 'POST', body: JSON.stringify({ name }) },
   )
-  return mapCreateAPIKeyResponse(raw.data)
+  return mapCreateAPIKeyResponse(raw)
 }
 
 export async function revokeAPIKey(id: string): Promise<void> {

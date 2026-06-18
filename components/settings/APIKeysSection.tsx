@@ -107,7 +107,7 @@ function CreateKeyModal({
             'focus:border-horizon-blue focus:outline-none',
           )}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && name.trim()) onCreate(name.trim())
+            if (e.key === 'Enter' && name.trim()) { e.preventDefault(); onCreate(name.trim()) }
           }}
         />
 
@@ -211,14 +211,16 @@ export function APIKeysSection() {
   const [showCreateModal, setShowCreateModal] = useState(false)
   const [revealedKey, setRevealedKey] = useState<CreateAPIKeyResponse | null>(null)
   const [revokingId, setRevokingId] = useState<string | null>(null)
+  const [createError, setCreateError] = useState<string | null>(null)
 
   async function handleCreate(name: string) {
     setShowCreateModal(false)
+    setCreateError(null)
     try {
       const result = await createMutation.mutateAsync(name)
       setRevealedKey(result)
-    } catch {
-      // error is surfaced via mutation.isError if needed
+    } catch (err) {
+      setCreateError(err instanceof Error ? err.message : 'Failed to create API key')
     }
   }
 
@@ -263,6 +265,12 @@ export function APIKeysSection() {
         {isError && (
           <p className="py-6 text-center text-[13px] text-alert-red">
             Failed to load API keys. Please refresh and try again.
+          </p>
+        )}
+
+        {createError && (
+          <p className="mb-2 rounded-lg bg-alert-red/10 px-3 py-2 text-[13px] text-alert-red">
+            {createError}
           </p>
         )}
 
