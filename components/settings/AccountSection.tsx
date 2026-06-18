@@ -15,11 +15,12 @@ function DeleteAccountModal({ onClose }: { onClose: () => void }) {
   async function handleDelete() {
     try {
       await mutation.mutateAsync()
-      clearAuth()
-      window.location.href = '/login'
     } catch {
       // error displayed inline via mutation.error
+      return
     }
+    clearAuth()
+    window.location.href = '/login'
   }
 
   return (
