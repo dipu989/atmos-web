@@ -11,6 +11,7 @@ import {
   getTripById,
   getTrips,
   getWeeklySummaries,
+  listAPIKeys,
 } from '@/lib/api/client'
 
 const STALE_TIME = 5 * 60 * 1000 // 5 minutes
@@ -84,6 +85,15 @@ export function usePreferences() {
   return useQuery({
     queryKey: ['preferences'],
     queryFn: () => getPreferences(),
+    staleTime: STALE_TIME,
+  })
+}
+
+
+export function useAPIKeys() {
+  return useQuery({
+    queryKey: ['apiKeys'],
+    queryFn: () => listAPIKeys(),
     staleTime: STALE_TIME,
   })
 }

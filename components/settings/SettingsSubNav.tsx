@@ -8,6 +8,7 @@ import {
   Plug,
   CreditCard,
   AlertTriangle,
+  Key,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -18,6 +19,7 @@ export type SettingsSection =
   | 'privacy'
   | 'connections'
   | 'billing'
+  | 'api-keys'
   | 'account'
 
 interface NavItem {
@@ -33,6 +35,7 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'privacy', label: 'Privacy & data', icon: Shield },
   { id: 'connections', label: 'Connected apps', icon: Plug },
   { id: 'billing', label: 'Plan & billing', icon: CreditCard },
+  { id: 'api-keys', label: 'API Keys', icon: Key },
   { id: 'account', label: 'Account', icon: AlertTriangle },
 ]
 

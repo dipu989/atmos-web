@@ -1,6 +1,8 @@
 import { clearAuth, getAccessToken, getRefreshToken, updateTokens } from '@/lib/auth'
 import type {
+  APIKey,
   AuthResponse,
+  CreateAPIKeyResponse,
   CreateTripRequest,
   DailySummary,
   Insight,
@@ -581,4 +583,61 @@ export async function updatePreferences(body: Partial<Preferences>): Promise<Pre
     method: 'PUT',
     body: JSON.stringify(body),
   })
+}
+
+// ─── API Keys ─────────────────────────────────────────────────────────────────
+
+interface BackendAPIKeyItem {
+  id: string
+  name: string
+  prefix: string
+  last_used_at?: string
+  expires_at?: string
+  created_at: string
+}
+
+interface BackendCreateAPIKeyResponse {
+  id: string
+  name: string
+  key: string
+  prefix: string
+  created_at: string
+}
+
+function mapAPIKeyItem(k: BackendAPIKeyItem): APIKey {
+  return {
+    id: k.id,
+    name: k.name,
+    prefix: k.prefix,
+    lastUsedAt: k.last_used_at,
+    expiresAt: k.expires_at,
+    createdAt: k.created_at,
+  }
+}
+
+function mapCreateAPIKeyResponse(k: BackendCreateAPIKeyResponse): CreateAPIKeyResponse {
+  return {
+    id: k.id,
+    name: k.name,
+    key: k.key,
+    prefix: k.prefix,
+    createdAt: k.created_at,
+  }
+}
+
+export async function listAPIKeys(): Promise<APIKey[]> {
+  const raw = await request<{ data: BackendAPIKeyItem[] }>(buildUrl('/users/me/api-keys'))
+  return (raw.data ?? []).map(mapAPIKeyItem)
+}
+
+export async function createAPIKey(name: string): Promise<CreateAPIKeyResponse> {
+  const raw = await request<{ data: BackendCreateAPIKeyResponse }>(
+    buildUrl('/users/me/api-keys'),
+    { method: 'POST', body: JSON.stringify({ name }) },
+  )
+  return mapCreateAPIKeyResponse(raw.data)
+}
+
+export async function revokeAPIKey(id: string): Promise<void> {
+  await request<void>(buildUrl(`/users/me/api-keys/${id}`), { method: 'DELETE' })
 }

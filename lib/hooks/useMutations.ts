@@ -2,9 +2,11 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import {
+  createAPIKey,
   createTrip,
   deleteTrip,
   markInsightRead,
+  revokeAPIKey,
   updateMe,
   updatePreferences,
   updateTrip,
@@ -79,6 +81,28 @@ export function useUpdatePreferences() {
     mutationFn: (body: Parameters<typeof updatePreferences>[0]) => updatePreferences(body),
     onSuccess: () => {
       void queryClient.invalidateQueries({ queryKey: ['preferences'] })
+    },
+  })
+}
+
+export function useCreateAPIKey() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (name: string) => createAPIKey(name),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['apiKeys'] })
+    },
+  })
+}
+
+export function useRevokeAPIKey() {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (id: string) => revokeAPIKey(id),
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: ['apiKeys'] })
     },
   })
 }

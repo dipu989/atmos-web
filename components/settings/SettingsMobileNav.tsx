@@ -8,6 +8,7 @@ import {
   Plug,
   CreditCard,
   AlertTriangle,
+  Key,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { SettingsSection } from './SettingsSubNav'
@@ -24,6 +25,7 @@ const CHIP_ITEMS: {
   { id: 'privacy',       label: 'Privacy',        icon: Shield },
   { id: 'connections',   label: 'Connected apps', icon: Plug },
   { id: 'billing',       label: 'Billing',        icon: CreditCard },
+  { id: 'api-keys',      label: 'API Keys',       icon: Key },
   { id: 'account',       label: 'Account',        icon: AlertTriangle },
 ]
 
