@@ -11,7 +11,6 @@ import { Input } from '@/components/ui/Input'
 import { useMe, usePreferences } from '@/lib/hooks/useTrips'
 import { useUpdateMe, useUpdatePreferences } from '@/lib/hooks/useMutations'
 
-// ─── Timezone options (common subset) ─────────────────────────────────────────
 const TIMEZONE_OPTIONS = [
   { value: 'Asia/Kolkata', label: 'Asia/Kolkata (IST, +5:30)' },
   { value: 'Asia/Colombo', label: 'Asia/Colombo (+5:30)' },
@@ -32,6 +31,19 @@ const TIMEZONE_OPTIONS = [
   { value: 'UTC', label: 'UTC (±0:00)' },
 ]
 
+const LOCALE_OPTIONS = [
+  { value: 'en', label: 'English' },
+  { value: 'hi', label: 'Hindi' },
+  { value: 'fr', label: 'French' },
+  { value: 'de', label: 'German' },
+  { value: 'es', label: 'Spanish' },
+  { value: 'pt', label: 'Portuguese' },
+  { value: 'zh', label: 'Chinese (Simplified)' },
+  { value: 'ja', label: 'Japanese' },
+  { value: 'ko', label: 'Korean' },
+  { value: 'ar', label: 'Arabic' },
+]
+
 const UNIT_OPTIONS = [
   { value: 'km', label: 'km' },
   { value: 'miles', label: 'mi' },
@@ -39,37 +51,34 @@ const UNIT_OPTIONS = [
 
 type Toast = { type: 'success' | 'error'; message: string }
 
-// ─── ProfileSection ────────────────────────────────────────────────────────────
-
 export function ProfileSection() {
   const { data: user, isLoading: userLoading, isError: userError } = useMe()
   const { data: prefs, isLoading: prefsLoading, isError: prefsError } = usePreferences()
   const updateMe = useUpdateMe()
   const updatePrefs = useUpdatePreferences()
 
-  // Form state — initialised from API data
   const [name, setName] = useState('')
-  const [city, setCity] = useState('')
   const [timezone, setTimezone] = useState('UTC')
+  const [locale, setLocale] = useState('en')
   const [distanceUnit, setDistanceUnit] = useState<'km' | 'miles'>('km')
   const [toast, setToast] = useState<Toast | null>(null)
 
-  // Populate form when API data first loads.
-  // Use primitive value deps so a new object reference (e.g. from a mock on every render)
-  // doesn't reset user edits on re-render.
+  // Populate form from API data. Use primitive deps to avoid resetting user edits
+  // on re-renders that produce a new object reference.
   const userName = user?.display_name
   const userTimezone = user?.timezone
+  const userLocale = user?.locale
   useEffect(() => {
     if (userName !== undefined) setName(userName ?? '')
     if (userTimezone !== undefined) setTimezone(userTimezone ?? 'UTC')
-  }, [userName, userTimezone])
+    if (userLocale !== undefined) setLocale(userLocale ?? 'en')
+  }, [userName, userTimezone, userLocale])
 
   const prefsUnit = prefs?.distance_unit
   useEffect(() => {
     if (prefsUnit !== undefined) setDistanceUnit(prefsUnit)
   }, [prefsUnit])
 
-  // Auto-dismiss toast after 3 s
   useEffect(() => {
     if (!toast) return
     const t = setTimeout(() => setToast(null), 3000)
@@ -83,6 +92,7 @@ export function ProfileSection() {
       const mePayload: Parameters<typeof updateMe.mutateAsync>[0] = {}
       if (user && name !== user.display_name) mePayload.display_name = name
       if (user && timezone !== user.timezone) mePayload.timezone = timezone
+      if (user && locale !== user.locale) mePayload.locale = locale
 
       const prefsPayload: Parameters<typeof updatePrefs.mutateAsync>[0] = {}
       if (prefs && distanceUnit !== prefs.distance_unit)
@@ -107,9 +117,18 @@ export function ProfileSection() {
     }
   }
 
+  function handleCancel() {
+    if (user) {
+      setName(user.display_name ?? '')
+      setTimezone(user.timezone ?? 'UTC')
+      setLocale(user.locale ?? 'en')
+    }
+    if (prefs) setDistanceUnit(prefs.distance_unit ?? 'km')
+  }
+
   if (userLoading || prefsLoading) {
     return (
-      <div className="rounded-2xl bg-white shadow-card" style={{ padding: '28px 32px' }}>
+      <div className="rounded-2xl bg-white px-8 py-7 shadow-card">
         <div className="space-y-4 animate-pulse">
           <div className="h-5 w-32 rounded bg-divider" />
           <div className="h-10 rounded bg-divider" />
@@ -122,7 +141,7 @@ export function ProfileSection() {
 
   if (userError || prefsError) {
     return (
-      <div className="rounded-2xl bg-white shadow-card" style={{ padding: '28px 32px' }}>
+      <div className="rounded-2xl bg-white px-8 py-7 shadow-card">
         <p className="text-[14px] text-alert-red">Failed to load profile settings.</p>
       </div>
     )
@@ -138,13 +157,7 @@ export function ProfileSection() {
             variant="secondary"
             size="sm"
             type="button"
-            onClick={() => {
-              if (user) {
-                setName(user.display_name ?? '')
-                setTimezone(user.timezone ?? 'UTC')
-              }
-              if (prefs) setDistanceUnit(prefs.distance_unit ?? 'km')
-            }}
+            onClick={handleCancel}
             disabled={isSubmitting}
           >
             Cancel
@@ -162,7 +175,6 @@ export function ProfileSection() {
         </>
       }
     >
-      {/* Toast */}
       {toast && (
         <div
           role="status"
@@ -178,16 +190,22 @@ export function ProfileSection() {
 
       {/* Avatar */}
       <div className="mb-6 flex items-center gap-4">
-        <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E8DCC7] text-[22px] font-semibold text-[#5A4A2A]">
-          {name ? name.charAt(0).toUpperCase() : '?'}
-        </div>
+        {user?.avatar_url ? (
+          <img
+            src={user.avatar_url}
+            alt={name}
+            className="h-16 w-16 rounded-full object-cover"
+          />
+        ) : (
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#E8DCC7] text-[22px] font-semibold text-[#5A4A2A]">
+            {name ? name.charAt(0).toUpperCase() : '?'}
+          </div>
+        )}
         <div>
           <button
             type="button"
             className="flex items-center gap-1.5 rounded-[9px] border border-divider bg-white px-3 py-1.5 text-[13px] font-medium text-text-secondary hover:bg-bg-page"
-            onClick={() =>
-              setToast({ type: 'success', message: 'Avatar upload coming soon.' })
-            }
+            onClick={() => setToast({ type: 'success', message: 'Avatar upload coming soon.' })}
           >
             <Camera size={13} />
             Change photo
@@ -196,7 +214,7 @@ export function ProfileSection() {
         </div>
       </div>
 
-      {/* Name */}
+      {/* Full name */}
       <FormRow label="Full name" hint="Your display name across the app.">
         <Input
           value={name}
@@ -206,7 +224,7 @@ export function ProfileSection() {
         />
       </FormRow>
 
-      {/* Email */}
+      {/* Email — read-only */}
       <FormRow label="Email">
         <div className="flex items-center gap-2">
           <Input
@@ -222,17 +240,7 @@ export function ProfileSection() {
         </div>
       </FormRow>
 
-      {/* City — UI only: city is not in the current API spec */}
-      <FormRow label="City" hint="Not synced to server yet.">
-        <Input
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          placeholder="e.g. Bengaluru"
-          className="h-9 w-[280px] rounded-[9px] text-[13px]"
-        />
-      </FormRow>
-
-      {/* Timezone — goes to PUT /users/me */}
+      {/* Timezone */}
       <FormRow label="Time zone">
         <Select
           value={timezone}
@@ -241,7 +249,16 @@ export function ProfileSection() {
         />
       </FormRow>
 
-      {/* Distance unit — goes to PUT /users/me/preferences */}
+      {/* Language */}
+      <FormRow label="Language">
+        <Select
+          value={locale}
+          onChange={(e) => setLocale(e.target.value)}
+          options={LOCALE_OPTIONS}
+        />
+      </FormRow>
+
+      {/* Distance unit */}
       <FormRow label="Distance unit" divider={false}>
         <Segmented
           value={distanceUnit}
