@@ -23,6 +23,23 @@ vi.mock('@/lib/auth', () => ({
   })),
 }));
 
+vi.mock('@/lib/hooks/useTrips', () => ({
+  useMe: vi.fn(() => ({
+    data: {
+      id: '1',
+      display_name: 'John Doe',
+      email: 'john@example.com',
+      avatar_url: '',
+      locale: 'en',
+      timezone: 'UTC',
+      created_at: '',
+      updated_at: '',
+    },
+    isLoading: false,
+    isError: false,
+  })),
+}));
+
 vi.mock('next/link', () => ({
   default: ({
     href,
@@ -88,10 +105,10 @@ describe('Sidebar', () => {
     expect(screen.getByText('JD')).toBeInTheDocument();
   });
 
-  it('shows user name in sidebar footer', () => {
+  it('shows user name and email in sidebar footer', () => {
     renderSidebar();
     expect(screen.getByText('John Doe')).toBeInTheDocument();
-    expect(screen.getByText('Free plan')).toBeInTheDocument();
+    expect(screen.getByText('john@example.com')).toBeInTheDocument();
   });
 
   it('mobile overlay is not visible by default', () => {
@@ -100,9 +117,11 @@ describe('Sidebar', () => {
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
-  it('shows "U" placeholder when no user is stored', () => {
+  it('shows "?" placeholder when no user data is available', async () => {
     vi.mocked(getStoredUser).mockReturnValueOnce(null);
+    const { useMe } = await import('@/lib/hooks/useTrips');
+    vi.mocked(useMe).mockReturnValueOnce({ data: undefined, isLoading: false, isError: false });
     renderSidebar();
-    expect(screen.getByText('U')).toBeInTheDocument();
+    expect(screen.getByText('?')).toBeInTheDocument();
   });
 });
