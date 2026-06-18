@@ -1,8 +1,9 @@
 'use client'
 
+import { useState } from 'react'
 import { Mail, RefreshCw, CheckCircle2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { useGmailStatus } from '@/lib/hooks/useTrips'
+import { useGmailStatus } from '@/lib/hooks/useConnections'
 import { useDisconnectGmail, useSyncGmail } from '@/lib/hooks/useMutations'
 import { getGmailAuthUrl } from '@/lib/api/client'
 import { SettingsSection } from '@/components/settings/SettingsSection'
@@ -26,13 +27,15 @@ export function ConnectionsSection() {
   const { data: status, isLoading, isError } = useGmailStatus()
   const disconnectMutation = useDisconnectGmail()
   const syncMutation = useSyncGmail()
+  const [connectError, setConnectError] = useState<string | null>(null)
 
   async function handleConnect() {
+    setConnectError(null)
     try {
       const url = await getGmailAuthUrl()
       window.location.href = url
-    } catch {
-      // ignore — user sees nothing happen, can retry
+    } catch (err) {
+      setConnectError(err instanceof Error ? err.message : 'Failed to connect. Please try again.')
     }
   }
 
@@ -108,6 +111,9 @@ export function ConnectionsSection() {
               )}
               {disconnectMutation.isError && (
                 <p className="mt-1 text-[12px] text-alert-red">Disconnect failed. Try again.</p>
+              )}
+              {connectError && (
+                <p className="mt-1 text-[12px] text-alert-red">{connectError}</p>
               )}
             </div>
           </div>

@@ -26,9 +26,9 @@ function DeleteAccountModal({ onClose }: { onClose: () => void }) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
-      onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
+      onClick={(e) => { if (e.target === e.currentTarget && !mutation.isPending) onClose() }}
     >
-      <div className="w-full max-w-sm rounded-2xl bg-white shadow-card" style={{ padding: '28px 32px' }}>
+      <div className="w-full max-w-sm rounded-2xl bg-white px-8 py-7 shadow-card">
         <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-alert-red/10">
           <AlertTriangle size={20} className="text-alert-red" />
         </div>
