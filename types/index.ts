@@ -191,6 +191,29 @@ export interface Insight {
   updatedAt: string
 }
 
+// ─── Gmail ────────────────────────────────────────────────────────────────────
+
+export interface GmailStatus {
+  connected: boolean
+  email?: string
+  connectedAt?: string
+  lastSyncAt?: string
+  lastSyncSummary?: {
+    messagesChecked: number
+    parsed: number
+    skipped: number
+    failed: number
+  }
+}
+
+export interface GmailSyncResult {
+  messagesChecked: number
+  parsed: number
+  skipped: number
+  failed: number
+  message: string
+}
+
 // ─── API Keys ─────────────────────────────────────────────────────────────────
 
 export interface APIKey {

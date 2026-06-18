@@ -3,6 +3,8 @@ import type {
   APIKey,
   AuthResponse,
   CreateAPIKeyResponse,
+  GmailStatus,
+  GmailSyncResult,
   CreateTripRequest,
   DailySummary,
   Insight,
@@ -583,6 +585,57 @@ export async function updatePreferences(body: Partial<Preferences>): Promise<Pre
     method: 'PUT',
     body: JSON.stringify(body),
   })
+}
+
+// ─── Gmail ────────────────────────────────────────────────────────────────────
+
+interface BackendGmailStatus {
+  connected: boolean
+  email?: string
+  connected_at?: string
+  last_sync_at?: string
+  last_sync_summary?: {
+    messages_checked: number
+    parsed: number
+    skipped: number
+    failed: number
+  }
+}
+
+function mapGmailStatus(s: BackendGmailStatus): GmailStatus {
+  return {
+    connected: s.connected,
+    email: s.email,
+    connectedAt: s.connected_at,
+    lastSyncAt: s.last_sync_at,
+    lastSyncSummary: s.last_sync_summary
+      ? {
+          messagesChecked: s.last_sync_summary.messages_checked,
+          parsed: s.last_sync_summary.parsed,
+          skipped: s.last_sync_summary.skipped,
+          failed: s.last_sync_summary.failed,
+        }
+      : undefined,
+  }
+}
+
+export async function getGmailStatus(): Promise<GmailStatus> {
+  const raw = await request<{ data: BackendGmailStatus }>(buildUrl('/gmail/status'))
+  return mapGmailStatus(raw.data)
+}
+
+export async function getGmailAuthUrl(): Promise<string> {
+  const raw = await request<{ data: { url: string } }>(buildUrl('/gmail/auth-url'))
+  return raw.data.url
+}
+
+export async function disconnectGmail(): Promise<void> {
+  await request<void>(buildUrl('/gmail/disconnect'), { method: 'DELETE' })
+}
+
+export async function syncGmail(): Promise<GmailSyncResult> {
+  const raw = await request<{ data: GmailSyncResult }>(buildUrl('/gmail/sync'), { method: 'POST' })
+  return raw.data
 }
 
 // ─── API Keys ─────────────────────────────────────────────────────────────────
