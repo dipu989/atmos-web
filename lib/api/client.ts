@@ -641,3 +641,13 @@ export async function createAPIKey(name: string): Promise<CreateAPIKeyResponse> 
 export async function revokeAPIKey(id: string): Promise<void> {
   await request<void>(buildUrl(`/users/me/api-keys/${id}`), { method: 'DELETE' })
 }
+
+// ─── Account ──────────────────────────────────────────────────────────────────
+
+export async function deleteAccount(): Promise<{ message: string }> {
+  const raw = await request<{ data: { message: string } }>(buildUrl('/users/me'), {
+    method: 'DELETE',
+    body: JSON.stringify({ confirmation: 'delete' }),
+  })
+  return raw.data
+}
