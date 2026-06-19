@@ -1,24 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { PageShell } from '@/components/layout/PageShell'
 import { TodayImpactCards } from '@/components/dashboard/TodayImpactCards'
 import { WeeklyTrendCard } from '@/components/dashboard/WeeklyTrendCard'
 import { TransportBreakdownCard } from '@/components/dashboard/TransportBreakdownCard'
 import { RecentTripsList } from '@/components/dashboard/RecentTripsList'
 import { InsightsFeedMini } from '@/components/dashboard/InsightsFeedMini'
+import { useMe } from '@/lib/hooks/useTrips'
 import { getStoredUser } from '@/lib/auth'
 
 export default function DashboardPage() {
   const [range, setRange] = useState('This month')
-  const [firstName, setFirstName] = useState<string | null>(null)
-
-  useEffect(() => {
-    const user = getStoredUser()
-    if (user?.display_name) {
-      setFirstName(user.display_name.split(' ')[0])
-    }
-  }, [])
+  const { data: meData } = useMe()
+  const storedUser = getStoredUser()
+  const firstName = (meData?.display_name ?? storedUser?.display_name)?.split(' ')[0] ?? null
 
   const subtitle = firstName ? `Welcome back, ${firstName}` : undefined
 

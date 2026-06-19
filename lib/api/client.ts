@@ -87,7 +87,7 @@ interface BackendDailySummary {
   computed_at: string
   created_at: string
   updated_at: string
-  trend: BackendTrend
+  trend?: BackendTrend
 }
 
 interface BackendWeeklySummary {
@@ -192,7 +192,9 @@ function mapDailySummary(d: BackendDailySummary): DailySummary {
     activityCount: d.activity_count,
     breakdown: mapBreakdown(d.breakdown),
     computedAt: d.computed_at,
-    trend: mapTrend(d.trend),
+    trend: d.trend
+      ? mapTrend(d.trend)
+      : { prev_total_kg_co2e: 0, change_pct: null, direction: 'flat' as const },
   }
 }
 

@@ -49,7 +49,16 @@ vi.mock('@/components/layout/PageShell', () => ({
 // ─── Mock auth ─────────────────────────────────────────────────────────────────
 
 vi.mock('@/lib/auth', () => ({
-  getStoredUser: vi.fn(),
+  getStoredUser: vi.fn(() => null),
+}))
+
+// ─── Mock useMe ────────────────────────────────────────────────────────────────
+
+const mockUseMe = vi.fn()
+
+vi.mock('@/lib/hooks/useTrips', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/hooks/useTrips')>()),
+  useMe: () => mockUseMe(),
 }))
 
 import { getStoredUser } from '@/lib/auth'
@@ -71,7 +80,7 @@ const mockUser: User = {
 describe('DashboardPage', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-    vi.mocked(getStoredUser).mockReturnValue(null)
+    mockUseMe.mockReturnValue({ data: undefined, isLoading: false, isError: false })
   })
 
   it('renders all 5 component sections', () => {
@@ -90,17 +99,17 @@ describe('DashboardPage', () => {
     expect(screen.getByText('Dashboard')).toBeInTheDocument()
   })
 
-  it('shows user first name in subtitle when user is stored', async () => {
-    vi.mocked(getStoredUser).mockReturnValue(mockUser)
+  it('shows user first name in subtitle when user data is available', () => {
+    mockUseMe.mockReturnValue({ data: mockUser, isLoading: false, isError: false })
 
     render(<DashboardPage />)
 
-    // useEffect runs after render — subtitle appears asynchronously
-    const subtitle = await screen.findByTestId('subtitle')
+    const subtitle = screen.getByTestId('subtitle')
     expect(subtitle).toHaveTextContent('Welcome back, Shantnu')
   })
 
-  it('shows no subtitle when user is not stored', () => {
+  it('shows no subtitle when neither API nor localStorage has user data', () => {
+    mockUseMe.mockReturnValue({ data: undefined, isLoading: true, isError: false })
     vi.mocked(getStoredUser).mockReturnValue(null)
 
     render(<DashboardPage />)
@@ -108,12 +117,25 @@ describe('DashboardPage', () => {
     expect(screen.queryByTestId('subtitle')).not.toBeInTheDocument()
   })
 
-  it('extracts only the first name from display_name', async () => {
-    vi.mocked(getStoredUser).mockReturnValue({ ...mockUser, display_name: 'Shantnu Kumar' })
+  it('falls back to localStorage name while API is loading', () => {
+    mockUseMe.mockReturnValue({ data: undefined, isLoading: true, isError: false })
+    vi.mocked(getStoredUser).mockReturnValue(mockUser)
 
     render(<DashboardPage />)
 
-    const subtitle = await screen.findByTestId('subtitle')
+    expect(screen.getByTestId('subtitle')).toHaveTextContent('Welcome back, Shantnu')
+  })
+
+  it('extracts only the first name from display_name', () => {
+    mockUseMe.mockReturnValue({
+      data: { ...mockUser, display_name: 'Shantnu Kumar' },
+      isLoading: false,
+      isError: false,
+    })
+
+    render(<DashboardPage />)
+
+    const subtitle = screen.getByTestId('subtitle')
     expect(subtitle).toHaveTextContent('Welcome back, Shantnu')
     expect(subtitle).not.toHaveTextContent('Kumar')
   })
