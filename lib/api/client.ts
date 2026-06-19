@@ -60,8 +60,8 @@ interface BackendActivity {
   updated_at: string
   /** CO₂ field — not yet in API spec, mapped when present for forward compatibility */
   kg_co2e?: number
-  /** Metadata bag — may contain `from` and `to` origin/destination labels */
-  metadata?: { from?: string; to?: string; [key: string]: unknown }
+  origin?: string
+  destination?: string
 }
 
 interface BackendModeBreakdown {
@@ -156,8 +156,8 @@ function mapActivity(a: BackendActivity): Trip {
     createdAt: a.created_at,
     updatedAt: a.updated_at,
     co2Kg: a.kg_co2e,
-    from: a.metadata?.from,
-    to: a.metadata?.to,
+    from: a.origin,
+    to: a.destination,
   }
 }
 
