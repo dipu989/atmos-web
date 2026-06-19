@@ -8,11 +8,13 @@ import { TransportBreakdownCard } from '@/components/dashboard/TransportBreakdow
 import { RecentTripsList } from '@/components/dashboard/RecentTripsList'
 import { InsightsFeedMini } from '@/components/dashboard/InsightsFeedMini'
 import { useMe } from '@/lib/hooks/useTrips'
+import { getStoredUser } from '@/lib/auth'
 
 export default function DashboardPage() {
   const [range, setRange] = useState('This month')
   const { data: meData } = useMe()
-  const firstName = meData?.display_name?.split(' ')[0] ?? null
+  const storedUser = getStoredUser()
+  const firstName = (meData?.display_name ?? storedUser?.display_name)?.split(' ')[0] ?? null
 
   const subtitle = firstName ? `Welcome back, ${firstName}` : undefined
 

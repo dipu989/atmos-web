@@ -46,14 +46,22 @@ vi.mock('@/components/layout/PageShell', () => ({
   ),
 }))
 
+// ─── Mock auth ─────────────────────────────────────────────────────────────────
+
+vi.mock('@/lib/auth', () => ({
+  getStoredUser: vi.fn(() => null),
+}))
+
 // ─── Mock useMe ────────────────────────────────────────────────────────────────
 
 const mockUseMe = vi.fn()
 
-vi.mock('@/lib/hooks/useTrips', () => ({
+vi.mock('@/lib/hooks/useTrips', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/lib/hooks/useTrips')>()),
   useMe: () => mockUseMe(),
 }))
 
+import { getStoredUser } from '@/lib/auth'
 import type { User } from '@/types/index'
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
@@ -100,12 +108,22 @@ describe('DashboardPage', () => {
     expect(subtitle).toHaveTextContent('Welcome back, Shantnu')
   })
 
-  it('shows no subtitle when user data is not yet loaded', () => {
+  it('shows no subtitle when neither API nor localStorage has user data', () => {
     mockUseMe.mockReturnValue({ data: undefined, isLoading: true, isError: false })
+    vi.mocked(getStoredUser).mockReturnValue(null)
 
     render(<DashboardPage />)
 
     expect(screen.queryByTestId('subtitle')).not.toBeInTheDocument()
+  })
+
+  it('falls back to localStorage name while API is loading', () => {
+    mockUseMe.mockReturnValue({ data: undefined, isLoading: true, isError: false })
+    vi.mocked(getStoredUser).mockReturnValue(mockUser)
+
+    render(<DashboardPage />)
+
+    expect(screen.getByTestId('subtitle')).toHaveTextContent('Welcome back, Shantnu')
   })
 
   it('extracts only the first name from display_name', () => {
