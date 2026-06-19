@@ -9,6 +9,8 @@ import { TripStatsStrip } from '@/components/trips/TripStatsStrip'
 import { TripsFilters } from '@/components/trips/TripsFilters'
 import { TripsTable } from '@/components/trips/TripsTable'
 import type { TransportMode } from '@/types/index'
+import { getAccessToken } from '@/lib/auth'
+import { cn } from '@/lib/utils'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -44,15 +46,48 @@ function modeToChipKey(tm: TransportMode): string {
 // ─── ExportButton ─────────────────────────────────────────────────────────────
 
 function ExportButton() {
+  const [loading, setLoading] = useState(false)
+
+  async function handleExport() {
+    setLoading(true)
+    try {
+      const token = getAccessToken()
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8081'
+      const response = await fetch(`${baseUrl}/api/v1/activities/export`, {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      })
+      if (!response.ok) throw new Error(`Export failed: ${response.status}`)
+
+      const blob = await response.blob()
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = 'atmos_trips.csv'
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+    } catch (err) {
+      console.error('CSV export failed', err)
+      alert('Export failed. Please try again.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <button
       type="button"
       data-testid="export-button"
-      onClick={() => alert('CSV export coming soon')}
-      className="flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-2 text-[13px] font-medium text-text-primary transition-colors hover:bg-bg-page"
+      onClick={handleExport}
+      disabled={loading}
+      className={cn(
+        'flex items-center gap-1.5 rounded-lg border border-divider bg-white px-3 py-2 text-[13px] font-medium text-text-primary transition-colors hover:bg-bg-page',
+        loading && 'cursor-not-allowed opacity-60',
+      )}
     >
       <Download size={14} aria-hidden="true" />
-      Export CSV
+      {loading ? 'Exporting…' : 'Export CSV'}
     </button>
   )
 }

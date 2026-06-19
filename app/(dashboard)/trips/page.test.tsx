@@ -1,7 +1,16 @@
 // @vitest-environment jsdom
 import { render, screen, fireEvent, act } from '@testing-library/react'
-import { describe, expect, it, vi, beforeEach } from 'vitest'
+import { describe, expect, it, vi, beforeEach, afterEach } from 'vitest'
+import * as authModule from '@/lib/auth'
 import TripsPage from './page'
+
+function makeOkBlobResponse(body = 'date,distance\n2024-01-15,10') {
+  return {
+    ok: true,
+    status: 200,
+    blob: () => Promise.resolve(new Blob([body], { type: 'text/csv' })),
+  } as unknown as Response
+}
 
 // ─── Mock next/navigation ─────────────────────────────────────────────────────
 
@@ -163,6 +172,8 @@ const DEFAULT_ALL_RESPONSE = { items: MOCK_TRIPS, total: 2, limit: 1000, offset:
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
 describe('TripsPage', () => {
+  let fetchSpy: ReturnType<typeof vi.fn>
+
   beforeEach(() => {
     vi.clearAllMocks()
     // Clear URL params between tests
@@ -176,6 +187,19 @@ describe('TripsPage', () => {
       }
       return { data: DEFAULT_PAGED_RESPONSE, isLoading: false, isError: false }
     })
+
+    fetchSpy = vi.fn().mockResolvedValue(makeOkBlobResponse())
+    vi.stubGlobal('fetch', fetchSpy)
+    vi.spyOn(authModule, 'getAccessToken').mockReturnValue('mock-bearer-token')
+    vi.stubGlobal('URL', {
+      ...URL,
+      createObjectURL: vi.fn().mockReturnValue('blob:mock-url'),
+      revokeObjectURL: vi.fn(),
+    })
+  })
+
+  afterEach(() => {
+    vi.unstubAllGlobals()
   })
 
   it('renders the page title', () => {
@@ -211,11 +235,47 @@ describe('TripsPage', () => {
     expect(screen.getByText('Export CSV')).toBeInTheDocument()
   })
 
-  it('export button shows alert on click', () => {
-    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+  it('export button calls the export endpoint with the bearer token', async () => {
+    render(<TripsPage />)
+
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('export-button'))
+    })
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      expect.stringContaining('/api/v1/activities/export'),
+      { headers: { Authorization: 'Bearer mock-bearer-token' } },
+    )
+  })
+
+  it('disables the export button and shows "Exporting…" while the request is in flight', async () => {
+    let resolveFetch: (response: Response) => void = () => {}
+    fetchSpy.mockReturnValue(new Promise((resolve) => { resolveFetch = resolve }))
+
     render(<TripsPage />)
     fireEvent.click(screen.getByTestId('export-button'))
-    expect(alertSpy).toHaveBeenCalledWith('CSV export coming soon')
+
+    expect(screen.getByTestId('export-button')).toBeDisabled()
+    expect(screen.getByText('Exporting…')).toBeInTheDocument()
+
+    await act(async () => {
+      resolveFetch(makeOkBlobResponse())
+    })
+
+    expect(screen.getByTestId('export-button')).not.toBeDisabled()
+    expect(screen.getByText('Export CSV')).toBeInTheDocument()
+  })
+
+  it('shows an alert when the export request fails', async () => {
+    const alertSpy = vi.spyOn(window, 'alert').mockImplementation(() => {})
+    fetchSpy.mockResolvedValue({ ok: false, status: 500 } as Response)
+
+    render(<TripsPage />)
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('export-button'))
+    })
+
+    expect(alertSpy).toHaveBeenCalledWith('Export failed. Please try again.')
     alertSpy.mockRestore()
   })
 
