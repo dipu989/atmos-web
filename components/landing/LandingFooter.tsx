@@ -75,6 +75,9 @@ export function LandingFooter() {
         <div className="mt-14 flex items-center justify-between border-t border-divider pt-[22px] text-[12.5px] text-text-secondary">
           <span>© {new Date().getFullYear()} Atmos · made with ♥ for the planet</span>
           <div className="flex gap-[22px]">
+            <Link href="/privacy" className="transition-colors hover:text-text-primary">
+              Privacy Policy
+            </Link>
             <a href="mailto:hi@atmos.app" className="transition-colors hover:text-text-primary">
               hi@atmos.app
             </a>
