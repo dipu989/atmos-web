@@ -78,6 +78,9 @@ export function LandingFooter() {
             <Link href="/privacy" className="transition-colors hover:text-text-primary">
               Privacy Policy
             </Link>
+            <Link href="/terms" className="transition-colors hover:text-text-primary">
+              Terms of Service
+            </Link>
             <a href="mailto:hi@atmos.app" className="transition-colors hover:text-text-primary">
               hi@atmos.app
             </a>
