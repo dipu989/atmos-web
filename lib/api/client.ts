@@ -62,6 +62,8 @@ interface BackendActivity {
   kg_co2e?: number
   origin?: string
   destination?: string
+  display_origin?: string
+  display_destination?: string
 }
 
 interface BackendModeBreakdown {
@@ -156,8 +158,8 @@ function mapActivity(a: BackendActivity): Trip {
     createdAt: a.created_at,
     updatedAt: a.updated_at,
     co2Kg: a.kg_co2e,
-    from: a.origin,
-    to: a.destination,
+    from: a.display_origin || a.origin,
+    to: a.display_destination || a.destination,
   }
 }
 
