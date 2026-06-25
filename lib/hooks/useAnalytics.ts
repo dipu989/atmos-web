@@ -203,7 +203,7 @@ export function useAnalytics(period: AnalyticsPeriod): UseAnalyticsResult {
   const tripsQ = useTrips({ limit: 500 })
   const prefsQ = usePreferences()
 
-  const summaries = useMemo(() => dailyQ.data ?? [], [dailyQ.data])
+  const summaries = useMemo(() => (Array.isArray(dailyQ.data) ? dailyQ.data : []), [dailyQ.data])
   const trips     = useMemo(() => tripsQ.data?.items ?? [], [tripsQ.data])
 
   const dailyBarData = useMemo(() => toDailyBarData(summaries), [summaries])
