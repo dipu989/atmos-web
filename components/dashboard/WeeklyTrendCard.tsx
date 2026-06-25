@@ -28,8 +28,12 @@ function WeeklyTrendSkeleton() {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function WeeklyTrendCard() {
-  const dailyQuery = useDailySummaries(7)
+interface WeeklyTrendCardProps {
+  days?: number
+}
+
+export function WeeklyTrendCard({ days = 7 }: WeeklyTrendCardProps) {
+  const dailyQuery = useDailySummaries(days)
   const prefsQuery = usePreferences()
 
   const isLoading = dailyQuery.isLoading || prefsQuery.isLoading
@@ -37,8 +41,11 @@ export function WeeklyTrendCard() {
 
   // Date range subtitle: "May 12 – May 18"
   const today = new Date()
-  const weekAgo = subDays(today, 6)
-  const dateRange = `${format(weekAgo, 'MMM d')} – ${format(today, 'MMM d')}`
+  const startOfRange = subDays(today, days - 1)
+  const dateRange =
+    days <= 1
+      ? format(today, 'MMM d')
+      : `${format(startOfRange, 'MMM d')} – ${format(today, 'MMM d')}`
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (isLoading) {

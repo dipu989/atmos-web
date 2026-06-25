@@ -93,8 +93,16 @@ function LegendRow({ mode }: LegendRowProps) {
 
 // ─── Main component ───────────────────────────────────────────────────────────
 
-export function TransportBreakdownCard() {
-  const query = useTransportBreakdown('monthly')
+interface TransportBreakdownCardProps {
+  period?: 'daily' | 'weekly' | 'monthly'
+  label?: string
+}
+
+export function TransportBreakdownCard({
+  period = 'monthly',
+  label = 'This month',
+}: TransportBreakdownCardProps) {
+  const query = useTransportBreakdown(period)
 
   // ── Loading ────────────────────────────────────────────────────────────────
   if (query.isLoading) {
@@ -107,7 +115,7 @@ export function TransportBreakdownCard() {
       <Card>
         <CardHeader className="pb-2">
           <h2 className="text-subheading font-semibold text-text-primary">Transport breakdown</h2>
-          <p className="text-label text-text-secondary">This month</p>
+          <p className="text-label text-text-secondary">{label}</p>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center h-[200px]">
@@ -131,7 +139,7 @@ export function TransportBreakdownCard() {
       <Card>
         <CardHeader className="pb-2">
           <h2 className="text-subheading font-semibold text-text-primary">Transport breakdown</h2>
-          <p className="text-label text-text-secondary">This month</p>
+          <p className="text-label text-text-secondary">{label}</p>
         </CardHeader>
         <CardContent>
           <EmptyState

@@ -9,8 +9,6 @@ const RANGE_OPTIONS = [
   'Today',
   'This week',
   'This month',
-  'Last 30 days',
-  'This year',
 ] as const;
 
 export type RangeOption = (typeof RANGE_OPTIONS)[number];
