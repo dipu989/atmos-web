@@ -334,8 +334,8 @@ async function request<T>(
   const json = (await response.json()) as Record<string, unknown>
   // All backend endpoints wrap responses in { success: bool, data: T }.
   // Unwrap automatically so every fetcher receives the payload directly.
-  if (json && typeof json === 'object' && 'success' in json && 'data' in json) {
-    return json.data as T
+  if (json && typeof json === 'object' && 'success' in json) {
+    return (json.data ?? null) as T
   }
   return json as T
 }
