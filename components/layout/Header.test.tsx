@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { Header } from './Header';
 import { SidebarProvider } from './SidebarContext';
 
@@ -74,10 +74,10 @@ describe('Header', () => {
     fireEvent.click(screen.getByTestId('range-picker-button'));
 
     // All options should appear
-    expect(screen.getByText('Today')).toBeInTheDocument();
-    expect(screen.getByText('This week')).toBeInTheDocument();
-    expect(screen.getByText('Last 30 days')).toBeInTheDocument();
-    expect(screen.getByText('This year')).toBeInTheDocument();
+    const options = within(screen.getByTestId('range-picker-options'));
+    expect(options.getByText('Today')).toBeInTheDocument();
+    expect(options.getByText('This week')).toBeInTheDocument();
+    expect(options.getByText('This month')).toBeInTheDocument();
   });
 
   it('range picker calls onChange and closes on option select', () => {

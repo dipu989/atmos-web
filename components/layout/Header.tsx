@@ -9,8 +9,6 @@ const RANGE_OPTIONS = [
   'Today',
   'This week',
   'This month',
-  'Last 30 days',
-  'This year',
 ] as const;
 
 export type RangeOption = (typeof RANGE_OPTIONS)[number];
@@ -94,7 +92,10 @@ export function Header({
               </button>
 
               {dropdownOpen && (
-                <div className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-xl border border-divider bg-bg-card shadow-card">
+                <div
+                  data-testid="range-picker-options"
+                  className="absolute right-0 top-full z-20 mt-1 w-44 overflow-hidden rounded-xl border border-divider bg-bg-card shadow-card"
+                >
                   {RANGE_OPTIONS.map((option) => (
                     <button
                       key={option}
