@@ -59,9 +59,9 @@ const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] as const
 const MONTH_ABBR = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
                     'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'] as const
 
-/** Parse a YYYY-MM-DD string as a local-time Date to avoid UTC-offset issues. */
+/** Parse a YYYY-MM-DD (or full ISO datetime) string as a local-time Date to avoid UTC-offset issues. */
 function parseLocalDate(dateLocal: string): Date {
-  const [y, m, d] = dateLocal.split('-').map(Number)
+  const [y, m, d] = dateLocal.slice(0, 10).split('-').map(Number)
   return new Date(y, m - 1, d)
 }
 
