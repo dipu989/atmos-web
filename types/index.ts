@@ -63,9 +63,7 @@ export interface User {
 export interface Preferences {
   distance_unit: 'km' | 'miles'
   push_notifications_enabled: boolean
-  weekly_report_enabled: boolean
   daily_goal_kg_co2e: number
-  data_sharing_enabled: boolean
 }
 
 // ─── Trip (maps from backend "Activity") ─────────────────────────────────────

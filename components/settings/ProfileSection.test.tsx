@@ -26,9 +26,7 @@ vi.mock('@/lib/hooks/useTrips', () => ({
     data: {
       distance_unit: 'km',
       push_notifications_enabled: false,
-      weekly_report_enabled: false,
       daily_goal_kg_co2e: 5,
-      data_sharing_enabled: false,
     },
     isLoading: false,
     isError: false,
