@@ -6,7 +6,6 @@ import { SettingsSubNav, type SettingsSection } from '@/components/settings/Sett
 import { ProfileSection } from '@/components/settings/ProfileSection'
 import { GoalsSection } from '@/components/settings/GoalsSection'
 import { NotificationsSection } from '@/components/settings/NotificationsSection'
-import { PrivacySection } from '@/components/settings/PrivacySection'
 import { ConnectionsSection } from '@/components/settings/ConnectionsSection'
 import { AccountSection } from '@/components/settings/AccountSection'
 import { APIKeysSection } from '@/components/settings/APIKeysSection'
@@ -37,7 +36,6 @@ export default function SettingsPage() {
           {activeSection === 'profile'       && <ProfileSection />}
           {activeSection === 'goals'         && <GoalsSection />}
           {activeSection === 'notifications' && <NotificationsSection />}
-          {activeSection === 'privacy'       && <PrivacySection />}
           {activeSection === 'connections'   && <ConnectionsSection />}
           {activeSection === 'api-keys'      && <APIKeysSection />}
           {activeSection === 'account'       && <AccountSection />}
