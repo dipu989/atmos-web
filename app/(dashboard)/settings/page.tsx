@@ -8,7 +8,6 @@ import { GoalsSection } from '@/components/settings/GoalsSection'
 import { NotificationsSection } from '@/components/settings/NotificationsSection'
 import { PrivacySection } from '@/components/settings/PrivacySection'
 import { ConnectionsSection } from '@/components/settings/ConnectionsSection'
-import { BillingSection } from '@/components/settings/BillingSection'
 import { AccountSection } from '@/components/settings/AccountSection'
 import { APIKeysSection } from '@/components/settings/APIKeysSection'
 import { SettingsMobileNav } from '@/components/settings/SettingsMobileNav'
@@ -40,7 +39,6 @@ export default function SettingsPage() {
           {activeSection === 'notifications' && <NotificationsSection />}
           {activeSection === 'privacy'       && <PrivacySection />}
           {activeSection === 'connections'   && <ConnectionsSection />}
-          {activeSection === 'billing'       && <BillingSection />}
           {activeSection === 'api-keys'      && <APIKeysSection />}
           {activeSection === 'account'       && <AccountSection />}
         </div>

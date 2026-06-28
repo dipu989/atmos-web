@@ -6,7 +6,6 @@ import {
   Bell,
   Shield,
   Plug,
-  CreditCard,
   AlertTriangle,
   Key,
 } from 'lucide-react'
@@ -24,7 +23,6 @@ const CHIP_ITEMS: {
   { id: 'notifications', label: 'Notifications',  icon: Bell },
   { id: 'privacy',       label: 'Privacy',        icon: Shield },
   { id: 'connections',   label: 'Connected apps', icon: Plug },
-  { id: 'billing',       label: 'Billing',        icon: CreditCard },
   { id: 'api-keys',      label: 'API Keys',       icon: Key },
   { id: 'account',       label: 'Account',        icon: AlertTriangle },
 ]

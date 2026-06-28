@@ -6,7 +6,6 @@ import {
   Bell,
   Shield,
   Plug,
-  CreditCard,
   AlertTriangle,
   Key,
 } from 'lucide-react'
@@ -18,7 +17,6 @@ export type SettingsSection =
   | 'notifications'
   | 'privacy'
   | 'connections'
-  | 'billing'
   | 'api-keys'
   | 'account'
 
@@ -34,7 +32,6 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'notifications', label: 'Notifications', icon: Bell },
   { id: 'privacy', label: 'Privacy & data', icon: Shield },
   { id: 'connections', label: 'Connected apps', icon: Plug },
-  { id: 'billing', label: 'Plan & billing', icon: CreditCard },
   { id: 'api-keys', label: 'API Keys', icon: Key },
   { id: 'account', label: 'Account', icon: AlertTriangle },
 ]

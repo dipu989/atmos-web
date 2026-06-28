@@ -58,7 +58,6 @@ vi.mock('@/components/settings/GoalsSection',         () => ({ GoalsSection:    
 vi.mock('@/components/settings/NotificationsSection', () => ({ NotificationsSection: () => <div data-testid="section-notifications" /> }))
 vi.mock('@/components/settings/PrivacySection',       () => ({ PrivacySection:       () => <div data-testid="section-privacy" /> }))
 vi.mock('@/components/settings/ConnectionsSection',   () => ({ ConnectionsSection:   () => <div data-testid="section-connections" /> }))
-vi.mock('@/components/settings/BillingSection',       () => ({ BillingSection:       () => <div data-testid="section-billing" /> }))
 vi.mock('@/components/settings/AccountSection',       () => ({ AccountSection:       () => <div data-testid="section-account" /> }))
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
