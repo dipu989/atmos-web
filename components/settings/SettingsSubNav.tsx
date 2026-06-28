@@ -4,7 +4,6 @@ import {
   User,
   Target,
   Bell,
-  Shield,
   Plug,
   AlertTriangle,
   Key,
@@ -15,7 +14,6 @@ export type SettingsSection =
   | 'profile'
   | 'goals'
   | 'notifications'
-  | 'privacy'
   | 'connections'
   | 'api-keys'
   | 'account'
@@ -30,7 +28,6 @@ const NAV_ITEMS: NavItem[] = [
   { id: 'profile', label: 'Profile', icon: User },
   { id: 'goals', label: 'Goals & tracking', icon: Target },
   { id: 'notifications', label: 'Notifications', icon: Bell },
-  { id: 'privacy', label: 'Privacy & data', icon: Shield },
   { id: 'connections', label: 'Connected apps', icon: Plug },
   { id: 'api-keys', label: 'API Keys', icon: Key },
   { id: 'account', label: 'Account', icon: AlertTriangle },
