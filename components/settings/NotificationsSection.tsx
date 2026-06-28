@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { SettingsSection } from './SettingsSection'
 import { FormRow } from './FormRow'
 import { Toggle } from '@/components/ui/Toggle'
+import { Tooltip } from '@/components/ui/Tooltip'
 import { usePreferences } from '@/lib/hooks/useTrips'
 import { useUpdatePreferences } from '@/lib/hooks/useMutations'
 
@@ -79,8 +80,15 @@ export function NotificationsSection() {
       )}
 
       <FormRow
-        label="Push notifications"
-        hint="Sends alerts to your mobile devices for new insights and possible-duplicate activity reviews. Turning this off stops all push notifications until you switch it back on — it doesn't affect anything in this web dashboard."
+        label={
+          <>
+            Push notifications
+            <Tooltip
+              aria-label="What does push notifications do?"
+              content="Sends alerts to your mobile devices for new insights and possible-duplicate activity reviews. Turning this off stops all push notifications until you switch it back on — it doesn't affect anything in this web dashboard."
+            />
+          </>
+        }
         divider={false}
       >
         <Toggle
