@@ -9,12 +9,11 @@ const NAV_LABELS = [
   'Notifications',
   'Privacy & data',
   'Connected apps',
-  'Plan & billing',
   'Account',
 ]
 
 describe('SettingsSubNav', () => {
-  it('renders all 7 nav items', () => {
+  it('renders all 6 nav items', () => {
     render(<SettingsSubNav active="profile" onChange={vi.fn()} />)
     for (const label of NAV_LABELS) {
       expect(screen.getByText(label)).toBeInTheDocument()
