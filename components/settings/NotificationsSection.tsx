@@ -1,19 +1,95 @@
-import { Bell } from 'lucide-react'
+'use client'
+
+import { useState, useEffect } from 'react'
 import { SettingsSection } from './SettingsSection'
+import { FormRow } from './FormRow'
+import { Toggle } from '@/components/ui/Toggle'
+import { usePreferences } from '@/lib/hooks/useTrips'
+import { useUpdatePreferences } from '@/lib/hooks/useMutations'
+
+type Toast = { type: 'success' | 'error'; message: string }
 
 export function NotificationsSection() {
+  const { data: prefs, isLoading, isError } = usePreferences()
+  const updatePrefs = useUpdatePreferences()
+
+  const [pushEnabled, setPushEnabled] = useState(true)
+  const [toast, setToast] = useState<Toast | null>(null)
+
+  const prefsPushEnabled = prefs?.push_notifications_enabled
+  useEffect(() => {
+    if (prefsPushEnabled !== undefined) setPushEnabled(prefsPushEnabled)
+  }, [prefsPushEnabled])
+
+  useEffect(() => {
+    if (!toast) return
+    const t = setTimeout(() => setToast(null), 3000)
+    return () => clearTimeout(t)
+  }, [toast])
+
+  async function handleToggle(next: boolean) {
+    setPushEnabled(next)
+    try {
+      await updatePrefs.mutateAsync({ push_notifications_enabled: next })
+      setToast({ type: 'success', message: 'Notification settings saved' })
+    } catch (err) {
+      setPushEnabled(!next)
+      setToast({
+        type: 'error',
+        message: err instanceof Error ? err.message : 'Failed to update notification settings',
+      })
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="rounded-2xl bg-white shadow-card" style={{ padding: '28px 32px' }}>
+        <div className="space-y-4 animate-pulse">
+          <div className="h-5 w-32 rounded bg-divider" />
+          <div className="h-10 rounded bg-divider" />
+        </div>
+      </div>
+    )
+  }
+
+  if (isError) {
+    return (
+      <div className="rounded-2xl bg-white shadow-card" style={{ padding: '28px 32px' }}>
+        <p className="text-[14px] text-alert-red">Failed to load notification settings.</p>
+      </div>
+    )
+  }
+
   return (
     <SettingsSection
       title="Notifications"
       description="Control how and when Atmos notifies you."
     >
-      <div className="flex flex-col items-center py-10 text-center">
-        <Bell size={36} color="#C5CCD6" aria-hidden="true" />
-        <p className="mt-3 text-[14px] font-medium text-text-secondary">Coming soon</p>
-        <p className="mt-1 text-[13px] text-text-secondary">
-          Notification preferences will be configurable here.
-        </p>
-      </div>
+      {toast && (
+        <div
+          role="status"
+          className={`mb-4 rounded-[9px] px-4 py-2.5 text-[13px] font-medium ${
+            toast.type === 'success'
+              ? 'bg-sage/10 text-sage'
+              : 'bg-alert-red/10 text-alert-red'
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
+
+      <FormRow
+        label="Push notifications"
+        hint="Sends alerts to your mobile devices for new insights and possible-duplicate activity reviews. Turning this off stops all push notifications until you switch it back on — it doesn't affect anything in this web dashboard."
+        divider={false}
+      >
+        <Toggle
+          value={pushEnabled}
+          onChange={handleToggle}
+          disabled={updatePrefs.isPending}
+          aria-label="Push notifications toggle"
+        />
+      </FormRow>
     </SettingsSection>
   )
 }

@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react'
 import { SettingsSection } from './SettingsSection'
 import { FormRow } from './FormRow'
 import { Slider } from '@/components/ui/Slider'
-import { Toggle } from '@/components/ui/Toggle'
 import { Button } from '@/components/ui/Button'
 import { usePreferences } from '@/lib/hooks/useTrips'
 import { useUpdatePreferences } from '@/lib/hooks/useMutations'
@@ -16,16 +15,13 @@ export function GoalsSection() {
   const updatePrefs = useUpdatePreferences()
 
   const [dailyGoal, setDailyGoal] = useState(5)
-  const [notifyEnabled, setNotifyEnabled] = useState(false)
   const [toast, setToast] = useState<Toast | null>(null)
 
   // Use primitive value deps so a new object reference doesn't reset edits.
   const prefsGoal = prefs?.daily_goal_kg_co2e
-  const prefsNotify = prefs?.push_notifications_enabled
   useEffect(() => {
     if (prefsGoal !== undefined) setDailyGoal(prefsGoal)
-    if (prefsNotify !== undefined) setNotifyEnabled(prefsNotify)
-  }, [prefsGoal, prefsNotify])
+  }, [prefsGoal])
 
   useEffect(() => {
     if (!toast) return
@@ -39,7 +35,6 @@ export function GoalsSection() {
     try {
       await updatePrefs.mutateAsync({
         daily_goal_kg_co2e: dailyGoal,
-        push_notifications_enabled: notifyEnabled,
       })
       setToast({ type: 'success', message: 'Goals saved' })
     } catch (err) {
@@ -73,7 +68,7 @@ export function GoalsSection() {
   return (
     <SettingsSection
       title="Goals & tracking"
-      description="Set your daily CO₂ target and reminder preferences."
+      description="Set your daily CO₂ target."
       footer={
         <>
           <Button
@@ -83,7 +78,6 @@ export function GoalsSection() {
             onClick={() => {
               if (prefs) {
                 setDailyGoal(prefs.daily_goal_kg_co2e ?? 5)
-                setNotifyEnabled(prefs.push_notifications_enabled ?? false)
               }
             }}
             disabled={isSubmitting}
@@ -121,6 +115,7 @@ export function GoalsSection() {
       <FormRow
         label="Daily CO₂ goal"
         hint="Target kg of CO₂ per day."
+        divider={false}
       >
         <div className="flex items-center gap-4">
           <div className="w-[220px]">
@@ -137,19 +132,6 @@ export function GoalsSection() {
             {dailyGoal.toFixed(1)} kg
           </span>
         </div>
-      </FormRow>
-
-      {/* Reminder toggle */}
-      <FormRow
-        label="Daily reminder"
-        hint="Remind me if I haven't logged by 9 pm."
-        divider={false}
-      >
-        <Toggle
-          value={notifyEnabled}
-          onChange={setNotifyEnabled}
-          aria-label="Daily reminder toggle"
-        />
       </FormRow>
     </SettingsSection>
   )
