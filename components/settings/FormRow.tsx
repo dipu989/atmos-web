@@ -2,7 +2,7 @@ import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 interface FormRowProps {
-  label: string
+  label: React.ReactNode
   hint?: string
   divider?: boolean
   children: React.ReactNode
@@ -21,7 +21,7 @@ export function FormRow({ label, hint, divider = true, children }: FormRowProps)
     >
       {/* Label column */}
       <div>
-        <p className="text-[14px] font-medium text-text-primary">{label}</p>
+        <p className="flex items-center gap-1.5 text-[14px] font-medium text-text-primary">{label}</p>
         {hint && (
           <p className="mt-0.5 text-[12px] text-text-secondary">{hint}</p>
         )}
