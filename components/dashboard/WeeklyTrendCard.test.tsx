@@ -53,9 +53,7 @@ const mockDailySummaries: DailySummary[] = Array.from({ length: 7 }, (_, i) => (
 const mockPrefs: Preferences = {
   distance_unit: 'km',
   push_notifications_enabled: true,
-  weekly_report_enabled: true,
   daily_goal_kg_co2e: 5.0,
-  data_sharing_enabled: false,
 }
 
 // ─── Tests ─────────────────────────────────────────────────────────────────────

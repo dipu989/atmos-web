@@ -576,9 +576,7 @@ export async function updateMe(
 const DEFAULT_PREFERENCES: Preferences = {
   distance_unit: 'km',
   push_notifications_enabled: false,
-  weekly_report_enabled: true,
   daily_goal_kg_co2e: 5,
-  data_sharing_enabled: false,
 }
 
 export async function getPreferences(): Promise<Preferences> {
