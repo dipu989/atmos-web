@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { AlertTriangle } from 'lucide-react'
 import { PageShell } from '@/components/layout/PageShell'
 import { WeeklyDigestHero } from '@/components/insights/WeeklyDigestHero'
 import type { WeeklyDigestHeroProps } from '@/components/insights/WeeklyDigestHero'
@@ -45,12 +46,25 @@ function HeroSkeleton() {
   )
 }
 
+// ─── InsightsError ────────────────────────────────────────────────────────────
+
+function InsightsError() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 py-10">
+      <AlertTriangle size={24} className="text-text-secondary" aria-hidden="true" />
+      <p className="text-[13px] text-text-secondary">
+        Could not load insights. Please try again.
+      </p>
+    </div>
+  )
+}
+
 // ─── Insights Page ─────────────────────────────────────────────────────────────
 
 export default function InsightsPage() {
   const [activeTab, setActiveTab] = useState<'all' | InsightType>('all')
 
-  const { data: insights, isLoading } = useInsights()
+  const { data: insights, isLoading, isError } = useInsights()
   const { mutate: markRead } = useMarkInsightRead()
 
   // Featured: first weekly_comparison (= WEEKLY_DIGEST concept), or first insight if none
@@ -99,33 +113,39 @@ export default function InsightsPage() {
       title="Insights"
       subtitle="What Atmos has learned from your travel patterns."
     >
-      {/* Stats strip — 4 compact KPI cards */}
-      <InsightStatsStrip insights={insights ?? []} loading={isLoading} />
+      {isError ? (
+        <InsightsError />
+      ) : (
+        <>
+          {/* Stats strip — 4 compact KPI cards */}
+          <InsightStatsStrip insights={insights ?? []} loading={isLoading} />
 
-      {/* Featured hero — most recent WEEKLY_DIGEST insight */}
-      {isLoading && <HeroSkeleton />}
-      {!isLoading && featuredInsight && (
-        <WeeklyDigestHero insight={mapToHeroInsight(featuredInsight)} />
+          {/* Featured hero — most recent WEEKLY_DIGEST insight */}
+          {isLoading && <HeroSkeleton />}
+          {!isLoading && featuredInsight && (
+            <WeeklyDigestHero insight={mapToHeroInsight(featuredInsight)} />
+          )}
+
+          {/* Type tabs + feed */}
+          <div>
+            <InsightTypeTabs
+              insights={insights ?? []}
+              activeTab={activeTab}
+              onChange={setActiveTab}
+            />
+            <InsightFeed
+              insights={filteredInsights}
+              onRead={handleMarkRead}
+              loading={isLoading}
+              activeType={activeTab}
+              onViewAll={activeTab !== 'all' ? () => setActiveTab('all') : undefined}
+            />
+          </div>
+
+          {/* Achievements panel — full width at bottom */}
+          <AchievementsPanel achievements={achievements} loading={isLoading} />
+        </>
       )}
-
-      {/* Type tabs + feed */}
-      <div>
-        <InsightTypeTabs
-          insights={insights ?? []}
-          activeTab={activeTab}
-          onChange={setActiveTab}
-        />
-        <InsightFeed
-          insights={filteredInsights}
-          onRead={handleMarkRead}
-          loading={isLoading}
-          activeType={activeTab}
-          onViewAll={activeTab !== 'all' ? () => setActiveTab('all') : undefined}
-        />
-      </div>
-
-      {/* Achievements panel — full width at bottom */}
-      <AchievementsPanel achievements={achievements} loading={isLoading} />
     </PageShell>
   )
 }
