@@ -2,14 +2,14 @@
 
 import { Suspense, useState, useEffect, useMemo } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { Download } from 'lucide-react'
+import { Download, AlertTriangle } from 'lucide-react'
 import { useTrips } from '@/lib/hooks/useTrips'
+import { exportTripsCSV } from '@/lib/api/client'
 import { PageShell } from '@/components/layout/PageShell'
 import { TripStatsStrip } from '@/components/trips/TripStatsStrip'
 import { TripsFilters } from '@/components/trips/TripsFilters'
 import { TripsTable } from '@/components/trips/TripsTable'
 import type { TransportMode } from '@/types/index'
-import { getAccessToken } from '@/lib/auth'
 import { cn } from '@/lib/utils'
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -43,6 +43,17 @@ function modeToChipKey(tm: TransportMode): string {
   }
 }
 
+// ─── TripsError ───────────────────────────────────────────────────────────────
+
+function TripsError() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 py-10">
+      <AlertTriangle size={24} className="text-text-secondary" aria-hidden="true" />
+      <p className="text-[13px] text-text-secondary">Could not load trips. Please try again.</p>
+    </div>
+  )
+}
+
 // ─── ExportButton ─────────────────────────────────────────────────────────────
 
 function ExportButton() {
@@ -51,14 +62,7 @@ function ExportButton() {
   async function handleExport() {
     setLoading(true)
     try {
-      const token = getAccessToken()
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8081'
-      const response = await fetch(`${baseUrl}/api/v1/activities/export`, {
-        headers: token ? { Authorization: `Bearer ${token}` } : {},
-      })
-      if (!response.ok) throw new Error(`Export failed: ${response.status}`)
-
-      const blob = await response.blob()
+      const blob = await exportTripsCSV()
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a')
       a.href = url
@@ -110,7 +114,7 @@ function TripsPageContent() {
   }, [search, mode, source])
 
   // ── Paginated query: current page, filtered by mode (API-side) ──────────────
-  const { data, isLoading } = useTrips({
+  const { data, isLoading, isError } = useTrips({
     limit: PAGE_SIZE,
     offset: (page - 1) * PAGE_SIZE,
     transport_mode: mode === 'all' ? undefined : mode,
@@ -121,7 +125,9 @@ function TripsPageContent() {
   // ── Full-dataset query: stats strip + mode chip counts ──────────────────────
   // NOTE: Trip counts per chip are approximate — derived from up to 1 000 trips,
   // not the true total. Acceptable for the initial build.
-  const { data: allData, isLoading: allLoading } = useTrips({ limit: 1000 })
+  const { data: allData, isLoading: allLoading, isError: allIsError } = useTrips({ limit: 1000 })
+
+  const hasError = isError || allIsError
 
   const allTrips = useMemo(() => allData?.items ?? [], [allData])
   const pagedTrips = useMemo(() => data?.items ?? [], [data])
@@ -195,15 +201,19 @@ function TripsPageContent() {
         tripCounts={tripCounts}
       />
 
-      <TripsTable
-        trips={filteredTrips}
-        total={total}
-        page={page}
-        pageSize={PAGE_SIZE}
-        onPageChange={setPage}
-        loading={isLoading}
-        hasActiveFilter={hasActiveFilter}
-      />
+      {hasError ? (
+        <TripsError />
+      ) : (
+        <TripsTable
+          trips={filteredTrips}
+          total={total}
+          page={page}
+          pageSize={PAGE_SIZE}
+          onPageChange={setPage}
+          loading={isLoading}
+          hasActiveFilter={hasActiveFilter}
+        />
+      )}
     </PageShell>
   )
 }

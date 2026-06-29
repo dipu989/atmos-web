@@ -266,12 +266,14 @@ function buildUrl(path: string, params?: QueryParams): string {
   return url.toString()
 }
 
-async function request<T>(
+// Shared by request() and exportTripsCSV() — handles auth headers, silent
+// token refresh on 401, and falls back to logout when the refresh also fails.
+async function authenticatedFetch(
   url: string,
   options: RequestInit = {},
   authenticated = true,
   allowRefreshRetry = true,
-): Promise<T> {
+): Promise<Response> {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
 
   if (authenticated) {
@@ -297,7 +299,7 @@ async function request<T>(
           const refreshed = await refreshToken(storedRefreshToken)
           updateTokens(refreshed.access_token, refreshed.refresh_token)
           // Retry the original request with the new access token. No further retry.
-          return request<T>(url, options, authenticated, false)
+          return authenticatedFetch(url, options, authenticated, false)
         } catch {
           // Refresh failed — fall through to logout below.
         }
@@ -325,6 +327,17 @@ async function request<T>(
     }
     throw new Error(message)
   }
+
+  return response
+}
+
+async function request<T>(
+  url: string,
+  options: RequestInit = {},
+  authenticated = true,
+  allowRefreshRetry = true,
+): Promise<T> {
+  const response = await authenticatedFetch(url, options, authenticated, allowRefreshRetry)
 
   // 204 No Content
   if (response.status === 204) {
@@ -393,6 +406,11 @@ export async function getTrips(params?: {
     if (isNotFoundError(err)) return { items: [], total: 0, limit: 20, offset: 0 }
     throw err
   }
+}
+
+export async function exportTripsCSV(): Promise<Blob> {
+  const response = await authenticatedFetch(buildUrl('/activities/export'))
+  return response.blob()
 }
 
 export async function getTripById(id: string): Promise<Trip> {
