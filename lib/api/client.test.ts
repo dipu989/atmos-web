@@ -349,10 +349,10 @@ describe('lib/api/client', () => {
 
   describe('non-401 errors', () => {
     it('throws using the error message from the response body', async () => {
-      fetchSpy.mockResolvedValue(makeErrorResponse(404, 'Trip not found'))
-      const { getTripById } = await import('@/lib/api/client')
+      fetchSpy.mockResolvedValue(makeErrorResponse(404, 'User not found'))
+      const { getMe } = await import('@/lib/api/client')
 
-      await expect(getTripById('nonexistent')).rejects.toThrow('Trip not found')
+      await expect(getMe()).rejects.toThrow('User not found')
     })
 
     it('throws for 5xx responses', async () => {

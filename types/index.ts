@@ -94,18 +94,6 @@ export interface Trip {
   to?: string
 }
 
-/** Shape sent to POST /api/v1/activities */
-export interface CreateTripRequest {
-  transport_mode: TransportMode
-  distance_km: number
-  duration_minutes?: number
-  source: ActivitySource
-  metadata?: Record<string, unknown>
-  started_at: string
-  ended_at?: string
-  idempotency_key?: string
-}
-
 // ─── Timeline ────────────────────────────────────────────────────────────────
 
 export interface ModeBreakdown {
@@ -124,19 +112,6 @@ export interface DailySummary {
   id: string
   userId: string
   dateLocal: string
-  totalKgCo2e: number
-  totalDistanceKm: number
-  activityCount: number
-  breakdown: Partial<Record<TransportMode, ModeBreakdown>>
-  computedAt: string
-  trend: TrendData
-}
-
-export interface WeeklySummary {
-  id: string
-  userId: string
-  weekStart: string
-  weekEnd: string
   totalKgCo2e: number
   totalDistanceKm: number
   activityCount: number

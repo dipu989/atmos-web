@@ -8,9 +8,7 @@ import {
   getMonthlySummaries,
   getPreferences,
   getTransportBreakdown,
-  getTripById,
   getTrips,
-  getWeeklySummaries,
   listAPIKeys,
 } from '@/lib/api/client'
 
@@ -24,27 +22,10 @@ export function useTrips(params?: Parameters<typeof getTrips>[0]) {
   })
 }
 
-export function useTripById(id: string) {
-  return useQuery({
-    queryKey: ['trips', id],
-    queryFn: () => getTripById(id),
-    enabled: !!id,
-    staleTime: STALE_TIME,
-  })
-}
-
 export function useDailySummaries(days?: number) {
   return useQuery({
     queryKey: ['dailySummaries', { days }],
     queryFn: () => getDailySummaries(days !== undefined ? { days } : undefined),
-    staleTime: STALE_TIME,
-  })
-}
-
-export function useWeeklySummaries(weeks?: number) {
-  return useQuery({
-    queryKey: ['weeklySummaries', { weeks }],
-    queryFn: () => getWeeklySummaries(weeks !== undefined ? { weeks } : undefined),
     staleTime: STALE_TIME,
   })
 }
