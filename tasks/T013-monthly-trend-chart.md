@@ -1,7 +1,7 @@
 # T013 — Component: MonthlyTrendChart
 
 **Branch:** `feat/T013-monthly-trend-chart`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---
