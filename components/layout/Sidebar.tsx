@@ -12,7 +12,8 @@ import {
   X,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { clearAuth, getStoredUser } from '@/lib/auth';
+import { clearAuth, getRefreshToken, getStoredUser } from '@/lib/auth';
+import { logout } from '@/lib/api/client';
 import { useMe } from '@/lib/hooks/useTrips';
 import { useSidebar } from './SidebarContext';
 
@@ -49,7 +50,17 @@ function SidebarContent({ onNavClick }: SidebarContentProps) {
   const email = meData?.email ?? storedUser?.email ?? '';
   const avatarUrl = meData?.avatar_url ?? storedUser?.avatar_url ?? '';
 
-  function handleLogout() {
+  async function handleLogout() {
+    const refreshToken = getRefreshToken();
+    if (refreshToken) {
+      // Best-effort — the local session is cleared regardless of whether the
+      // backend call succeeds, so a network failure never blocks sign-out.
+      try {
+        await logout(refreshToken);
+      } catch {
+        // ignore — proceed with local sign-out below
+      }
+    }
     clearAuth();
     router.replace('/login');
   }

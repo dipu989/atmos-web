@@ -1,16 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { Sidebar } from './Sidebar';
 import { SidebarProvider } from './SidebarContext';
-import { getStoredUser } from '@/lib/auth';
+import { clearAuth, getRefreshToken, getStoredUser } from '@/lib/auth';
+import { logout } from '@/lib/api/client';
+
+const mockRouterReplace = vi.fn();
 
 vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/dashboard'),
-  useRouter: vi.fn(() => ({ replace: vi.fn() })),
+  useRouter: vi.fn(() => ({ replace: mockRouterReplace })),
 }));
 
 vi.mock('@/lib/auth', () => ({
   clearAuth: vi.fn(),
+  getRefreshToken: vi.fn(() => 'refresh-token-abc'),
   getStoredUser: vi.fn(() => ({
     id: '1',
     display_name: 'John Doe',
@@ -21,6 +25,10 @@ vi.mock('@/lib/auth', () => ({
     created_at: '',
     updated_at: '',
   })),
+}));
+
+vi.mock('@/lib/api/client', () => ({
+  logout: vi.fn(() => Promise.resolve()),
 }));
 
 vi.mock('@/lib/hooks/useTrips', () => ({
@@ -123,5 +131,24 @@ describe('Sidebar', () => {
     vi.mocked(useMe).mockReturnValueOnce({ data: undefined, isLoading: false, isError: false });
     renderSidebar();
     expect(screen.getByText('?')).toBeInTheDocument();
+  });
+
+  it('calls the backend logout endpoint with the refresh token, then clears local auth and redirects', async () => {
+    renderSidebar();
+    fireEvent.click(screen.getByLabelText('Log out'));
+
+    expect(getRefreshToken).toHaveBeenCalled();
+    await waitFor(() => expect(logout).toHaveBeenCalledWith('refresh-token-abc'));
+    expect(clearAuth).toHaveBeenCalled();
+    expect(mockRouterReplace).toHaveBeenCalledWith('/login');
+  });
+
+  it('still clears local auth and redirects when the backend logout call fails', async () => {
+    vi.mocked(logout).mockRejectedValueOnce(new Error('network error'));
+    renderSidebar();
+    fireEvent.click(screen.getByLabelText('Log out'));
+
+    await waitFor(() => expect(clearAuth).toHaveBeenCalled());
+    expect(mockRouterReplace).toHaveBeenCalledWith('/login');
   });
 });

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Leaf } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Sparkline } from '@/components/charts/Sparkline'
@@ -31,6 +32,8 @@ export interface InsightCardInsight {
   progress?: { current: number; target: number; label: string }
   /** Labels for CTA buttons (first = primary outline, rest = ghost) */
   actions?: string[]
+  /** In-app path the primary CTA button navigates to, e.g. "/trips/new" */
+  ctaTarget?: string
 }
 
 export interface InsightCardProps {
@@ -41,6 +44,8 @@ export interface InsightCardProps {
 // ─── InsightCard ──────────────────────────────────────────────────────────────
 
 export function InsightCard({ insight, onRead }: InsightCardProps) {
+  const router = useRouter()
+
   // Optimistic "read" state — removes the New dot immediately on click
   const [isNew, setIsNew] = useState(insight.new)
 
@@ -205,7 +210,12 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
             <button
               key={label}
               type="button"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) => {
+                e.stopPropagation()
+                if (i === 0 && insight.ctaTarget) {
+                  router.push(insight.ctaTarget)
+                }
+              }}
               className={cn(
                 'font-medium transition-opacity hover:opacity-80',
                 i === 0

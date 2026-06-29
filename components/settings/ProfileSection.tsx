@@ -49,7 +49,7 @@ const UNIT_OPTIONS = [
   { value: 'miles', label: 'mi' },
 ] as const
 
-type Toast = { type: 'success' | 'error'; message: string }
+type Toast = { type: 'success' | 'error' | 'info'; message: string }
 
 export function ProfileSection() {
   const { data: user, isLoading: userLoading, isError: userError } = useMe()
@@ -181,7 +181,9 @@ export function ProfileSection() {
           className={`mb-4 rounded-[9px] px-4 py-2.5 text-[13px] font-medium ${
             toast.type === 'success'
               ? 'bg-sage/10 text-sage'
-              : 'bg-alert-red/10 text-alert-red'
+              : toast.type === 'info'
+                ? 'bg-horizon-blue/10 text-horizon-blue'
+                : 'bg-alert-red/10 text-alert-red'
           }`}
         >
           {toast.message}
@@ -205,7 +207,7 @@ export function ProfileSection() {
           <button
             type="button"
             className="flex items-center gap-1.5 rounded-[9px] border border-divider bg-white px-3 py-1.5 text-[13px] font-medium text-text-secondary hover:bg-bg-page"
-            onClick={() => setToast({ type: 'success', message: 'Avatar upload coming soon.' })}
+            onClick={() => setToast({ type: 'info', message: 'Avatar upload coming soon.' })}
           >
             <Camera size={13} />
             Change photo
@@ -233,10 +235,12 @@ export function ProfileSection() {
             disabled
             className="h-9 w-[280px] rounded-[9px] text-[13px]"
           />
-          <span className="flex items-center gap-1 text-[12px] font-medium text-sage">
-            <CheckCircle size={13} />
-            Verified
-          </span>
+          {user?.email_verified_at && (
+            <span className="flex items-center gap-1 text-[12px] font-medium text-sage">
+              <CheckCircle size={13} />
+              Verified
+            </span>
+          )}
         </div>
       </FormRow>
 

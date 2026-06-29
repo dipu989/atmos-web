@@ -83,7 +83,7 @@ export function NotificationsSection() {
           Push notifications
           <Tooltip
             aria-label="What does push notifications do?"
-            content="Sends alerts to your mobile devices for new insights and possible-duplicate activity reviews. Turning this off stops all push notifications until you switch it back on — it doesn't affect anything in this web dashboard."
+            content="Sends alerts to your mobile devices for new insights and possible-duplicate trip reviews. Turning this off stops all push notifications until you switch it back on — it doesn't affect anything in this web dashboard."
           />
         </p>
         <Toggle

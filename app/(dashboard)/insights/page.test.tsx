@@ -354,6 +354,27 @@ describe('InsightsPage — empty data', () => {
   })
 })
 
+describe('InsightsPage — error state', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+  })
+
+  it('shows an error message instead of empty states when the insights query fails', () => {
+    mockHookData({ isError: true, data: [] })
+    render(<InsightsPage />)
+    expect(screen.getByText('Could not load insights. Please try again.')).toBeInTheDocument()
+  })
+
+  it('does not render the stats strip, hero, feed, or achievements panel on error', () => {
+    mockHookData({ isError: true, data: [] })
+    render(<InsightsPage />)
+    expect(screen.queryByTestId('insight-stats-strip')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('weekly-digest-hero')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('insight-feed')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('achievements-panel')).not.toBeInTheDocument()
+  })
+})
+
 describe('InsightsPage — mobile viewport', () => {
   beforeEach(() => {
     vi.clearAllMocks()

@@ -191,11 +191,10 @@ describe('TripsPage', () => {
     fetchSpy = vi.fn().mockResolvedValue(makeOkBlobResponse())
     vi.stubGlobal('fetch', fetchSpy)
     vi.spyOn(authModule, 'getAccessToken').mockReturnValue('mock-bearer-token')
-    vi.stubGlobal('URL', {
-      ...URL,
-      createObjectURL: vi.fn().mockReturnValue('blob:mock-url'),
-      revokeObjectURL: vi.fn(),
-    })
+    // jsdom's URL has no createObjectURL/revokeObjectURL — add them without
+    // replacing the constructor itself (buildUrl() needs `new URL()` to work).
+    URL.createObjectURL = vi.fn().mockReturnValue('blob:mock-url')
+    URL.revokeObjectURL = vi.fn()
   })
 
   afterEach(() => {
@@ -244,7 +243,9 @@ describe('TripsPage', () => {
 
     expect(fetchSpy).toHaveBeenCalledWith(
       expect.stringContaining('/api/v1/activities/export'),
-      { headers: { Authorization: 'Bearer mock-bearer-token' } },
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: 'Bearer mock-bearer-token' }),
+      }),
     )
   })
 
@@ -294,6 +295,32 @@ describe('TripsPage', () => {
 
     render(<TripsPage />)
     expect(screen.getByTestId('trip-stats-strip')).toHaveAttribute('data-loading', 'true')
+  })
+
+  it('shows an error message instead of the table when the paged trips query fails', () => {
+    mockUseTrips.mockImplementation((params: { limit?: number }) => {
+      if (params?.limit === 1000) {
+        return { data: DEFAULT_ALL_RESPONSE, isLoading: false, isError: false }
+      }
+      return { data: undefined, isLoading: false, isError: true }
+    })
+
+    render(<TripsPage />)
+    expect(screen.getByText('Could not load trips. Please try again.')).toBeInTheDocument()
+    expect(screen.queryByTestId('trips-table')).not.toBeInTheDocument()
+  })
+
+  it('shows an error message instead of the table when the full-dataset trips query fails', () => {
+    mockUseTrips.mockImplementation((params: { limit?: number }) => {
+      if (params?.limit === 1000) {
+        return { data: undefined, isLoading: false, isError: true }
+      }
+      return { data: DEFAULT_PAGED_RESPONSE, isLoading: false, isError: false }
+    })
+
+    render(<TripsPage />)
+    expect(screen.getByText('Could not load trips. Please try again.')).toBeInTheDocument()
+    expect(screen.queryByTestId('trips-table')).not.toBeInTheDocument()
   })
 
   describe('URL params applied on mount', () => {
