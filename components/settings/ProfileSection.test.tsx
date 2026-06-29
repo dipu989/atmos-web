@@ -2,26 +2,32 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { ProfileSection } from './ProfileSection'
+import type { User } from '@/types/index'
 
 // ─── Mock TanStack Query hooks ─────────────────────────────────────────────────
 const mockUpdateMeMutateAsync = vi.fn()
 const mockUpdatePrefsMutateAsync = vi.fn()
 
+const verifiedUser: User = {
+  id: 'u1',
+  email: 'test@example.com',
+  display_name: 'Test User',
+  avatar_url: '',
+  locale: 'en',
+  timezone: 'UTC',
+  email_verified_at: '2024-01-01T00:00:00Z',
+  created_at: '2024-01-01T00:00:00Z',
+  updated_at: '2024-01-01T00:00:00Z',
+}
+
+const mockUseMe = vi.fn()
+
+function setMeData(data: User) {
+  mockUseMe.mockReturnValue({ data, isLoading: false, isError: false })
+}
+
 vi.mock('@/lib/hooks/useTrips', () => ({
-  useMe: () => ({
-    data: {
-      id: 'u1',
-      email: 'test@example.com',
-      display_name: 'Test User',
-      avatar_url: '',
-      locale: 'en',
-      timezone: 'UTC',
-      created_at: '2024-01-01T00:00:00Z',
-      updated_at: '2024-01-01T00:00:00Z',
-    },
-    isLoading: false,
-    isError: false,
-  }),
+  useMe: () => mockUseMe(),
   usePreferences: () => ({
     data: {
       distance_unit: 'km',
@@ -49,6 +55,7 @@ describe('ProfileSection', () => {
     vi.clearAllMocks()
     mockUpdateMeMutateAsync.mockResolvedValue({})
     mockUpdatePrefsMutateAsync.mockResolvedValue({})
+    setMeData(verifiedUser)
   })
 
   it('renders all fields', () => {
@@ -66,9 +73,15 @@ describe('ProfileSection', () => {
     expect(emailInput).toBeDisabled()
   })
 
-  it('shows Verified badge next to email', () => {
+  it('shows Verified badge next to email when email_verified_at is set', () => {
     render(<ProfileSection />)
     expect(screen.getByText('Verified')).toBeInTheDocument()
+  })
+
+  it('hides Verified badge when email_verified_at is null', () => {
+    setMeData({ ...verifiedUser, email_verified_at: null })
+    render(<ProfileSection />)
+    expect(screen.queryByText('Verified')).not.toBeInTheDocument()
   })
 
   it('pre-fills name from user data', () => {

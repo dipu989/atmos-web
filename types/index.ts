@@ -56,6 +56,7 @@ export interface User {
   avatar_url: string
   locale: string
   timezone: string
+  email_verified_at: string | null
   created_at: string
   updated_at: string
 }
