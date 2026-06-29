@@ -14,13 +14,18 @@ const CONTACT_LINKS = [
   { label: 'Request a feature',href: 'mailto:hi@atmos.app?subject=Feature%20request' },
 ]
 
+const LEGAL_LINKS = [
+  { label: 'Privacy Policy',   href: '/privacy' },
+  { label: 'Terms of Service', href: '/terms' },
+]
+
 export function LandingFooter() {
   return (
     <footer className="border-t border-divider bg-[#FAFBFC] pb-10 pt-14">
       <div className="mx-auto max-w-[1240px] px-5 lg:px-10">
 
         {/* Top grid */}
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-3 lg:grid-cols-[1.8fr_1fr_1fr]">
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-[1.8fr_1fr_1fr_1fr]">
 
           {/* Brand + blurb */}
           <div>
@@ -69,22 +74,30 @@ export function LandingFooter() {
               </a>
             ))}
           </div>
+
+          {/* Legal links */}
+          <div>
+            <h5 className="mb-3.5 text-[11.5px] font-semibold uppercase tracking-[0.4px] text-text-primary">
+              Legal
+            </h5>
+            {LEGAL_LINKS.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="block py-[5px] text-[13.5px] text-text-secondary transition-colors hover:text-text-primary"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         {/* Bottom bar */}
         <div className="mt-14 flex items-center justify-between border-t border-divider pt-[22px] text-[12.5px] text-text-secondary">
           <span>© {new Date().getFullYear()} Atmos · made with ♥ for the planet</span>
-          <div className="flex gap-[22px]">
-            <Link href="/privacy" className="transition-colors hover:text-text-primary">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="transition-colors hover:text-text-primary">
-              Terms of Service
-            </Link>
-            <a href="mailto:hi@atmos.app" className="transition-colors hover:text-text-primary">
-              hi@atmos.app
-            </a>
-          </div>
+          <a href="mailto:hi@atmos.app" className="transition-colors hover:text-text-primary">
+            hi@atmos.app
+          </a>
         </div>
 
       </div>
