@@ -5,7 +5,6 @@ import type {
   CreateAPIKeyResponse,
   GmailStatus,
   GmailSyncResult,
-  CreateTripRequest,
   DailySummary,
   Insight,
   InsightType,
@@ -21,7 +20,6 @@ import type {
   Trip,
   TrendData,
   User,
-  WeeklySummary,
   ActivitySource,
   ActivityStatus,
 } from '@/types/index'
@@ -197,21 +195,6 @@ function mapDailySummary(d: BackendDailySummary): DailySummary {
     trend: d.trend
       ? mapTrend(d.trend)
       : { prev_total_kg_co2e: 0, change_pct: null, direction: 'flat' as const },
-  }
-}
-
-function mapWeeklySummary(w: BackendWeeklySummary): WeeklySummary {
-  return {
-    id: w.id,
-    userId: w.user_id,
-    weekStart: w.week_start,
-    weekEnd: w.week_end,
-    totalKgCo2e: w.total_kg_co2e,
-    totalDistanceKm: w.total_distance_km,
-    activityCount: w.activity_count,
-    breakdown: mapBreakdown(w.breakdown),
-    computedAt: w.computed_at,
-    trend: mapTrend(w.trend),
   }
 }
 
@@ -420,41 +403,6 @@ export async function exportTripsCSV(): Promise<Blob> {
   return response.blob()
 }
 
-export async function getTripById(id: string): Promise<Trip> {
-  const raw = await request<BackendActivity>(buildUrl(`/activities/${id}`))
-  return mapActivity(raw)
-}
-
-export async function createTrip(body: CreateTripRequest): Promise<Trip> {
-  const raw = await request<BackendActivity>(buildUrl('/activities'), {
-    method: 'POST',
-    body: JSON.stringify(body),
-  })
-  return mapActivity(raw)
-}
-
-/**
- * Update a trip by id.
- * NOTE: The API spec does not currently list a PUT /activities/:id endpoint.
- * This function is provided for future use and forwards a partial request body.
- */
-export async function updateTrip(id: string, body: Partial<CreateTripRequest>): Promise<Trip> {
-  const raw = await request<BackendActivity>(buildUrl(`/activities/${id}`), {
-    method: 'PUT',
-    body: JSON.stringify(body),
-  })
-  return mapActivity(raw)
-}
-
-/**
- * Delete a trip by id.
- * NOTE: The API spec does not currently list a DELETE /activities/:id endpoint.
- * This function is provided for future use.
- */
-export async function deleteTrip(id: string): Promise<void> {
-  await request<void>(buildUrl(`/activities/${id}`), { method: 'DELETE' })
-}
-
 // ─── Analytics ────────────────────────────────────────────────────────────────
 
 /**
@@ -480,23 +428,6 @@ export async function getDailySummaries(params?: { days?: number }): Promise<Dai
 
     const raw = await request<BackendDailySummary>(buildUrl('/timeline/daily'))
     return [mapDailySummary(raw)]
-  } catch (err) {
-    if (isNotFoundError(err)) return []
-    throw err
-  }
-}
-
-/**
- * Returns weekly summaries.
- * NOTE: The current API only exposes the current week. The `weeks` param is
- * reserved for future multi-week support.
- */
-export async function getWeeklySummaries(
-  _params?: { weeks?: number },
-): Promise<WeeklySummary[]> {
-  try {
-    const raw = await request<BackendWeeklySummary>(buildUrl('/timeline/weekly'))
-    return [mapWeeklySummary(raw)]
   } catch (err) {
     if (isNotFoundError(err)) return []
     throw err

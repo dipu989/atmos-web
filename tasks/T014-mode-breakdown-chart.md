@@ -1,7 +1,7 @@
 # T014 — Component: ModeBreakdownOverTime
 
 **Branch:** `feat/T014-mode-breakdown-chart`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T003 merged to main
 
 ---

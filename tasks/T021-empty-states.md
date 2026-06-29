@@ -1,7 +1,7 @@
 # T021 — Empty States
 
 **Branch:** `feat/T021-empty-states`
-**Status:** ⬜ Todo
+**Status:** ✅ Done
 **Depends on:** T019 merged (all pages assembled)
 
 ---
