@@ -379,6 +379,13 @@ export async function refreshToken(token: string): Promise<TokenRefreshResponse>
   )
 }
 
+export async function logout(token: string): Promise<void> {
+  await request<void>(buildUrl('/auth/logout'), {
+    method: 'POST',
+    body: JSON.stringify({ refresh_token: token }),
+  })
+}
+
 // ─── Trips (maps activity ↔ trip at this layer) ───────────────────────────────
 
 export async function getTrips(params?: {
