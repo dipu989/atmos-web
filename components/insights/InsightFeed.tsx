@@ -65,6 +65,7 @@ function mapToCardInsight(insight: Insight): InsightCardInsight {
         }
       : undefined,
     actions: insight.ctaLabel ? [insight.ctaLabel] : [],
+    ctaTarget: insight.ctaTarget,
   }
 }
 

@@ -1,8 +1,13 @@
 // @vitest-environment jsdom
 import { render, screen, fireEvent } from '@testing-library/react'
-import { describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi, beforeEach } from 'vitest'
 import { InsightCard } from '@/components/insights/InsightCard'
 import type { InsightCardInsight } from '@/components/insights/InsightCard'
+
+const mockPush = vi.fn()
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mockPush }),
+}))
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
@@ -163,6 +168,10 @@ describe('InsightCard — STREAK type', () => {
 })
 
 describe('InsightCard — Action buttons', () => {
+  beforeEach(() => {
+    mockPush.mockClear()
+  })
+
   it('renders action buttons when actions are provided', () => {
     render(<InsightCard insight={tipInsight} />)
     expect(screen.getByRole('button', { name: 'Try it' })).toBeInTheDocument()
@@ -172,6 +181,30 @@ describe('InsightCard — Action buttons', () => {
   it('does not render actions when actions array is empty', () => {
     render(<InsightCard insight={base} />)
     expect(screen.queryByRole('button')).not.toBeInTheDocument()
+  })
+
+  it('navigates to ctaTarget when the primary action button is clicked', () => {
+    render(<InsightCard insight={{ ...tipInsight, ctaTarget: '/trips/new' }} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Try it' }))
+
+    expect(mockPush).toHaveBeenCalledWith('/trips/new')
+  })
+
+  it('does not navigate when clicking a secondary action button', () => {
+    render(<InsightCard insight={{ ...tipInsight, ctaTarget: '/trips/new' }} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Dismiss' }))
+
+    expect(mockPush).not.toHaveBeenCalled()
+  })
+
+  it('does not navigate or throw when the primary action has no ctaTarget', () => {
+    render(<InsightCard insight={tipInsight} />)
+
+    fireEvent.click(screen.getByRole('button', { name: 'Try it' }))
+
+    expect(mockPush).not.toHaveBeenCalled()
   })
 })
 
