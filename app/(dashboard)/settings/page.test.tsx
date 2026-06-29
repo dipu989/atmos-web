@@ -34,6 +34,9 @@ vi.mock('@/components/settings/SettingsSubNav', () => ({
       <button data-testid="nav-profile"       onClick={() => onChange('profile')}>Profile</button>
       <button data-testid="nav-goals"         onClick={() => onChange('goals')}>Goals</button>
       <button data-testid="nav-notifications" onClick={() => onChange('notifications')}>Notifications</button>
+      <button data-testid="nav-connections"   onClick={() => onChange('connections')}>Connected apps</button>
+      <button data-testid="nav-api-keys"      onClick={() => onChange('api-keys')}>API Keys</button>
+      <button data-testid="nav-account"       onClick={() => onChange('account')}>Account</button>
     </nav>
   ),
 }))
@@ -58,6 +61,7 @@ vi.mock('@/components/settings/GoalsSection',         () => ({ GoalsSection:    
 vi.mock('@/components/settings/NotificationsSection', () => ({ NotificationsSection: () => <div data-testid="section-notifications" /> }))
 vi.mock('@/components/settings/ConnectionsSection',   () => ({ ConnectionsSection:   () => <div data-testid="section-connections" /> }))
 vi.mock('@/components/settings/AccountSection',       () => ({ AccountSection:       () => <div data-testid="section-account" /> }))
+vi.mock('@/components/settings/APIKeysSection',       () => ({ APIKeysSection:       () => <div data-testid="section-api-keys" /> }))
 
 // ─── Tests ────────────────────────────────────────────────────────────────────
 
@@ -93,6 +97,27 @@ describe('SettingsPage', () => {
     render(<SettingsPage />)
     fireEvent.click(screen.getByTestId('chip-goals'))
     expect(screen.getByTestId('section-goals')).toBeInTheDocument()
+  })
+
+  it('switches to Connections section when its nav item is clicked', () => {
+    render(<SettingsPage />)
+    fireEvent.click(screen.getByTestId('nav-connections'))
+    expect(screen.getByTestId('section-connections')).toBeInTheDocument()
+    expect(screen.queryByTestId('section-profile')).not.toBeInTheDocument()
+  })
+
+  it('switches to API Keys section when its nav item is clicked', () => {
+    render(<SettingsPage />)
+    fireEvent.click(screen.getByTestId('nav-api-keys'))
+    expect(screen.getByTestId('section-api-keys')).toBeInTheDocument()
+    expect(screen.queryByTestId('section-profile')).not.toBeInTheDocument()
+  })
+
+  it('switches to Account section when its nav item is clicked', () => {
+    render(<SettingsPage />)
+    fireEvent.click(screen.getByTestId('nav-account'))
+    expect(screen.getByTestId('section-account')).toBeInTheDocument()
+    expect(screen.queryByTestId('section-profile')).not.toBeInTheDocument()
   })
 
   it('renders without crash at 375px mobile viewport', () => {
