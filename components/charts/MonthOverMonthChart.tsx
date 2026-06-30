@@ -31,7 +31,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
 
   return (
     <div className="rounded-xl bg-white shadow-card px-3 py-2">
-      <p className="text-[13px] font-medium text-[#1A2332] mb-1">{label}</p>
+      <p className="text-[13px] font-medium text-text-primary mb-1">{label}</p>
       {payload.map((entry) => (
         <p key={entry.name} className="text-[12px]" style={{ color: entry.color }}>
           {entry.name === 'current' ? 'This month' : 'Last month'}:{' '}
@@ -49,17 +49,17 @@ function CustomLegend() {
     <div className="flex items-center gap-4 justify-center mt-2">
       <div className="flex items-center gap-1.5" data-testid="legend-current">
         <span
-          className="inline-block rounded-full"
-          style={{ width: 8, height: 8, backgroundColor: '#4A90C4' }}
+          className="inline-block rounded-full bg-horizon-blue"
+          style={{ width: 8, height: 8 }}
         />
-        <span className="text-[12px] text-[#6B7A8D]">This month</span>
+        <span className="text-[12px] text-text-secondary">This month</span>
       </div>
       <div className="flex items-center gap-1.5" data-testid="legend-previous">
         <span
           className="inline-block rounded-full"
           style={{ width: 8, height: 8, backgroundColor: '#C5CCD6' }}
         />
-        <span className="text-[12px] text-[#6B7A8D]">Last month</span>
+        <span className="text-[12px] text-text-secondary">Last month</span>
       </div>
     </div>
   )

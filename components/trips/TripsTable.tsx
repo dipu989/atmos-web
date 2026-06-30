@@ -90,10 +90,10 @@ interface TripsTableProps {
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
-function getCo2Color(co2Kg: number): string {
-  if (co2Kg === 0) return '#3DAB82'
-  if (co2Kg > 2) return '#F0956A'
-  return '#1A2332'
+function getCo2ColorClass(co2Kg: number): string {
+  if (co2Kg === 0) return 'text-sage'
+  if (co2Kg > 2) return 'text-peach'
+  return 'text-text-primary'
 }
 
 function isDetectedSource(source: ActivitySource): boolean {
@@ -163,7 +163,7 @@ function SortHeader({ label, colKey, activeSortKey, activeSortDir, align = 'left
       className={cn(
         'flex items-center gap-1 text-[12px] font-medium focus:outline-none',
         align === 'right' && 'ml-auto',
-        isActive ? 'text-[#1A2332]' : 'text-[#6B7A8D]',
+        isActive ? 'text-text-primary' : 'text-text-secondary',
       )}
     >
       {label}
@@ -214,7 +214,7 @@ function TripRow({ trip, isMobile }: { trip: Trip; isMobile: boolean }) {
   const from     = trip.from ?? '—'
   const to       = trip.to ?? '—'
   const co2Kg    = trip.co2Kg ?? 0
-  const co2Color = getCo2Color(co2Kg)
+  const co2ColorClass = getCo2ColorClass(co2Kg)
   const detected = isDetectedSource(trip.source)
   const dateLabel = formatTripDate(trip.dateLocal)
   const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
@@ -266,7 +266,7 @@ function TripRow({ trip, isMobile }: { trip: Trip; isMobile: boolean }) {
 
       {/* CO₂ — right-aligned, colored */}
       <div className="text-right">
-        <span className="text-[13px] font-semibold" style={{ color: co2Color }}>
+        <span className={cn('text-[13px] font-semibold', co2ColorClass)}>
           {co2Kg.toFixed(1)}
         </span>
         <span className="ml-0.5 text-[12px] text-text-secondary">kg</span>
@@ -275,17 +275,11 @@ function TripRow({ trip, isMobile }: { trip: Trip; isMobile: boolean }) {
       {/* Source badge */}
       <div>
         {detected ? (
-          <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
-            style={{ backgroundColor: 'rgba(74,144,196,0.10)', color: '#4A90C4' }}
-          >
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium bg-horizon-blue/10 text-horizon-blue">
             Detected
           </span>
         ) : (
-          <span
-            className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium"
-            style={{ backgroundColor: '#F0F2F5', color: '#6B7A8D' }}
-          >
+          <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-medium bg-divider text-text-secondary">
             Manual
           </span>
         )}
@@ -358,8 +352,8 @@ function Pagination({ page, pageSize, total, isMobile, onPageChange }: Paginatio
           className={cn(
             'flex h-7 w-7 items-center justify-center rounded border text-[13px] text-text-primary',
             isPrevDisabled
-              ? 'cursor-not-allowed opacity-50 border-[#F0F2F5] bg-white'
-              : 'border-[#F0F2F5] bg-white hover:border-[rgba(74,144,196,0.25)]',
+              ? 'cursor-not-allowed opacity-50 border-divider bg-white'
+              : 'border-divider bg-white hover:border-horizon-blue/25',
           )}
         >
           ‹
@@ -382,10 +376,9 @@ function Pagination({ page, pageSize, total, isMobile, onPageChange }: Paginatio
               className={cn(
                 'flex h-7 w-7 items-center justify-center rounded border text-[12px]',
                 page === p
-                  ? 'border-[rgba(74,144,196,0.25)] text-[#4A90C4]'
-                  : 'border-[#F0F2F5] bg-white text-text-primary',
+                  ? 'border-horizon-blue/25 text-horizon-blue bg-horizon-blue/10'
+                  : 'border-divider bg-white text-text-primary',
               )}
-              style={page === p ? { backgroundColor: 'rgba(74,144,196,0.10)' } : undefined}
             >
               {p}
             </button>
@@ -401,8 +394,8 @@ function Pagination({ page, pageSize, total, isMobile, onPageChange }: Paginatio
           className={cn(
             'flex h-7 w-7 items-center justify-center rounded border text-[13px] text-text-primary',
             isNextDisabled
-              ? 'cursor-not-allowed opacity-50 border-[#F0F2F5] bg-white'
-              : 'border-[#F0F2F5] bg-white hover:border-[rgba(74,144,196,0.25)]',
+              ? 'cursor-not-allowed opacity-50 border-divider bg-white'
+              : 'border-divider bg-white hover:border-horizon-blue/25',
           )}
         >
           ›

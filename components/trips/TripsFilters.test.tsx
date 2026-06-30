@@ -75,6 +75,6 @@ describe('TripsFilters', () => {
   it('active mode chip is highlighted', () => {
     render(<TripsFilters {...defaultProps} mode="car" />)
     const carChip = screen.getByTestId('mode-chip-car')
-    expect(carChip).toHaveStyle({ color: '#F0956A' })
+    expect(carChip.className).toContain('text-peach')
   })
 })

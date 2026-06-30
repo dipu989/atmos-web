@@ -11,7 +11,7 @@ const earnedBadge: Achievement = {
   name: 'First Steps',
   desc: 'Complete your first green trip',
   icon: 'leaf',
-  color: '#3DAB82',
+  colorToken: 'sage' as const,
   earned: true,
   date: 'Feb 21',
 }
@@ -21,7 +21,7 @@ const earnedBadge2: Achievement = {
   name: 'Streak Master',
   desc: 'Maintain a 7-day green streak',
   icon: 'flame',
-  color: '#4A90C4',
+  colorToken: 'blue' as const,
   earned: true,
   date: 'Mar 5',
 }
@@ -31,7 +31,7 @@ const lockedNoProgress: Achievement = {
   name: 'Eco Warrior',
   desc: 'Log 100 green trips',
   icon: 'trophy',
-  color: '#4A90C4',
+  colorToken: 'blue' as const,
   earned: false,
 }
 
@@ -40,7 +40,7 @@ const lockedWithProgress: Achievement = {
   name: 'Century Cyclist',
   desc: 'Cycle 100 km total',
   icon: 'bike',
-  color: '#3DAB82',
+  colorToken: 'sage' as const,
   earned: false,
   progress: 42,
   target: 100,
@@ -51,7 +51,7 @@ const lockedWithProgress2: Achievement = {
   name: 'Train Rider',
   desc: 'Take 50 train trips',
   icon: 'train',
-  color: '#F0956A',
+  colorToken: 'blue' as const,
   earned: false,
   progress: 10,
   target: 50,

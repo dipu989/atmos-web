@@ -67,9 +67,9 @@ function SignUpForm() {
 
       {/* Divider */}
       <div className="my-5 flex items-center gap-3">
-        <div className="h-px flex-1 bg-[#F0F2F5]" />
+        <div className="h-px flex-1 bg-divider" />
         <span className="text-[12px] text-text-secondary">or</span>
-        <div className="h-px flex-1 bg-[#F0F2F5]" />
+        <div className="h-px flex-1 bg-divider" />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-4" noValidate>

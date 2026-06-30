@@ -27,8 +27,8 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
 
   return (
     <div className="rounded-xl bg-white shadow-card px-3 py-2 min-w-[100px]">
-      <p className="text-[13px] font-medium text-[#1A2332]">{label}</p>
-      <p className="text-[12px] text-[#6B7A8D]">{value.toFixed(2)} kg CO₂</p>
+      <p className="text-[13px] font-medium text-text-primary">{label}</p>
+      <p className="text-[12px] text-text-secondary">{value.toFixed(2)} kg CO₂</p>
     </div>
   )
 }

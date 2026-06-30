@@ -40,8 +40,8 @@ function HeroSkeleton() {
   return (
     <div
       data-testid="hero-skeleton"
-      className="animate-pulse rounded-2xl"
-      style={{ backgroundColor: '#1A2332', minHeight: 180 }}
+      className="animate-pulse rounded-2xl bg-text-primary"
+      style={{ minHeight: 180 }}
     />
   )
 }
@@ -86,7 +86,7 @@ export default function InsightsPage() {
       name:  i.title,
       desc:  i.body,
       icon:  i.insightType === 'milestone' ? 'trophy' : 'flame',
-      color: i.insightType === 'milestone' ? '#4A90C4' : '#3DAB82',
+      colorToken: i.insightType === 'milestone' ? 'blue' as const : 'sage' as const,
       earned: i.isRead,
       date: i.isRead
         ? new Date(i.updatedAt).toLocaleDateString('en-US', {

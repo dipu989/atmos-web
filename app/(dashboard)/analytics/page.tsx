@@ -33,7 +33,7 @@ function PeriodSwitcher({ value, onChange, isMobile }: PeriodSwitcherProps) {
   return (
     <div
       data-testid="period-switcher"
-      className="flex items-center rounded-xl bg-[#F0F2F5] p-1"
+      className="flex items-center rounded-xl bg-divider p-1"
     >
       {PERIOD_OPTIONS.map(({ key, label, shortLabel }) => (
         <button
@@ -45,8 +45,8 @@ function PeriodSwitcher({ value, onChange, isMobile }: PeriodSwitcherProps) {
           className={cn(
             'rounded-lg px-3 py-1.5 text-[13px] font-medium transition-all',
             value === key
-              ? 'bg-white text-[#1A2332] shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
-              : 'text-[#6B7A8D] hover:text-[#1A2332]',
+              ? 'bg-white text-text-primary shadow-[0_1px_3px_rgba(0,0,0,0.08)]'
+              : 'text-text-secondary hover:text-text-primary',
           )}
         >
           {isMobile ? shortLabel : label}
@@ -83,8 +83,8 @@ function EmptyChart({ message }: { message: string }) {
           strokeLinejoin="round"
         />
       </svg>
-      <p className="text-[14px] font-medium text-[#1A2332]">No data yet</p>
-      <p className="text-[12.5px] text-[#6B7A8D]">{message}</p>
+      <p className="text-[14px] font-medium text-text-primary">No data yet</p>
+      <p className="text-[12.5px] text-text-secondary">{message}</p>
     </div>
   )
 }
@@ -94,7 +94,7 @@ function EmptyChart({ message }: { message: string }) {
 function ChartError() {
   return (
     <div className="flex items-center justify-center py-10">
-      <p className="text-[13px] text-[#6B7A8D]">Failed to load chart data.</p>
+      <p className="text-[13px] text-text-secondary">Failed to load chart data.</p>
     </div>
   )
 }

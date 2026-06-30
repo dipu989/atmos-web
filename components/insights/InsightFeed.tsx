@@ -21,21 +21,21 @@ const INSIGHT_TYPE_LABELS: Record<InsightType, string> = {
 
 // ─── Visual config per insight type ──────────────────────────────────────────
 
-const INSIGHT_VISUAL: Record<InsightType, { color: string; icon: string }> = {
-  streak:            { color: '#3DAB82', icon: '🔥' },
-  milestone:         { color: '#4A90C4', icon: '🏆' },
-  comparison:        { color: '#F0956A', icon: '📊' },
-  tip:               { color: '#3DAB82', icon: '💡' },
-  anomaly:           { color: '#E05252', icon: '⚠️' },
-  weekly_comparison: { color: '#4A90C4', icon: '📅' },
-  mode_spike:        { color: '#F0956A', icon: '🚀' },
-  mode_summary:      { color: '#6B7A8D', icon: '🗺️' },
+const INSIGHT_VISUAL: Record<InsightType, { icon: string }> = {
+  streak:            { icon: '🔥' },
+  milestone:         { icon: '🏆' },
+  comparison:        { icon: '📊' },
+  tip:               { icon: '💡' },
+  anomaly:           { icon: '⚠️' },
+  weekly_comparison: { icon: '📅' },
+  mode_spike:        { icon: '🚀' },
+  mode_summary:      { icon: '🗺️' },
 }
 
 // ─── Mapper: Insight → InsightCardInsight ─────────────────────────────────────
 
 function mapToCardInsight(insight: Insight): InsightCardInsight {
-  const visual = INSIGHT_VISUAL[insight.insightType] ?? { color: '#6B7A8D', icon: '💡' }
+  const visual = INSIGHT_VISUAL[insight.insightType] ?? { icon: '💡' }
   const meta = insight.metadata
 
   const progressMeta = meta.progress as
@@ -45,7 +45,6 @@ function mapToCardInsight(insight: Insight): InsightCardInsight {
   return {
     id: insight.id,
     type: insight.insightType,
-    color: visual.color,
     icon: visual.icon,
     date: new Date(insight.createdAt).toLocaleDateString('en-US', {
       month: 'short',

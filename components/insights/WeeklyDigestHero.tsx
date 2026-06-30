@@ -28,19 +28,14 @@ interface DeltaBadgeProps {
 function DeltaBadge({ delta }: DeltaBadgeProps) {
   const isImprovement = delta < 0
   const abs = Math.abs(delta)
-
-  const bg = isImprovement ? 'rgba(61,171,130,0.18)' : 'rgba(240,149,106,0.18)'
-  const color = isImprovement ? '#3DAB82' : '#F0956A'
   const Icon = isImprovement ? ArrowDown : ArrowUp
   const label = isImprovement ? 'delta-down' : 'delta-up'
 
   return (
     <span
       data-testid={label}
-      className="inline-flex items-center gap-0.5"
+      className={`inline-flex items-center gap-0.5 ${isImprovement ? 'bg-sage/18 text-sage' : 'bg-peach/18 text-peach'}`}
       style={{
-        backgroundColor: bg,
-        color,
         borderRadius: '999px',
         padding: '3px 8px',
         fontSize: 12,
@@ -60,10 +55,7 @@ export function WeeklyDigestHero({ insight }: WeeklyDigestHeroProps) {
   const { type, title, body, metric, spark } = insight
 
   return (
-    <div
-      className="rounded-[20px] p-5 lg:p-[28px_32px]"
-      style={{ backgroundColor: '#1A2332' }}
-    >
+    <div className="rounded-[20px] bg-text-primary p-5 lg:p-[28px_32px]">
       {/* On mobile: single-column. On lg+: side-by-side with sparkline */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between lg:gap-6">
         {/* ── Left / main column ───────────────────────────────────────────── */}

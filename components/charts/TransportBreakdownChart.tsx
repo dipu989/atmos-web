@@ -46,8 +46,8 @@ function CustomTooltip({
 
   return (
     <div className="rounded-xl bg-white shadow-card px-3 py-2 min-w-[120px]">
-      <p className="text-[13px] font-medium text-[#1A2332]">{entry.name}</p>
-      <p className="text-[13px] text-[#6B7A8D]">
+      <p className="text-[13px] font-medium text-text-primary">{entry.name}</p>
+      <p className="text-[13px] text-text-secondary">
         {entry.co2_kg.toFixed(2)} kg · {pct}%
       </p>
     </div>
@@ -97,11 +97,12 @@ export function TransportBreakdownChart({ data }: TransportBreakdownChartProps) 
       <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
         <span
           data-testid="chart-total"
-          style={{ fontSize: 22, fontWeight: 600, color: '#1A2332', lineHeight: 1.1 }}
+          className="text-text-primary"
+          style={{ fontSize: 22, fontWeight: 600, lineHeight: 1.1 }}
         >
           {total.toFixed(1)}
         </span>
-        <span style={{ fontSize: 12, color: '#6B7A8D', lineHeight: 1.4 }}>kg CO₂</span>
+        <span className="text-text-secondary" style={{ fontSize: 12, lineHeight: 1.4 }}>kg CO₂</span>
       </div>
 
       <PieChart width={200} height={200}>

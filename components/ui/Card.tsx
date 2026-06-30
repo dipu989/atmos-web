@@ -80,10 +80,10 @@ export function SectionCard({ title, subtitle, children, className, ...rest }: S
       {(title || subtitle) && (
         <div className="mb-4">
           {title && (
-            <h3 className="text-[17px] font-semibold leading-tight text-[#1A2332]">{title}</h3>
+            <h3 className="text-[17px] font-semibold leading-tight text-text-primary">{title}</h3>
           )}
           {subtitle && (
-            <p className="mt-0.5 text-[13px] text-[#6B7A8D]">{subtitle}</p>
+            <p className="mt-0.5 text-[13px] text-text-secondary">{subtitle}</p>
           )}
         </div>
       )}
