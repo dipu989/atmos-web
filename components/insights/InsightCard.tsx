@@ -58,7 +58,7 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
 
   const pct =
     insight.progress
-      ? Math.min(100, Math.round((insight.progress.current / insight.progress.target) * 100))
+      ? Math.min(100, Math.round((insight.progress.current / (insight.progress.target || 1)) * 100))
       : 0
 
   return (

@@ -9,6 +9,8 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
 }))
 
+beforeEach(() => { mockPush.mockClear() })
+
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
 const base: InsightCardInsight = {
@@ -163,10 +165,6 @@ describe('InsightCard — STREAK type', () => {
 })
 
 describe('InsightCard — Action buttons', () => {
-  beforeEach(() => {
-    mockPush.mockClear()
-  })
-
   it('renders action buttons when actions are provided', () => {
     render(<InsightCard insight={tipInsight} />)
     expect(screen.getByRole('button', { name: 'Try it' })).toBeInTheDocument()

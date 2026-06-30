@@ -13,10 +13,9 @@ const ACHIEVEMENT_COLOR: Record<AchievementColorToken, {
   text: string
   bg: string
   bgTint: string
-  hex: string
 }> = {
-  blue: { text: 'text-horizon-blue', bg: 'bg-horizon-blue', bgTint: 'bg-horizon-blue/10', hex: '#4A90C4' },
-  sage: { text: 'text-sage',         bg: 'bg-sage',         bgTint: 'bg-sage/10',         hex: '#3DAB82' },
+  blue: { text: 'text-horizon-blue', bg: 'bg-horizon-blue', bgTint: 'bg-horizon-blue/10' },
+  sage: { text: 'text-sage',         bg: 'bg-sage',         bgTint: 'bg-sage/10' },
 }
 
 export interface Achievement {
@@ -58,13 +57,11 @@ function AchievementBadge({ achievement }: AchievementBadgeProps) {
       <div className="relative mx-auto" style={{ width: 48, height: 48 }}>
         <div
           aria-hidden="true"
-          className={cn('flex h-full w-full items-center justify-center rounded-full', earned ? colors.bgTint : 'bg-[#E8EDF2]')}
+          className={cn('flex h-full w-full items-center justify-center rounded-full', earned ? colors.bgTint : 'bg-gray-100')}
         >
-          <Icon
-            name={icon}
-            size={24}
-            color={earned ? colors.hex : '#C5CCD6'}
-          />
+          <span className={earned ? colors.text : 'text-[#C5CCD6]'}>
+            <Icon name={icon} size={24} color="currentColor" />
+          </span>
         </div>
 
         {/* Earned checkmark overlay */}
@@ -102,8 +99,8 @@ function AchievementBadge({ achievement }: AchievementBadgeProps) {
       {!earned && !hasProgress && (
         <p
           data-testid="badge-desc"
-          className="line-clamp-2"
-          style={{ fontSize: 11, color: '#C5CCD6', marginTop: 2 }}
+          className="line-clamp-2 text-[#C5CCD6]"
+          style={{ fontSize: 11, marginTop: 2 }}
         >
           {desc}
         </p>
@@ -146,17 +143,17 @@ function BadgeSkeleton() {
     >
       {/* Circle */}
       <div
-        className="mx-auto rounded-full bg-[#E8EDF2]"
+        className="mx-auto rounded-full bg-gray-100"
         style={{ width: 48, height: 48 }}
       />
       {/* Name */}
       <div
-        className="mx-auto mt-3 rounded bg-[#E8EDF2]"
+        className="mx-auto mt-3 rounded bg-gray-100"
         style={{ height: 10, width: '60%' }}
       />
       {/* Sub */}
       <div
-        className="mx-auto mt-2 rounded bg-[#E8EDF2]"
+        className="mx-auto mt-2 rounded bg-gray-100"
         style={{ height: 8, width: '45%' }}
       />
     </div>
@@ -180,7 +177,7 @@ export function AchievementsPanel({
       >
         {/* Header skeleton */}
         <div className="mb-4 flex animate-pulse flex-col gap-1">
-          <div className="rounded bg-[#E8EDF2]" style={{ height: 17, width: 120 }} />
+          <div className="rounded bg-gray-100" style={{ height: 17, width: 120 }} />
           <div className="rounded bg-divider" style={{ height: 12, width: 90 }} />
         </div>
 
@@ -211,7 +208,7 @@ export function AchievementsPanel({
           Achievements
         </h2>
         <EmptyState
-          icon={<Trophy size={48} color="#C5CCD6" aria-hidden="true" />}
+          icon={<span className="text-[#C5CCD6]"><Trophy size={48} color="currentColor" aria-hidden="true" /></span>}
           title="No achievements yet"
           description="Complete milestones to earn badges."
         />

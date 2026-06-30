@@ -8,10 +8,10 @@ import { cn } from '@/lib/utils'
 type ModeColorToken = 'blue' | 'peach' | 'sage' | 'slate'
 
 const MODE_TOKEN_CLASSES: Record<ModeColorToken, { border: string; bgTint: string; text: string }> = {
-  blue:  { border: 'border-horizon-blue',     bgTint: 'bg-horizon-blue/[0.08]',     text: 'text-horizon-blue' },
-  peach: { border: 'border-peach',            bgTint: 'bg-peach/[0.08]',            text: 'text-peach' },
-  sage:  { border: 'border-sage',             bgTint: 'bg-sage/[0.08]',             text: 'text-sage' },
-  slate: { border: 'border-text-secondary',   bgTint: 'bg-text-secondary/[0.08]',   text: 'text-text-secondary' },
+  blue:  { border: 'border-horizon-blue',     bgTint: 'bg-horizon-blue/10',     text: 'text-horizon-blue' },
+  peach: { border: 'border-peach',            bgTint: 'bg-peach/10',            text: 'text-peach' },
+  sage:  { border: 'border-sage',             bgTint: 'bg-sage/10',             text: 'text-sage' },
+  slate: { border: 'border-text-secondary',   bgTint: 'bg-text-secondary/10',   text: 'text-text-secondary' },
 }
 
 interface ModeConfig {
