@@ -43,10 +43,10 @@ function CustomTooltip({ active, payload }: TooltipProps<number, string>) {
 
   return (
     <div className="rounded-xl bg-white shadow-card px-3 py-2">
-      <p className="text-[13px] font-medium text-[#1A2332]">{point.label}</p>
-      <p className="text-[13px] text-[#6B7A8D]">{point.co2_kg.toFixed(1)} kg CO₂</p>
+      <p className="text-[13px] font-medium text-text-primary">{point.label}</p>
+      <p className="text-[13px] text-text-secondary">{point.co2_kg.toFixed(1)} kg CO₂</p>
       {isOverGoal && (
-        <p className="text-[12px] font-medium text-[#F0956A]">Over goal</p>
+        <p className="text-[12px] font-medium text-peach">Over goal</p>
       )}
     </div>
   )

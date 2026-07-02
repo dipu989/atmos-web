@@ -9,12 +9,13 @@ vi.mock('next/navigation', () => ({
   useRouter: () => ({ push: mockPush }),
 }))
 
+beforeEach(() => { mockPush.mockClear() })
+
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 
 const base: InsightCardInsight = {
   id: 'ins-001',
   type: 'milestone',
-  color: '#4A90C4',
   icon: '🏆',
   date: 'May 20',
   new: false,
@@ -29,7 +30,6 @@ const tipInsight: InsightCardInsight = {
   ...base,
   id: 'ins-tip',
   type: 'tip',
-  color: '#3DAB82',
   icon: '🌿',
   title: 'Switch to metro for your morning commute',
   body: 'Your Tuesday car trip to work emits 3× more than the metro.',
@@ -41,7 +41,6 @@ const anomalyInsight: InsightCardInsight = {
   ...base,
   id: 'ins-anomaly',
   type: 'anomaly',
-  color: '#F0956A',
   icon: '📈',
   title: 'Unusual spike on Friday',
   body: 'Your CO₂ emissions last Friday were 3× your daily average.',
@@ -53,7 +52,6 @@ const streakInsight: InsightCardInsight = {
   ...base,
   id: 'ins-streak',
   type: 'streak',
-  color: '#3DAB82',
   icon: '🔥',
   title: '5-day green commute streak',
   body: 'You have taken public transport or cycled every day this week.',
@@ -100,20 +98,19 @@ describe('InsightCard — New dot', () => {
   })
 })
 
-// JSDOM normalises hex colors to rgb(...), so compare using a helper
-function hexToRgb(hex: string) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgb(${r}, ${g}, ${b})`
-}
-
 describe('InsightCard — left border color', () => {
-  it('applies left border matching insight.color', () => {
+  it('applies the design-token border class matching insight.type', () => {
     const { container } = render(<InsightCard insight={base} />)
     const card = container.firstChild as HTMLElement
-    // JSDOM converts #4A90C4 → rgb(74, 144, 196)
-    expect(card.style.borderLeft).toBe(`4px solid ${hexToRgb(base.color)}`)
+    // base.type === 'milestone' → blue token
+    expect(card.className).toContain('border-l-horizon-blue')
+  })
+
+  it('applies a different token class for a different insight type', () => {
+    const { container } = render(<InsightCard insight={tipInsight} />)
+    const card = container.firstChild as HTMLElement
+    // tipInsight.type === 'tip' → sage token
+    expect(card.className).toContain('border-l-sage')
   })
 })
 
@@ -168,10 +165,6 @@ describe('InsightCard — STREAK type', () => {
 })
 
 describe('InsightCard — Action buttons', () => {
-  beforeEach(() => {
-    mockPush.mockClear()
-  })
-
   it('renders action buttons when actions are provided', () => {
     render(<InsightCard insight={tipInsight} />)
     expect(screen.getByRole('button', { name: 'Try it' })).toBeInTheDocument()

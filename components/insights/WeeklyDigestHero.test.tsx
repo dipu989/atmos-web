@@ -48,8 +48,7 @@ describe('WeeklyDigestHero', () => {
     const badge = screen.getByTestId('delta-down')
     expect(badge).toBeInTheDocument()
     expect(badge).toHaveTextContent('8% vs last week')
-    // Green color
-    expect(badge).toHaveStyle({ color: '#3DAB82' })
+    expect(badge.className).toContain('text-sage')
   })
 
   it('positive delta shows orange upward badge', () => {
@@ -62,8 +61,7 @@ describe('WeeklyDigestHero', () => {
     const badge = screen.getByTestId('delta-up')
     expect(badge).toBeInTheDocument()
     expect(badge).toHaveTextContent('12% vs last week')
-    // Orange color
-    expect(badge).toHaveStyle({ color: '#F0956A' })
+    expect(badge.className).toContain('text-peach')
   })
 
   it('sparkline SVG element is present', () => {

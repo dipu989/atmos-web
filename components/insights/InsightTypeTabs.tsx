@@ -38,9 +38,8 @@ interface CountBadgeProps {
 function CountBadge({ count, active }: CountBadgeProps) {
   return (
     <span
+      className={active ? 'bg-horizon-blue text-white' : 'bg-[#E8EDF2] text-text-secondary'}
       style={{
-        backgroundColor: active ? '#4A90C4' : '#E8EDF2',
-        color: active ? '#FFFFFF' : '#6B7A8D',
         borderRadius: 999,
         padding: '1px 7px',
         fontSize: 11,
@@ -94,16 +93,16 @@ export function InsightTypeTabs({
           'relative mr-5 flex shrink-0 items-center gap-1.5 pb-3 pt-1',
           'text-[13.5px] transition-colors',
           activeTab === 'all'
-            ? 'font-semibold text-[#1A2332]'
-            : 'font-medium text-[#6B7A8D] hover:text-[#1A2332]',
+            ? 'font-semibold text-text-primary'
+            : 'font-medium text-text-secondary hover:text-text-primary',
         )}
       >
         All
         <CountBadge count={allCount} active={activeTab === 'all'} />
         {activeTab === 'all' && (
           <span
-            className="absolute inset-x-0 rounded-full"
-            style={{ bottom: -1, height: 2, backgroundColor: '#4A90C4' }}
+            className="absolute inset-x-0 rounded-full bg-horizon-blue"
+            style={{ bottom: -1, height: 2 }}
             aria-hidden="true"
           />
         )}
@@ -125,16 +124,16 @@ export function InsightTypeTabs({
               'relative mr-5 flex shrink-0 items-center gap-1.5 pb-3 pt-1',
               'text-[13.5px] transition-colors',
               isActive
-                ? 'font-semibold text-[#1A2332]'
-                : 'font-medium text-[#6B7A8D] hover:text-[#1A2332]',
+                ? 'font-semibold text-text-primary'
+                : 'font-medium text-text-secondary hover:text-text-primary',
             )}
           >
             {TAB_LABELS[type] ?? type}
             <CountBadge count={count} active={isActive} />
             {isActive && (
               <span
-                className="absolute inset-x-0 rounded-full"
-                style={{ bottom: -1, height: 2, backgroundColor: '#4A90C4' }}
+                className="absolute inset-x-0 rounded-full bg-horizon-blue"
+                style={{ bottom: -1, height: 2 }}
                 aria-hidden="true"
               />
             )}

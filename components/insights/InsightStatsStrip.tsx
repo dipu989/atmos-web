@@ -25,25 +25,28 @@ function SkeletonStatCard() {
 // ─── CompactStatCard ──────────────────────────────────────────────────────────
 
 interface CompactStatCardProps {
-  accent: string
+  accentToken: 'blue' | 'sage' | 'peach' | 'slate'
   label: string
   value: string | number
   unit?: string
   icon: React.ReactNode
 }
 
-function CompactStatCard({ accent, label, value, unit, icon }: CompactStatCardProps) {
+function CompactStatCard({ accentToken, label, value, unit, icon }: CompactStatCardProps) {
+  const ACCENT_CLASSES: Record<string, { border: string; text: string }> = {
+    blue:  { border: 'border-t-horizon-blue', text: 'text-horizon-blue' },
+    sage:  { border: 'border-t-sage',         text: 'text-sage' },
+    peach: { border: 'border-t-peach',        text: 'text-peach' },
+    slate: { border: 'border-t-text-secondary', text: 'text-text-secondary' },
+  }
+  const accent = ACCENT_CLASSES[accentToken]
   return (
     <div
-      className="flex flex-col gap-1 rounded-2xl border-t-[3px] bg-bg-card shadow-card"
-      style={{
-        borderTopColor: accent,
-        minHeight: 96,
-        padding: '18px 20px',
-      }}
+      className={`flex flex-col gap-1 rounded-2xl border-t-[3px] bg-bg-card shadow-card ${accent.border}`}
+      style={{ minHeight: 96, padding: '18px 20px' }}
     >
       <div className="flex items-center gap-1.5">
-        <span style={{ color: accent }} aria-hidden="true">
+        <span className={accent.text} aria-hidden="true">
           {icon}
         </span>
         <span className="text-[12px] font-medium uppercase tracking-[0.4px] text-text-secondary">
@@ -97,25 +100,25 @@ export function InsightStatsStrip({ insights, loading }: InsightStatsStripProps)
       className="grid grid-cols-2 gap-4 sm:grid-cols-4"
     >
       <CompactStatCard
-        accent="#4A90C4"
+        accentToken="blue"
         label="Total insights"
         value={total}
         icon={<Lightbulb size={13} />}
       />
       <CompactStatCard
-        accent="#F0956A"
+        accentToken="peach"
         label="New"
         value={newCount}
         icon={<Bell size={13} />}
       />
       <CompactStatCard
-        accent="#3DAB82"
+        accentToken="sage"
         label="Actions taken"
         value={acted}
         icon={<Check size={13} />}
       />
       <CompactStatCard
-        accent="#6B7A8D"
+        accentToken="slate"
         label="Potential save"
         value={potentialSave.toFixed(1)}
         unit="kg/mo"

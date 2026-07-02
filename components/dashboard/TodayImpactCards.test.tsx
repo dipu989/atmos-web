@@ -185,7 +185,7 @@ describe('TodayImpactCards', () => {
     render(<TodayImpactCards />)
 
     const progressFill = screen.getByTestId('progress-fill')
-    expect(progressFill).toHaveStyle({ backgroundColor: 'rgb(61, 171, 130)' }) // #3DAB82
+    expect(progressFill.className).toContain('bg-sage')
   })
 
   it('progress bar is orange (peach) when over goal', () => {
@@ -200,7 +200,7 @@ describe('TodayImpactCards', () => {
     render(<TodayImpactCards />)
 
     const progressFill = screen.getByTestId('progress-fill')
-    expect(progressFill).toHaveStyle({ backgroundColor: 'rgb(240, 149, 106)' }) // #F0956A
+    expect(progressFill.className).toContain('bg-peach')
   })
 
   it('renders 4 cards in a grid', () => {

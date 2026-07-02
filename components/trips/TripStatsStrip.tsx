@@ -26,8 +26,17 @@ function SkeletonStatCard() {
 
 // ─── CompactStatCard ──────────────────────────────────────────────────────────
 
+type StatAccentToken = 'blue' | 'sage' | 'peach' | 'slate'
+
+const ACCENT_BORDER_CLASSES: Record<StatAccentToken, string> = {
+  blue: 'border-t-horizon-blue',
+  sage: 'border-t-sage',
+  peach: 'border-t-peach',
+  slate: 'border-t-text-secondary',
+}
+
 interface CompactStatCardProps {
-  accent: string
+  accent: StatAccentToken
   label: string
   value: string | number
   unit?: string
@@ -37,12 +46,8 @@ interface CompactStatCardProps {
 function CompactStatCard({ accent, label, value, unit, sub }: CompactStatCardProps) {
   return (
     <div
-      className="bg-bg-card rounded-2xl shadow-card border-t-[3px] flex flex-col gap-1"
-      style={{
-        borderTopColor: accent,
-        minHeight: 96,
-        padding: '18px 20px',
-      }}
+      className={`bg-bg-card rounded-2xl shadow-card border-t-[3px] flex flex-col gap-1 ${ACCENT_BORDER_CLASSES[accent]}`}
+      style={{ minHeight: 96, padding: '18px 20px' }}
     >
       <span className="text-[12px] font-medium text-text-secondary uppercase tracking-[0.4px]">
         {label}
@@ -88,7 +93,7 @@ export function TripStatsStrip({
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {/* Card 1: Total trips */}
       <CompactStatCard
-        accent="#4A90C4"
+        accent="blue"
         label="Total trips"
         value={totalTrips}
         sub={
@@ -99,21 +104,21 @@ export function TripStatsStrip({
       />
       {/* Card 2: Distance */}
       <CompactStatCard
-        accent="#3DAB82"
+        accent="sage"
         label="Distance"
         value={totalKm.toFixed(1)}
         unit="km"
       />
       {/* Card 3: CO₂ */}
       <CompactStatCard
-        accent="#F0956A"
+        accent="peach"
         label="CO₂ emitted"
         value={totalKg.toFixed(1)}
         unit="kg"
       />
       {/* Card 4: Active days */}
       <CompactStatCard
-        accent="#6B7A8D"
+        accent="slate"
         label="Active days"
         value={activeDays}
         unit="days"

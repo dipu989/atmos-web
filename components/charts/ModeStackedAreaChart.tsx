@@ -61,7 +61,7 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
 
   return (
     <div className="rounded-xl bg-white shadow-card px-3 py-2 min-w-[140px]">
-      <p className="text-[13px] font-semibold text-[#1A2332] mb-1">{label}</p>
+      <p className="text-[13px] font-semibold text-text-primary mb-1">{label}</p>
       {(payload as PayloadEntry[]).map((entry) => (
         <div key={entry.dataKey} className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-1.5">
@@ -69,11 +69,11 @@ function CustomTooltip({ active, payload, label }: TooltipProps<number, string>)
               className="inline-block h-2 w-2 rounded-full flex-shrink-0"
               style={{ backgroundColor: entry.color }}
             />
-            <span className="text-[12px] text-[#6B7A8D]">
+            <span className="text-[12px] text-text-secondary">
               {MODE_LABELS[entry.dataKey as Mode] ?? entry.dataKey}
             </span>
           </div>
-          <span className="text-[12px] font-medium text-[#1A2332]">
+          <span className="text-[12px] font-medium text-text-primary">
             {entry.value.toFixed(2)} kg
           </span>
         </div>
@@ -93,7 +93,7 @@ function CustomLegend() {
             className="inline-block h-2 w-2 rounded-full flex-shrink-0"
             style={{ backgroundColor: MODE_COLORS[mode] }}
           />
-          <span className="text-[12px] text-[#6B7A8D]">{MODE_LABELS[mode]}</span>
+          <span className="text-[12px] text-text-secondary">{MODE_LABELS[mode]}</span>
         </div>
       ))}
     </div>

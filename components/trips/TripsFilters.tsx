@@ -5,20 +5,29 @@ import { cn } from '@/lib/utils'
 
 // ─── Mode config ──────────────────────────────────────────────────────────────
 
+type ModeColorToken = 'blue' | 'peach' | 'sage' | 'slate'
+
+const MODE_TOKEN_CLASSES: Record<ModeColorToken, { border: string; bgTint: string; text: string }> = {
+  blue:  { border: 'border-horizon-blue',     bgTint: 'bg-horizon-blue/10',     text: 'text-horizon-blue' },
+  peach: { border: 'border-peach',            bgTint: 'bg-peach/10',            text: 'text-peach' },
+  sage:  { border: 'border-sage',             bgTint: 'bg-sage/10',             text: 'text-sage' },
+  slate: { border: 'border-text-secondary',   bgTint: 'bg-text-secondary/10',   text: 'text-text-secondary' },
+}
+
 interface ModeConfig {
   key: string
   label: string
-  color: string
-  Icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number }>
+  colorToken: ModeColorToken
+  Icon: React.ComponentType<{ size?: number; color?: string; strokeWidth?: number; className?: string }>
 }
 
 const MODES: ModeConfig[] = [
-  { key: 'all', label: 'All', color: '#4A90C4', Icon: Grid },
-  { key: 'car', label: 'Car', color: '#F0956A', Icon: Car },
-  { key: 'train', label: 'Train', color: '#4A90C4', Icon: Train },
-  { key: 'bus', label: 'Bus', color: '#3DAB82', Icon: Bus },
-  { key: 'cycling', label: 'Bike', color: '#3DAB82', Icon: Bike },
-  { key: 'walking', label: 'Walk', color: '#6B7A8D', Icon: Footprints },
+  { key: 'all', label: 'All', colorToken: 'blue', Icon: Grid },
+  { key: 'car', label: 'Car', colorToken: 'peach', Icon: Car },
+  { key: 'train', label: 'Train', colorToken: 'blue', Icon: Train },
+  { key: 'bus', label: 'Bus', colorToken: 'sage', Icon: Bus },
+  { key: 'cycling', label: 'Bike', colorToken: 'sage', Icon: Bike },
+  { key: 'walking', label: 'Walk', colorToken: 'slate', Icon: Footprints },
 ]
 
 // ─── SearchInput ──────────────────────────────────────────────────────────────
@@ -36,9 +45,8 @@ function SearchInput({ value, onChange }: SearchInputProps) {
     >
       <Search
         size={14}
-        color="#6B7A8D"
         strokeWidth={2}
-        className="absolute left-2.5 pointer-events-none"
+        className="absolute left-2.5 pointer-events-none text-text-secondary"
         aria-hidden="true"
       />
       <input
@@ -81,8 +89,8 @@ function SourceToggle({ value, onChange }: SourceToggleProps) {
   return (
     <div
       data-testid="source-toggle"
-      className="flex"
-      style={{ backgroundColor: '#F0F2F5', padding: 3, borderRadius: 9 }}
+      className="flex bg-divider"
+      style={{ padding: 3, borderRadius: 9 }}
     >
       {SOURCE_OPTIONS.map(({ key, label }) => {
         const isActive = value === key
@@ -117,9 +125,10 @@ interface ModeChipsProps {
 function ModeChips({ activeMode, onModeChange, tripCounts }: ModeChipsProps) {
   return (
     <div data-testid="mode-chips" className="flex flex-wrap gap-2">
-      {MODES.map(({ key, label, color, Icon }) => {
+      {MODES.map(({ key, label, colorToken, Icon }) => {
         const isActive = activeMode === key
         const count = tripCounts[key] ?? 0
+        const classes = MODE_TOKEN_CLASSES[colorToken]
         return (
           <button
             key={key}
@@ -128,28 +137,20 @@ function ModeChips({ activeMode, onModeChange, tripCounts }: ModeChipsProps) {
             onClick={() => onModeChange(key)}
             className={cn(
               'flex items-center gap-1.5 px-3 py-[6px] rounded-[999px] text-[12.5px] border transition-all',
-              isActive ? 'font-semibold' : 'bg-white border-divider text-text-primary font-medium',
-            )}
-            style={
               isActive
-                ? {
-                    border: `1.5px solid ${color}`,
-                    backgroundColor: `${color}14`,
-                    color,
-                  }
-                : undefined
-            }
+                ? cn('font-semibold border-[1.5px]', classes.border, classes.bgTint, classes.text)
+                : 'bg-white border-divider text-text-primary font-medium',
+            )}
           >
             <Icon
               size={13}
-              color={isActive ? color : '#6B7A8D'}
               strokeWidth={2}
               aria-hidden={true}
+              className={isActive ? classes.text : 'text-text-secondary'}
             />
             <span>{label}</span>
             <span
-              className="text-[11px] font-medium"
-              style={{ color: isActive ? color : '#6B7A8D' }}
+              className={cn('text-[11px] font-medium', isActive ? classes.text : 'text-text-secondary')}
             >
               {count}
             </span>

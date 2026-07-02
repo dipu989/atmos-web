@@ -7,16 +7,27 @@ import { EmptyState } from '@/components/ui/EmptyState'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
+export type AchievementColorToken = 'blue' | 'sage'
+
+const ACHIEVEMENT_COLOR: Record<AchievementColorToken, {
+  text: string
+  bg: string
+  bgTint: string
+}> = {
+  blue: { text: 'text-horizon-blue', bg: 'bg-horizon-blue', bgTint: 'bg-horizon-blue/10' },
+  sage: { text: 'text-sage',         bg: 'bg-sage',         bgTint: 'bg-sage/10' },
+}
+
 export interface Achievement {
   id: string | number
   name: string
   desc: string
-  icon: string        // lucide icon name (key in Icon component map)
-  color: string       // hex color, e.g. "#4A90C4"
+  icon: string              // lucide icon name (key in Icon component map)
+  colorToken: AchievementColorToken
   earned: boolean
-  date?: string       // shown when earned, e.g. "Feb 21"
-  progress?: number   // current value (when not yet earned)
-  target?: number     // target value (when not yet earned)
+  date?: string             // shown when earned, e.g. "Feb 21"
+  progress?: number         // current value (when not yet earned)
+  target?: number           // target value (when not yet earned)
 }
 
 export interface AchievementsPanelProps {
@@ -31,35 +42,26 @@ interface AchievementBadgeProps {
 }
 
 function AchievementBadge({ achievement }: AchievementBadgeProps) {
-  const { name, desc, icon, color, earned, date, progress, target } = achievement
+  const { name, desc, icon, colorToken, earned, date, progress, target } = achievement
+  const colors = ACHIEVEMENT_COLOR[colorToken]
   const hasProgress = !earned && progress != null && target != null
 
   return (
     <div
       data-testid="achievement-badge"
       data-earned={earned ? 'true' : 'false'}
-      className="text-center"
-      style={{
-        borderRadius: 16,
-        padding: '18px 14px',
-        backgroundColor: earned ? '#FFFFFF' : '#F5F7FA',
-        boxShadow: earned ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-      }}
+      className={cn('text-center', earned ? 'bg-bg-card shadow-card' : 'bg-bg-page')}
+      style={{ borderRadius: 16, padding: '18px 14px' }}
     >
       {/* ── Icon circle ────────────────────────────────────────────────────── */}
       <div className="relative mx-auto" style={{ width: 48, height: 48 }}>
         <div
           aria-hidden="true"
-          className="flex h-full w-full items-center justify-center rounded-full"
-          style={{
-            backgroundColor: earned ? color + '1A' : '#E8EDF2',
-          }}
+          className={cn('flex h-full w-full items-center justify-center rounded-full', earned ? colors.bgTint : 'bg-gray-100')}
         >
-          <Icon
-            name={icon}
-            size={24}
-            color={earned ? color : '#C5CCD6'}
-          />
+          <span className={earned ? colors.text : 'text-[#C5CCD6]'}>
+            <Icon name={icon} size={24} color="currentColor" />
+          </span>
         </div>
 
         {/* Earned checkmark overlay */}
@@ -67,31 +69,18 @@ function AchievementBadge({ achievement }: AchievementBadgeProps) {
           <div
             data-testid="earned-checkmark"
             aria-label="Earned"
-            className="absolute -right-1 -top-1 flex items-center justify-center rounded-full"
-            style={{
-              width: 14,
-              height: 14,
-              backgroundColor: '#3DAB82',
-            }}
+            className="absolute -right-1 -top-1 flex items-center justify-center rounded-full bg-sage"
+            style={{ width: 14, height: 14 }}
           >
-            <Check
-              size={8}
-              color="#FFFFFF"
-              strokeWidth={3}
-              aria-hidden="true"
-            />
+            <Check size={8} color="white" strokeWidth={3} aria-hidden="true" />
           </div>
         )}
       </div>
 
       {/* ── Badge name ─────────────────────────────────────────────────────── */}
       <p
-        className="font-semibold"
-        style={{
-          fontSize: 13,
-          marginTop: 10,
-          color: earned ? '#1A2332' : '#6B7A8D',
-        }}
+        className={cn('font-semibold', earned ? 'text-text-primary' : 'text-text-secondary')}
+        style={{ fontSize: 13, marginTop: 10 }}
       >
         {name}
       </p>
@@ -100,7 +89,8 @@ function AchievementBadge({ achievement }: AchievementBadgeProps) {
       {earned && date && (
         <p
           data-testid="badge-date"
-          style={{ fontSize: 11, color, marginTop: 2 }}
+          className={colors.text}
+          style={{ fontSize: 11, marginTop: 2 }}
         >
           {date}
         </p>
@@ -109,8 +99,8 @@ function AchievementBadge({ achievement }: AchievementBadgeProps) {
       {!earned && !hasProgress && (
         <p
           data-testid="badge-desc"
-          className="line-clamp-2"
-          style={{ fontSize: 11, color: '#C5CCD6', marginTop: 2 }}
+          className="line-clamp-2 text-[#C5CCD6]"
+          style={{ fontSize: 11, marginTop: 2 }}
         >
           {desc}
         </p>
@@ -119,23 +109,20 @@ function AchievementBadge({ achievement }: AchievementBadgeProps) {
       {hasProgress && (
         <div data-testid="badge-progress" style={{ marginTop: 6 }}>
           {/* Mini progress bar track */}
-          <div
-            className="overflow-hidden rounded-full"
-            style={{ height: 4, backgroundColor: '#F0F2F5' }}
-          >
+          <div className="overflow-hidden rounded-full bg-divider" style={{ height: 4 }}>
             <div
               data-testid="progress-fill"
-              className="h-full rounded-full"
+              className={cn('h-full rounded-full', colors.bg)}
               style={{
                 width: `${Math.min(100, Math.round(((progress ?? 0) / (target ?? 1)) * 100))}%`,
-                backgroundColor: color,
               }}
             />
           </div>
           {/* Progress label */}
           <p
             data-testid="progress-label"
-            style={{ fontSize: 10.5, color: '#6B7A8D', marginTop: 4 }}
+            className="text-text-secondary"
+            style={{ fontSize: 10.5, marginTop: 4 }}
           >
             {progress} / {target}
           </p>
@@ -151,27 +138,23 @@ function BadgeSkeleton() {
   return (
     <div
       aria-hidden="true"
-      className="animate-pulse text-center"
-      style={{
-        borderRadius: 16,
-        padding: '18px 14px',
-        backgroundColor: '#F5F7FA',
-      }}
+      className="animate-pulse text-center bg-bg-page"
+      style={{ borderRadius: 16, padding: '18px 14px' }}
     >
       {/* Circle */}
       <div
-        className="mx-auto rounded-full"
-        style={{ width: 48, height: 48, backgroundColor: '#E8EDF2' }}
+        className="mx-auto rounded-full bg-gray-100"
+        style={{ width: 48, height: 48 }}
       />
       {/* Name */}
       <div
-        className="mx-auto mt-3 rounded"
-        style={{ height: 10, width: '60%', backgroundColor: '#E8EDF2' }}
+        className="mx-auto mt-3 rounded bg-gray-100"
+        style={{ height: 10, width: '60%' }}
       />
       {/* Sub */}
       <div
-        className="mx-auto mt-2 rounded"
-        style={{ height: 8, width: '45%', backgroundColor: '#E8EDF2' }}
+        className="mx-auto mt-2 rounded bg-gray-100"
+        style={{ height: 8, width: '45%' }}
       />
     </div>
   )
@@ -194,14 +177,8 @@ export function AchievementsPanel({
       >
         {/* Header skeleton */}
         <div className="mb-4 flex animate-pulse flex-col gap-1">
-          <div
-            className="rounded"
-            style={{ height: 17, width: 120, backgroundColor: '#E8EDF2' }}
-          />
-          <div
-            className="rounded"
-            style={{ height: 12, width: 90, backgroundColor: '#F0F2F5' }}
-          />
+          <div className="rounded bg-gray-100" style={{ height: 17, width: 120 }} />
+          <div className="rounded bg-divider" style={{ height: 12, width: 90 }} />
         </div>
 
         {/* Skeleton grid */}
@@ -231,7 +208,7 @@ export function AchievementsPanel({
           Achievements
         </h2>
         <EmptyState
-          icon={<Trophy size={48} color="#C5CCD6" aria-hidden="true" />}
+          icon={<span className="text-[#C5CCD6]"><Trophy size={48} color="currentColor" aria-hidden="true" /></span>}
           title="No achievements yet"
           description="Complete milestones to earn badges."
         />

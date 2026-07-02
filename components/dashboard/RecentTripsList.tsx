@@ -53,10 +53,10 @@ function formatTripDate(dateStr: string): string {
   return format(date, 'MMM d, h:mm a')
 }
 
-function getCo2Color(co2Kg: number): string {
-  if (co2Kg === 0) return '#3DAB82'
-  if (co2Kg > 2.0) return '#F0956A'
-  return '#1A2332'
+function getCo2ColorClass(co2Kg: number): string {
+  if (co2Kg === 0) return 'text-sage'
+  if (co2Kg > 2.0) return 'text-peach'
+  return 'text-text-primary'
 }
 
 // ─── Trip Row (local — not a separate file per task spec) ─────────────────────
@@ -69,7 +69,7 @@ function TripRow({ trip, isLast }: { trip: Trip; isLast: boolean }) {
   const from = trip.from ?? '—'
   const to   = trip.to   ?? '—'
   const co2Kg   = trip.co2Kg ?? 0
-  const co2Color = getCo2Color(co2Kg)
+  const co2ColorClass = getCo2ColorClass(co2Kg)
   const dateLabel = formatTripDate(trip.startedAt)
 
   return (
@@ -101,8 +101,7 @@ function TripRow({ trip, isLast }: { trip: Trip; isLast: boolean }) {
       <div className="flex-shrink-0 text-right">
         <span
           data-testid="co2-value"
-          className="text-[13px] font-semibold"
-          style={{ color: co2Color }}
+          className={cn('text-[13px] font-semibold', co2ColorClass)}
         >
           {co2Kg.toFixed(1)}
         </span>

@@ -29,19 +29,16 @@ function TrendBadge({ trend }: { trend: TrendData }) {
   const { change_pct, direction } = trend
 
   if (change_pct === null) {
-    return <span className="text-[12px] text-[#6B7A8D]">No trend data</span>
+    return <span className="text-[12px] text-text-secondary">No trend data</span>
   }
 
   const isDown = direction === 'down'
   const isFlat = direction === 'flat'
-  const color = isFlat ? '#6B7A8D' : isDown ? '#3DAB82' : '#F0956A'
+  const colorClass = isFlat ? 'text-text-secondary' : isDown ? 'text-sage' : 'text-peach'
 
   return (
     <div className="flex items-center gap-1">
-      <span
-        className="flex items-center gap-0.5 text-[12px] font-medium"
-        style={{ color }}
-      >
+      <span className={`flex items-center gap-0.5 text-[12px] font-medium ${colorClass}`}>
         {isFlat ? null : isDown ? (
           <ArrowDownRight size={12} strokeWidth={2.5} />
         ) : (
@@ -49,7 +46,7 @@ function TrendBadge({ trend }: { trend: TrendData }) {
         )}
         {Math.abs(change_pct).toFixed(1)}%
       </span>
-      <span className="text-[12px] text-[#6B7A8D]">vs last month</span>
+      <span className="text-[12px] text-text-secondary">vs last month</span>
     </div>
   )
 }
@@ -71,15 +68,12 @@ function ProgressBarSub({ todayKg, goalKg }: ProgressBarSubProps) {
     <div className="flex flex-col gap-1">
       <div className="h-[6px] rounded-full bg-gray-100 overflow-hidden">
         <div
-          className="h-full rounded-full transition-all"
           data-testid="progress-fill"
-          style={{
-            width: `${progressPct}%`,
-            backgroundColor: isUnderGoal ? '#3DAB82' : '#F0956A',
-          }}
+          className={`h-full rounded-full transition-all ${isUnderGoal ? 'bg-sage' : 'bg-peach'}`}
+          style={{ width: `${progressPct}%` }}
         />
       </div>
-      <span className="text-[12px] text-[#6B7A8D]">{label}</span>
+      <span className="text-[12px] text-text-secondary">{label}</span>
     </div>
   )
 }
@@ -98,7 +92,7 @@ function SkeletonCard() {
 // ─── Error card sub ──────────────────────────────────────────────────────────
 
 const ERROR_SUB = (
-  <span className="text-[12px] text-[#6B7A8D]">Data unavailable</span>
+  <span className="text-[12px] text-text-secondary">Data unavailable</span>
 )
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -140,10 +134,10 @@ export function TodayImpactCards() {
   if (isError) {
     return (
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard accent="#4A90C4" label="CO₂ this month" value="—" sub={ERROR_SUB} />
-        <StatCard accent="#3DAB82" label="Daily goal" value="—" sub={ERROR_SUB} />
-        <StatCard accent="#F0956A" label="Current streak" value="—" sub={ERROR_SUB} />
-        <StatCard accent="#6B7A8D" label="Days tracked" value="—" sub={ERROR_SUB} />
+        <StatCard accent="blue" label="CO₂ this month" value="—" sub={ERROR_SUB} />
+        <StatCard accent="sage" label="Daily goal" value="—" sub={ERROR_SUB} />
+        <StatCard accent="peach" label="Current streak" value="—" sub={ERROR_SUB} />
+        <StatCard accent="slate" label="Days tracked" value="—" sub={ERROR_SUB} />
       </div>
     )
   }
@@ -179,7 +173,7 @@ export function TodayImpactCards() {
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {/* Card 1: CO₂ this month */}
       <StatCard
-        accent="#4A90C4"
+        accent="blue"
         icon="leaf"
         label="CO₂ this month"
         value={monthlyCO2.toFixed(1)}
@@ -189,7 +183,7 @@ export function TodayImpactCards() {
 
       {/* Card 2: Daily goal */}
       <StatCard
-        accent="#3DAB82"
+        accent="sage"
         icon="target"
         label="Daily goal"
         value={todayKg.toFixed(1)}
@@ -199,13 +193,13 @@ export function TodayImpactCards() {
 
       {/* Card 3: Current streak */}
       <StatCard
-        accent="#F0956A"
+        accent="peach"
         icon="flame"
         label="Current streak"
         value={streakCurrent}
         unit="days"
         sub={
-          <span className="text-[12px] text-[#6B7A8D]">
+          <span className="text-[12px] text-text-secondary">
             Longest: {streakLongest} days
           </span>
         }
@@ -213,13 +207,13 @@ export function TodayImpactCards() {
 
       {/* Card 4: Days tracked */}
       <StatCard
-        accent="#6B7A8D"
+        accent="slate"
         icon="calendar"
         label="Days tracked"
         value={daysTracked}
         unit="total"
         sub={
-          <span className="text-[12px] text-[#6B7A8D]">Since {sinceFormatted}</span>
+          <span className="text-[12px] text-text-secondary">Since {sinceFormatted}</span>
         }
       />
     </div>

@@ -46,8 +46,8 @@ function MiniInsightCard({ insight }: { insight: Insight }) {
       {!insight.isRead && (
         <div
           data-testid="unread-dot"
-          className="absolute right-3 top-3 rounded-full"
-          style={{ width: 6, height: 6, backgroundColor: '#4A90C4' }}
+          className="absolute right-3 top-3 rounded-full bg-horizon-blue"
+          style={{ width: 6, height: 6 }}
         />
       )}
 

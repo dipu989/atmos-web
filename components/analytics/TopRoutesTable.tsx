@@ -71,16 +71,16 @@ function TableHeader({ isMobile }: { isMobile: boolean }) {
   const cols = isMobile ? COLS_MOBILE : COLS_DESKTOP
   return (
     <div
-      className="grid items-center gap-3 border-b border-[#F0F2F5] bg-[#FAFBFC] px-4 py-2.5"
+      className="grid items-center gap-3 border-b border-divider bg-[#FAFBFC] px-4 py-2.5"
       style={{ gridTemplateColumns: cols }}
     >
       <div /> {/* icon column */}
-      <span className="text-[12px] font-medium text-[#6B7A8D]">Route</span>
-      <span className="text-right text-[12px] font-medium text-[#6B7A8D]">Trips</span>
+      <span className="text-[12px] font-medium text-text-secondary">Route</span>
+      <span className="text-right text-[12px] font-medium text-text-secondary">Trips</span>
       {!isMobile && (
-        <span className="text-right text-[12px] font-medium text-[#6B7A8D]">Distance</span>
+        <span className="text-right text-[12px] font-medium text-text-secondary">Distance</span>
       )}
-      <span className="text-right text-[12px] font-medium text-[#6B7A8D]">CO₂</span>
+      <span className="text-right text-[12px] font-medium text-text-secondary">CO₂</span>
     </div>
   )
 }
@@ -92,7 +92,7 @@ function SkeletonRow({ isMobile }: { isMobile: boolean }) {
   return (
     <div
       data-testid="route-skeleton-row"
-      className="grid items-center gap-3 border-b border-[#F0F2F5] px-4 py-3"
+      className="grid items-center gap-3 border-b border-divider px-4 py-3"
       style={{ gridTemplateColumns: cols }}
     >
       <div className="h-[30px] w-[30px] animate-pulse rounded-[9px] bg-gray-100" />
@@ -127,7 +127,7 @@ function RouteRow({ route, maxKm, isMobile }: RouteRowProps) {
   return (
     <div
       data-testid="route-row"
-      className="grid items-center gap-3 border-b border-[#F0F2F5] px-4 py-3"
+      className="grid items-center gap-3 border-b border-divider px-4 py-3"
       style={{ gridTemplateColumns: cols }}
     >
       {/* Mode icon badge */}
@@ -140,13 +140,13 @@ function RouteRow({ route, maxKm, isMobile }: RouteRowProps) {
 
       {/* Route + progress bar */}
       <div className="min-w-0">
-        <p className="truncate text-[13px] font-medium text-[#1A2332]">
+        <p className="truncate text-[13px] font-medium text-text-primary">
           <span>{route.from}</span>
-          <span className="mx-1 text-[12px] text-[#6B7A8D]">→</span>
+          <span className="mx-1 text-[12px] text-text-secondary">→</span>
           <span>{route.to}</span>
         </p>
         {/* Thin progress bar */}
-        <div className="mt-1.5 h-[3px] w-full overflow-hidden rounded-full bg-[#F0F2F5]">
+        <div className="mt-1.5 h-[3px] w-full overflow-hidden rounded-full bg-divider">
           <div
             className="h-full rounded-full transition-all"
             style={{ width: `${barWidthPct}%`, backgroundColor: modeColor }}
@@ -156,21 +156,21 @@ function RouteRow({ route, maxKm, isMobile }: RouteRowProps) {
 
       {/* Trip count */}
       <div className="text-right">
-        <span className="text-[13px] text-[#1A2332]">{route.count}</span>
+        <span className="text-[13px] text-text-primary">{route.count}</span>
       </div>
 
       {/* Distance — hidden on mobile */}
       {!isMobile && (
         <div className="text-right">
-          <span className="text-[13px] text-[#1A2332]">{route.total_km.toFixed(1)}</span>
-          <span className="ml-0.5 text-[11px] text-[#6B7A8D]">km</span>
+          <span className="text-[13px] text-text-primary">{route.total_km.toFixed(1)}</span>
+          <span className="ml-0.5 text-[11px] text-text-secondary">km</span>
         </div>
       )}
 
       {/* CO₂ */}
       <div className="text-right">
-        <span className="text-[13px] text-[#1A2332]">{route.total_kg.toFixed(1)}</span>
-        <span className="ml-0.5 text-[11px] text-[#6B7A8D]">kg</span>
+        <span className="text-[13px] text-text-primary">{route.total_kg.toFixed(1)}</span>
+        <span className="ml-0.5 text-[11px] text-text-secondary">kg</span>
       </div>
     </div>
   )

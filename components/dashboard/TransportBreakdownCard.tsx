@@ -73,17 +73,17 @@ function LegendRow({ mode }: LegendRowProps) {
       />
       {/* Mode name */}
       <span
-        className="truncate"
-        style={{ fontSize: 13, fontWeight: 500, color: '#1A2332', flex: 1 }}
+        className="truncate text-text-primary"
+        style={{ fontSize: 13, fontWeight: 500, flex: 1 }}
       >
         {mode.name}
       </span>
       {/* Values: kg + km */}
       <div className="flex flex-col items-end shrink-0">
-        <span style={{ fontSize: 13, fontWeight: 600, color: '#1A2332' }}>
+        <span className="text-text-primary" style={{ fontSize: 13, fontWeight: 600 }}>
           {mode.co2_kg.toFixed(2)} kg
         </span>
-        <span style={{ fontSize: 12, color: '#6B7A8D' }}>
+        <span className="text-text-secondary" style={{ fontSize: 12 }}>
           {mode.distance_km.toFixed(1)} km
         </span>
       </div>

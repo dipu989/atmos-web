@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { Leaf } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Sparkline } from '@/components/charts/Sparkline'
+import { insightColorClasses } from '@/components/insights/insightColors'
 import type { InsightType } from '@/types'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -12,8 +13,6 @@ import type { InsightType } from '@/types'
 export interface InsightCardInsight {
   id: string
   type: InsightType
-  /** Hex color for the left border, icon badge, and type chip */
-  color: string
   /** Emoji or short text rendered inside the icon badge */
   icon: string
   /** Formatted date string shown top-right */
@@ -45,6 +44,7 @@ export interface InsightCardProps {
 
 export function InsightCard({ insight, onRead }: InsightCardProps) {
   const router = useRouter()
+  const classes = insightColorClasses(insight.type)
 
   // Optimistic "read" state — removes the New dot immediately on click
   const [isNew, setIsNew] = useState(insight.new)
@@ -58,18 +58,17 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
 
   const pct =
     insight.progress
-      ? Math.min(100, Math.round((insight.progress.current / insight.progress.target) * 100))
+      ? Math.min(100, Math.round((insight.progress.current / (insight.progress.target || 1)) * 100))
       : 0
 
   return (
     <div
       role="article"
       onClick={handleClick}
-      className={cn('bg-bg-card', isNew && 'cursor-pointer')}
+      className={cn('bg-bg-card border-l-4', classes.borderLeft, isNew && 'cursor-pointer')}
       style={{
         borderRadius: 16,
         boxShadow: '0 1px 3px rgba(0,0,0,0.07)',
-        borderLeft: `4px solid ${insight.color}`,
         padding: '18px 20px',
       }}
     >
@@ -80,12 +79,11 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
           {/* Icon badge */}
           <div
             aria-hidden="true"
-            className="flex shrink-0 items-center justify-center"
+            className={cn('flex shrink-0 items-center justify-center', classes.bgTint)}
             style={{
               width: 28,
               height: 28,
               borderRadius: 8,
-              backgroundColor: insight.color + '1A',
               fontSize: 15,
             }}
           >
@@ -94,11 +92,9 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
 
           {/* Type chip */}
           <span
-            className="font-semibold uppercase"
+            className={cn('font-semibold uppercase', classes.text, classes.bgTintLight)}
             style={{
               fontSize: 10,
-              color: insight.color,
-              backgroundColor: insight.color + '14',
               borderRadius: 999,
               padding: '2px 8px',
               letterSpacing: '0.04em',
@@ -117,12 +113,12 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
             <span
               data-testid="new-dot"
               aria-label="Unread"
+              className="bg-horizon-blue"
               style={{
                 display: 'inline-block',
                 width: 6,
                 height: 6,
                 borderRadius: '50%',
-                backgroundColor: '#4A90C4',
                 flexShrink: 0,
               }}
             />
@@ -152,10 +148,8 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
       {insight.type === 'tip' && insight.impact && (
         <div
           data-testid="impact-banner"
-          className="mt-3 inline-flex items-center gap-1.5"
+          className="mt-3 inline-flex items-center gap-1.5 bg-sage/10 text-sage"
           style={{
-            backgroundColor: 'rgba(61,171,130,0.10)',
-            color: '#3DAB82',
             borderRadius: 8,
             padding: '6px 12px',
             fontSize: 13,
@@ -190,14 +184,11 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
               {pct}%
             </span>
           </div>
-          <div
-            className="overflow-hidden rounded-full"
-            style={{ backgroundColor: '#F0F2F5', height: 6 }}
-          >
+          <div className="overflow-hidden rounded-full bg-divider" style={{ height: 6 }}>
             <div
               data-testid="progress-fill"
-              className="h-full rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${pct}%`, backgroundColor: insight.color }}
+              className={cn('h-full rounded-full transition-all duration-500 ease-out', classes.bg)}
+              style={{ width: `${pct}%` }}
             />
           </div>
         </div>
@@ -219,24 +210,10 @@ export function InsightCard({ insight, onRead }: InsightCardProps) {
               className={cn(
                 'font-medium transition-opacity hover:opacity-80',
                 i === 0
-                  ? 'rounded-lg border bg-transparent'
-                  : 'rounded-lg border-transparent bg-transparent',
+                  ? cn('rounded-lg border bg-transparent', classes.border, classes.text)
+                  : 'rounded-lg border-transparent bg-transparent text-text-secondary',
               )}
-              style={
-                i === 0
-                  ? {
-                      borderColor: insight.color,
-                      color: insight.color,
-                      padding: '6px 14px',
-                      fontSize: 13,
-                    }
-                  : {
-                      color: '#6B7A8D',
-                      padding: '6px 14px',
-                      fontSize: 13,
-                      border: 'none',
-                    }
-              }
+              style={{ padding: '6px 14px', fontSize: 13 }}
             >
               {label}
             </button>

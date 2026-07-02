@@ -92,7 +92,7 @@ describe('RecentTripsList', () => {
     render(<RecentTripsList />)
 
     const co2El = screen.getByTestId('co2-value')
-    expect(co2El).toHaveStyle({ color: 'rgb(61, 171, 130)' }) // #3DAB82
+    expect(co2El.className).toContain('text-sage')
     expect(co2El).toHaveTextContent('0.0')
   })
 
@@ -103,7 +103,7 @@ describe('RecentTripsList', () => {
     render(<RecentTripsList />)
 
     const co2El = screen.getByTestId('co2-value')
-    expect(co2El).toHaveStyle({ color: 'rgb(240, 149, 106)' }) // #F0956A
+    expect(co2El.className).toContain('text-peach')
     expect(co2El).toHaveTextContent('3.5')
   })
 
@@ -143,6 +143,6 @@ describe('RecentTripsList', () => {
     render(<RecentTripsList />)
 
     const co2El = screen.getByTestId('co2-value')
-    expect(co2El).toHaveStyle({ color: 'rgb(26, 35, 50)' }) // #1A2332
+    expect(co2El.className).toContain('text-text-primary')
   })
 })

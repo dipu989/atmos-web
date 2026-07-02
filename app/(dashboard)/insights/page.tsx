@@ -40,8 +40,8 @@ function HeroSkeleton() {
   return (
     <div
       data-testid="hero-skeleton"
-      className="animate-pulse rounded-2xl"
-      style={{ backgroundColor: '#1A2332', minHeight: 180 }}
+      className="animate-pulse rounded-2xl bg-gray-100"
+      style={{ minHeight: 180 }}
     />
   )
 }
@@ -71,11 +71,15 @@ export default function InsightsPage() {
   const featuredInsight =
     insights?.find((i) => i.insightType === 'weekly_comparison') ?? insights?.[0]
 
-  // Feed: exclude weekly_comparison (it's shown in the hero)
-  const filteredInsights =
-    activeTab === 'all'
-      ? (insights ?? []).filter((i) => i.insightType !== 'weekly_comparison')
-      : (insights ?? []).filter((i) => i.insightType === activeTab)
+  // Feed: exclude the hero insight and weekly_comparison; when a specific tab is
+  // active, also filter by type — but still suppress the featured item so it
+  // doesn't appear both in the hero and in the list simultaneously.
+  const filteredInsights = (insights ?? []).filter(
+    (i) =>
+      i.insightType !== 'weekly_comparison' &&
+      i.id !== featuredInsight?.id &&
+      (activeTab === 'all' || i.insightType === activeTab),
+  )
 
   // Achievements derived from MILESTONE and STREAK insights.
   // NOTE: No dedicated achievements endpoint exists. Using milestone/streak insights as proxy.
@@ -86,7 +90,7 @@ export default function InsightsPage() {
       name:  i.title,
       desc:  i.body,
       icon:  i.insightType === 'milestone' ? 'trophy' : 'flame',
-      color: i.insightType === 'milestone' ? '#4A90C4' : '#3DAB82',
+      colorToken: i.insightType === 'milestone' ? 'blue' as const : 'sage' as const,
       earned: i.isRead,
       date: i.isRead
         ? new Date(i.updatedAt).toLocaleDateString('en-US', {
@@ -96,11 +100,11 @@ export default function InsightsPage() {
         : undefined,
       progress:
         i.insightType === 'streak'
-          ? ((i.metadata.current as number | undefined) ?? 0)
+          ? ((i.metadata.progress as { current: number } | undefined)?.current ?? 0)
           : undefined,
       target:
         i.insightType === 'streak'
-          ? ((i.metadata.target as number | undefined) ?? 30)
+          ? ((i.metadata.progress as { target: number } | undefined)?.target ?? 30)
           : undefined,
     }))
 

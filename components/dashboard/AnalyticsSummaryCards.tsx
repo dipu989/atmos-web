@@ -19,7 +19,7 @@ function SkeletonCard() {
 // ─── Error sub ────────────────────────────────────────────────────────────────
 
 const ERROR_SUB = (
-  <span className="text-[12px] text-[#6B7A8D]">Data unavailable</span>
+  <span className="text-[12px] text-text-secondary">Data unavailable</span>
 )
 
 // ─── Main component ───────────────────────────────────────────────────────────
@@ -48,10 +48,10 @@ export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsP
   if (dailyQuery.isError) {
     return (
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard accent="#4A90C4" label="Total trips" value="—" sub={ERROR_SUB} />
-        <StatCard accent="#3DAB82" label="Total distance" value="—" sub={ERROR_SUB} />
-        <StatCard accent="#F0956A" label="Total CO₂" value="—" sub={ERROR_SUB} />
-        <StatCard accent="#6B7A8D" label="Avg per trip" value="—" sub={ERROR_SUB} />
+        <StatCard accent="blue" label="Total trips" value="—" sub={ERROR_SUB} />
+        <StatCard accent="sage" label="Total distance" value="—" sub={ERROR_SUB} />
+        <StatCard accent="peach" label="Total CO₂" value="—" sub={ERROR_SUB} />
+        <StatCard accent="slate" label="Avg per trip" value="—" sub={ERROR_SUB} />
       </div>
     )
   }
@@ -73,7 +73,7 @@ export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsP
     '1y':  'Last year',
   }
   const periodSub = (
-    <span className="text-[12px] text-[#6B7A8D]">{periodLabels[period]}</span>
+    <span className="text-[12px] text-text-secondary">{periodLabels[period]}</span>
   )
 
   // ── Render ───────────────────────────────────────────────────────────────
@@ -81,7 +81,7 @@ export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsP
     <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
       {/* Card 1: Total trips */}
       <StatCard
-        accent="#4A90C4"
+        accent="blue"
         icon="map-pin"
         label="Total trips"
         value={totalTrips}
@@ -91,7 +91,7 @@ export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsP
 
       {/* Card 2: Total distance */}
       <StatCard
-        accent="#3DAB82"
+        accent="sage"
         icon="route"
         label="Total distance"
         value={totalDistanceKm.toFixed(1)}
@@ -101,7 +101,7 @@ export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsP
 
       {/* Card 3: Total CO₂ */}
       <StatCard
-        accent="#F0956A"
+        accent="peach"
         icon="leaf"
         label="Total CO₂"
         value={totalCo2.toFixed(1)}
@@ -111,12 +111,12 @@ export function AnalyticsSummaryCards({ period = '30d' }: AnalyticsSummaryCardsP
 
       {/* Card 4: Avg per trip */}
       <StatCard
-        accent="#6B7A8D"
+        accent="slate"
         icon="bar-chart-2"
         label="Avg per trip"
         value={avgPerTrip.toFixed(2)}
         unit="kg CO₂"
-        sub={<span className="text-[12px] text-[#6B7A8D]">Per trip avg</span>}
+        sub={<span className="text-[12px] text-text-secondary">Per trip avg</span>}
       />
     </div>
   )
