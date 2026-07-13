@@ -48,6 +48,10 @@ The web app is built for **deep data exploration and management**. Trip logging 
 
 ---
 
+## Live
+
+[https://atmosapp.dev](https://atmosapp.dev)
+
 ## Getting Started
 
 ### Prerequisites
